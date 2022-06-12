@@ -1,24 +1,17 @@
-[
-  {
-    "Name": "TurengSimpleGet^pen!get",
-    "Uri": "https://ac.tureng.co/?t=deneme&l=entr",
-    "HttpMethod": "GET",
-    "NumberOfRequests": 1000,
-    "FetchContent": true,
-    "Parallelism": 500,
-    "BoundedCapacity": 250,
-    "UseDefaultCredentials": false,
-    "UseCookieContainer": false
-  },
-  {
-    "Name": "TurengSimpleGet^door",
-    "Uri": "https://ac.tureng.co/?t=door&=entr",
-    "HttpMethod": "GET",
-    "NumberOfRequests": 1000,
-    "FetchContent": false,
-    "Parallelism": 100,
-    "BoundedCapacity": 100,
-    "UseDefaultCredentials": false,
-    "UseCookieContainer": false
-  }
-]
+﻿{
+  "TestCaseConfigurations": [
+    {
+      "Name": "post_simple_1",
+      "Uri": "http://localhost:3000",
+      "HttpMethod": "POST",
+      "NumberOfRequests": 100,
+      "FetchContent": false,
+      "Parallelism": 10,
+      "BoundedCapacity": 10,
+      "Headers": {
+        "Content-Type": "application/json"
+      },
+      "Body": "{\"name\":\"test\"}"
+    }
+  ]
+}
