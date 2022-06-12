@@ -1,5 +1,7 @@
 using System.Diagnostics;
 using System.Net;
+using System.Net.Mime;
+using System.Text;
 using System.Threading.Tasks.Dataflow;
 using WebBen.CLI.Configuration;
 using WebBen.CLI.CredentialProviders;
@@ -102,8 +104,15 @@ internal class HttpTestContext
             }
 
             // SetBody
-            if (!string.IsNullOrWhiteSpace(testCaseInstance.Configuration!.Body))
-                httpRequestMessage.Content = new StringContent(testCaseInstance.Configuration.Body);
+            if (testCaseInstance.Configuration!.Body != null)
+            {
+                var encoding = Encoding.GetEncoding(testCaseInstance.Configuration.Body.Encoding);
+                httpRequestMessage.Content = new StringContent(
+                    testCaseInstance.Configuration.Body.Content,
+                    encoding,
+                    testCaseInstance.Configuration.Body.ContentType
+                );
+            }
 
             try
             {

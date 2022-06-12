@@ -81,16 +81,34 @@ Support for NTLM authentication, cookie containers, and default credentials. It 
 Http request headers can be specified.
 ```
 {
-  "Name": "post_simple_1",
-  "Uri": "http://localhost:3000",
-  "HttpMethod": "POST",
-  "NumberOfRequests": 100,
-  "FetchContent": false,
-  "Parallelism": 10,
-  "BoundedCapacity": 10,
-  "Headers": {
-    "Content-Type": "application/json"
-  },
-  "Body": "{\"name\":\"test\"}"
+  "TestCaseConfigurations": [
+    {
+      "Name": "post_simple_1",
+      "Uri": "http://localhost:3000",
+      "HttpMethod": "POST",
+      "NumberOfRequests": 10000,
+      "FetchContent": false,
+      "Parallelism": 500,
+      "BoundedCapacity": 500,
+      "Headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+      },
+      "Body": {
+        "Content": "{\"name\":\"test\"}",
+        "ContentType": "application/json"
+      }
+    }
+  ]
 }
+```
+
+### Http request 
+```
+POST / HTTP/1.1
+Host: localhost:3000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+Content-Type: application/json; charset=utf-8
+Content-Length: 15
+
+{"name":"test"}
 ```

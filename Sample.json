@@ -11,7 +11,11 @@
       "Headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
       },
-      "Body": "{\"name\":\"test\"}"
+      "Body": {
+        "Content": "{\"name\":\"test\"}",
+        "ContentType": "application/json",
+        "Encoding": "utf-8"
+      }
     }
   ]
 }

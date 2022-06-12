@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace WebBen.CLI.Configuration;
 
 public class TestCaseConfiguration
@@ -13,5 +15,12 @@ public class TestCaseConfiguration
     public bool UseCookieContainer { get; set; }
     public string? CredentialConfigurationKey { get; set; }
     public Dictionary<string, object>? Headers { get; set; }
-    public string? Body { get; set; }
+    public TestCaseBodyConfiguration? Body { get; set; }
+}
+
+public class TestCaseBodyConfiguration
+{
+    public string Content { get; set; }
+    public string ContentType { get; set; }
+    public string Encoding { get; set; } = System.Text.Encoding.UTF8.WebName;
 }
