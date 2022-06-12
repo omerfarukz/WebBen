@@ -1,5 +1,5 @@
 # WebBen
-An experimental http benchmarker sample.
+An experimental http benchmar tool.
 
 ## Configuration Sample
 ```
