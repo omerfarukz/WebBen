@@ -65,7 +65,8 @@ internal class HttpTestContext
                     throw new InvalidDataException(nameof(credentialConfiguration));
 
                 var provider = _credentialProviders[credentialConfiguration.Provider ?? DefaultCredentialProvider];
-                credentials = provider.FromConfiguration(credentialConfiguration.Data);
+                if (credentialConfiguration.Data != null)
+                    credentials = provider.FromConfiguration(credentialConfiguration.Data);
             }
 
             Console.WriteLine($"Executing test case '{testCase.Configuration.Name}");

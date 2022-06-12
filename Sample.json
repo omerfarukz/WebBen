@@ -4,10 +4,10 @@
       "Name": "post_simple_1",
       "Uri": "http://localhost:3000",
       "HttpMethod": "POST",
-      "NumberOfRequests": 100,
+      "NumberOfRequests": 10000,
       "FetchContent": false,
-      "Parallelism": 10,
-      "BoundedCapacity": 10,
+      "Parallelism": 500,
+      "BoundedCapacity": 500,
       "Headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
       },

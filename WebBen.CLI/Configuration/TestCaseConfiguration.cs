@@ -11,8 +11,7 @@ public class TestCaseConfiguration
     public int BoundedCapacity { get; set; } = 100;
     public bool UseDefaultCredentials { get; set; }
     public bool UseCookieContainer { get; set; }
-    public string CredentialConfigurationKey { get; set; }
-
-    public Dictionary<string, object> Headers { get; set; }
-    public string Body { get; set; }
+    public string? CredentialConfigurationKey { get; set; }
+    public Dictionary<string, object>? Headers { get; set; }
+    public string? Body { get; set; }
 }

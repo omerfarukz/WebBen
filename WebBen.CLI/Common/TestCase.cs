@@ -3,14 +3,9 @@ using WebBen.CLI.Configuration;
 
 namespace WebBen.CLI.Common;
 
-public record TestCase
+public record TestCase(TestCaseConfiguration Configuration)
 {
-    public TestCaseConfiguration Configuration { get; }
-    
-    public TestCase(TestCaseConfiguration configuration)
-    {
-        this.Configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
-    }
+    public TestCaseConfiguration Configuration { get; } = Configuration ?? throw new ArgumentNullException(nameof(Configuration));
 
     /// <summary>
     /// Keep time spend in milliseconds
