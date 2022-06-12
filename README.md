@@ -8,29 +8,14 @@ An experimental http benchmark tool.
     {
       "Name": "search_term_page_2_ntlm",
       "Uri": "https://internal.contoso.com/Ajax.ashx?search=term&page=2",
-      "HttpMethod": "GET",
       "NumberOfRequests": 50,
       "FetchContent": false,
       "Parallelism": 50,
       "BoundedCapacity": 50,
-      "UseDefaultCredentials": false,
-      "UseCookieContainer": false,
       "CredentialConfigurationKey": "cred_1"
     },
     {
-      "Name": "home_page_ntlm",
-      "Uri": "https://internal.contoso.com",
-      "HttpMethod": "GET",
-      "NumberOfRequests": 50,
-      "FetchContent": false,
-      "Parallelism": 50,
-      "BoundedCapacity": 50,
-      "UseDefaultCredentials": false,
-      "UseCookieContainer": false,
-      "CredentialConfigurationKey": "cred_1"
-    },
-    {
-      "Name": "another_site_anonym",
+      "Name": "another_uri_anonym",
       "Uri": "https://public.contoso.com/",
       "HttpMethod": "GET",
       "NumberOfRequests": 10000,
@@ -59,8 +44,7 @@ An experimental http benchmark tool.
  | Name                    | NoR  | Pll | BC  | Err | Avg    | Min   | Max      | P90    | P80    | Median | 
  |---------------------------------------------------------------------------------------------------------| 
  | search_term_page_2_ntlm | 1000 | 500 | 250 | 0   | 345.50 | 25.36 | 1,240.98 | 924.09 | 748.85 | 248.23 | 
- | home_page_ntlm          | 1000 | 100 | 100 | 0   | 85.02  | 24.94 | 740.27   | 293.38 | 68.92  | 41.66  |
- | another_site_anonym     | 1000 | 100 | 100 | 0   | 125.02 | 74.94 | 240.27   | 193.38 | 168.92 | 101.66 |
+ | another_uri_anonym      | 1000 | 100 | 100 | 0   | 125.02 | 74.94 | 240.27   | 193.38 | 168.92 | 101.66 |
 ```
 
 ## Other features
@@ -95,7 +79,8 @@ Http request headers can be specified.
       },
       "Body": {
         "Content": "{\"name\":\"test\"}",
-        "ContentType": "application/json"
+        "ContentType": "application/json",
+        "Encoding": "utf-8"
       }
     }
   ]
