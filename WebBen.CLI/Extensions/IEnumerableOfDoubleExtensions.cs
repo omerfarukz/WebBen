@@ -1,6 +1,6 @@
 namespace WebBen.CLI.Extensions;
 
-internal static class IEnumerableOfDoubleExtensions
+internal static class EnumerableOfDoubleExtensions
 {
     public static TimeSpan Average(this IEnumerable<TimeSpan> source)
     {

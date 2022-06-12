@@ -16,7 +16,7 @@
     <ItemGroup>
       <None Include="..\Sample.json">
         <Link>Sample.json</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 
