@@ -4,7 +4,7 @@
       "Name": "post_simple_1",
       "Uri": "http://localhost:3000/api/v1/posts",
       "HttpMethod": "POST",
-      "NumberOfRequests": 1000,
+      "NumberOfRequests": 500,
       "FetchContent": false,
       "Parallelism": 500,
       "BoundedCapacity": 500,

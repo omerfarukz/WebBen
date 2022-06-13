@@ -18,6 +18,8 @@ public class TestCaseConfiguration
     public TestCaseBodyConfiguration? Body { get; set; }
     public Dictionary<string, object>? Cookies { get; set; }
     public bool AllowAutoRedirect { get; set; }
+    public int MaxResponseContentBufferSize { get; set; } = int.MaxValue;
+    public int TimeoutInMs { get; set; } = int.MaxValue;
 }
 
 public class TestCaseBodyConfiguration

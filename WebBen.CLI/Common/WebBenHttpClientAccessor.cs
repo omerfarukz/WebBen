@@ -13,7 +13,7 @@ internal class WebBenHttpClientAccessor : IDisposable
     {
         if (testCase == null)
             throw new ArgumentNullException(nameof(testCase));
-        
+
         _handler = new HttpClientHandler
         {
             AllowAutoRedirect = testCase.Configuration.AllowAutoRedirect,
@@ -28,12 +28,14 @@ internal class WebBenHttpClientAccessor : IDisposable
         if (_handler.UseCookies || testCase.Configuration.Cookies != null)
         {
             CookieContainer = new CookieContainer();
-            
+
             _handler.UseCookies = true;
             _handler.CookieContainer = CookieContainer;
         }
 
-        Client = new HttpClient(_handler, true) { BaseAddress = testCase.Configuration.Uri};
+        Client = new HttpClient(_handler, true) {BaseAddress = testCase.Configuration.Uri};
+        Client.MaxResponseContentBufferSize = testCase.Configuration.MaxResponseContentBufferSize;
+        Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
     }
 
     public void Dispose()
