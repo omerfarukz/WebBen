@@ -3,20 +3,17 @@
 An experimental http benchmark tool. Declarative and easy to use. Execute test cases and compare the results. Parallelize the execution of test cases.
 
 ## Usage samples
-```
+```shell
 webben -c config.json
 ```
 
-```
+```shell
 webben -u "https://contoso.com/?t=keyword&l=entr"
 ```
 
-
-
-
 ## Configuration Sample
 
-```
+```json
 {
   "TestCaseConfigurations": [
     {
@@ -54,8 +51,7 @@ webben -u "https://contoso.com/?t=keyword&l=entr"
 ```
 
 ## Output
-
-```
+```shell
  | Name                    | NoR  | Pll | BC  | Err | Avg    | Min   | Max      | P90    | P80    | Median | 
  |---------------------------------------------------------------------------------------------------------| 
  | search_term_page_2_ntlm | 1000 | 500 | 250 | 0   | 345.50 | 25.36 | 1,240.98 | 924.09 | 748.85 | 248.23 | 
@@ -68,22 +64,24 @@ Support for NTLM authentication, cookie containers, and default credentials. It 
 configuration for multiple test cases. The credential configuration is specified by the `CredentialConfigurationKey`
 property.
 
-```
-"CredentialConfigurations": [
+```json
+{
+  "CredentialConfigurations": [
     {
-        "Key": "cred_1",
-        "Provider": "NetworkCredentialProvider",
-        "Data": {
-            "username": "foo",
-            "password": "bar"
-        }
+      "Key": "cred_1",
+      "Provider": "NetworkCredentialProvider",
+      "Data": {
+        "username": "foo",
+        "password": "bar"
+      }
     }
-]
+  ]
+}
 ```
 
 Http request headers can be specified.
 
-```
+```json
 {
   "TestCaseConfigurations": [
     {
@@ -109,7 +107,7 @@ Http request headers can be specified.
 
 ### Http request
 
-```
+```http request
 POST / HTTP/1.1
 Host: localhost:3000
 User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
