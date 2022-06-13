@@ -93,9 +93,21 @@ internal class HttpTestContext
                 new HttpMethod(testCaseInstance.Configuration.HttpMethod),
                 testCaseInstance.Configuration.Uri
             );
-
+            
+            // Set cookies
+            if (testCaseInstance.Configuration.Cookies != null)
+            {
+                foreach (var cookie in testCaseInstance.Configuration.Cookies)
+                {
+                    webBenHttpClientAccessor.CookieContainer.Add(
+                        testCaseInstance.Configuration.Uri!,
+                        new Cookie(cookie.Key, $"{cookie.Value}")
+                    );
+                }
+            }
+            
             // Set headers
-            if (testCaseInstance.Configuration?.Headers != null)
+            if (testCaseInstance.Configuration!.Headers != null)
             {
                 foreach (var header in testCaseInstance.Configuration.Headers)
                 {
@@ -104,7 +116,7 @@ internal class HttpTestContext
             }
 
             // SetBody
-            if (testCaseInstance.Configuration!.Body != null)
+            if (testCaseInstance.Configuration.Body != null)
             {
                 var encoding = Encoding.GetEncoding(testCaseInstance.Configuration.Body.Encoding);
                 httpRequestMessage.Content = new StringContent(

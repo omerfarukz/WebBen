@@ -6,7 +6,9 @@ namespace WebBen.CLI.Common;
 internal class WebBenHttpClientAccessor : IDisposable
 {
     private readonly HttpClientHandler _handler;
-    
+    public HttpClient Client { get; }
+    public CookieContainer CookieContainer { get; }
+
     public WebBenHttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {
         if (testCase == null)
@@ -18,21 +20,24 @@ internal class WebBenHttpClientAccessor : IDisposable
             MaxConnectionsPerServer = int.MaxValue
         };
         _handler.UseDefaultCredentials = false;
-        _handler.UseCookies = testCase.Configuration.UseCookieContainer;
 
         if (credentials != null)
             _handler.Credentials = credentials;
 
-        if (_handler.UseCookies)
-            _handler.CookieContainer = new CookieContainer();
+        
+        if (_handler.UseCookies || testCase.Configuration.Cookies != null)
+        {
+            CookieContainer = new CookieContainer();
+            
+            _handler.UseCookies = true;
+            _handler.CookieContainer = CookieContainer;
+        }
 
-        Client = new HttpClient(_handler, false);
+        Client = new HttpClient(_handler, true) { BaseAddress = testCase.Configuration.Uri};
     }
-
-    public HttpClient Client { get; }
 
     public void Dispose()
     {
-        _handler.Dispose();
+        Client.Dispose();
     }
 }

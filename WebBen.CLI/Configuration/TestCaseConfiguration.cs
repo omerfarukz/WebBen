@@ -16,6 +16,7 @@ public class TestCaseConfiguration
     public string? CredentialConfigurationKey { get; set; }
     public Dictionary<string, object>? Headers { get; set; }
     public TestCaseBodyConfiguration? Body { get; set; }
+    public Dictionary<string, object>? Cookies { get; set; }
 }
 
 public class TestCaseBodyConfiguration

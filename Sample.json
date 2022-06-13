@@ -4,12 +4,15 @@
       "Name": "post_simple_1",
       "Uri": "http://localhost:3000",
       "HttpMethod": "POST",
-      "NumberOfRequests": 10000,
+      "NumberOfRequests": 5,
       "FetchContent": false,
-      "Parallelism": 500,
-      "BoundedCapacity": 500,
+      "Parallelism": 1,
+      "BoundedCapacity": 1,
       "Headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+      },
+      "Cookies": {
+        "X-Session-Id": "44c00ac0-eae8-11ec-8fea-0242ac120002"
       },
       "Body": {
         "Content": "{\"name\":\"test\"}",
