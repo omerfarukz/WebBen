@@ -7,6 +7,13 @@
         <Nullable>enable</Nullable>
         <AssemblyName>webben</AssemblyName>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+        <VersionSuffix>1.$([System.DateTime]::UtcNow.ToString(yy))$([System.DateTime]::UtcNow.ToString(MM)).$([System.DateTime]::UtcNow.ToString(ddHH)).$([System.DateTime]::UtcNow.ToString(mmss))</VersionSuffix>
+        <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">0.0.0.1</AssemblyVersion>
+        <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
+        <Version Condition=" '$(VersionSuffix)' == '' ">0.0.1.0</Version>
+        <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
+        
     </PropertyGroup>
 
     <ItemGroup>
@@ -24,6 +31,10 @@
         <Link>Simple.json</Link>
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
 </Project>

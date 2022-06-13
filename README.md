@@ -2,9 +2,17 @@
 
 An experimental http benchmark tool. Declarative and easy to use. Execute test cases and compare the results. Parallelize the execution of test cases.
 
+## Usage samples
 ```
-webben config.json
+webben -c config.json
 ```
+
+```
+webben -u "https://ac.tureng.co/?t=asdasdasdddd&l=entr"
+```
+
+
+
 
 ## Configuration Sample
 
