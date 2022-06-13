@@ -1,6 +1,6 @@
 namespace WebBen.CLI.Configuration;
 
-public class Configuration
+public class TestConfiguration
 {
     public CaseConfiguration[] TestCases { get; set; } = null!;
 

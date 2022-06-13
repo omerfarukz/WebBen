@@ -1,6 +1,14 @@
 ﻿{
   "TestCaseConfigurations": [
     {
+      "Name": "get_simple_1",
+      "Uri": "http://localhost:3000/api/v1/posts/foo"
+    },
+    {
+      "Name": "get_simple_2",
+      "Uri": "http://localhost:3000/api/v1/posts/bar"
+    },
+    {
       "Name": "post_simple_1",
       "Uri": "http://localhost:3000/api/v1/posts",
       "HttpMethod": "POST",

@@ -5,13 +5,34 @@ An experimental http benchmark tool. Declarative and easy to use. Execute test c
 ## Usage samples
 ```shell
 Usage:
-  webben [options]
+  webben [command] [options]
+
+Commands:
+  config <fileInfo>
+  uri <uri>
+  
+Example:
+  webben config source.json
+  
+Usage:
+  webben uri <uri> [options]
+
+Arguments:
+  <uri>  The URI to use.
 
 Options:
-  -c, --configuration-file <configuration-file>  The file to use.
-  -u, --uri <uri>                                The URI to use.
-  --version                                      Show version information
-  -?, -h, --help                                 Show help and usage information
+  -p, --parallelism <parallelism>                                              The number of parallelism to use.
+  -b, --bounded-capacity <bounded-capacity>                                    The bounded capacity to use.
+  -t, --timeout-in-ms <timeout-in-ms>                                          The bounded capacity to use.
+  -m, --http-method <http-method>                                              The HTTP method to use.
+  -f, --fetch-content                                                          Whether to fetch the content of the URI.
+  -r, --allow-redirect                                                         Whether to allow redirects.
+  -n, --request-count <request-count>                                          The number of requests to make.
+  -s, --max-response-contentB-buffer-size <max-response-contentB-buffer-size>  The maximum size of the response content buffer.
+  -?, -h, --help                                                               Show help and usage information
+
+Example:
+  webben uri http://localhost:3000 -p 100 -b 50 -t 5000 -m GET -f false -r false -n 10000
 ```
 
 ## Configuration Sample
@@ -20,7 +41,7 @@ Options:
 {
   "TestCaseConfigurations": [
     {
-      "Name": "search_term_page_2_ntlm",
+      "Name": "search_term_page_2./web  _ntlm",
       "Uri": "https://internal.contoso.com/Ajax.ashx?search=term&page=2",
       "NumberOfRequests": 50,
       "FetchContent": false,
