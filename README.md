@@ -8,7 +8,7 @@ webben -c config.json
 ```
 
 ```
-webben -u "https://ac.tureng.co/?t=asdasdasdddd&l=entr"
+webben -u "https://contoso.com/?t=keyword&l=entr"
 ```
 
 
