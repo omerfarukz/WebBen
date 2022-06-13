@@ -1,21 +1,21 @@
 using System.Diagnostics;
 using System.Net;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Nodes;
 using System.Threading.Tasks.Dataflow;
+using WebBen.CLI.Common.Logging;
 using WebBen.CLI.Configuration;
 using WebBen.CLI.CredentialProviders;
-using WebBen.CLI.Extensions;
 
 namespace WebBen.CLI.Common;
 
 internal class HttpTestContext
 {
     private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
+    private readonly ILogger _logger;
 
-    public HttpTestContext()
+    public HttpTestContext(ILogger logger)
     {
+        _logger = logger;
         _credentialProviders = new Dictionary<string, ICredentialProvider>();
         _credentialProviders.Add(nameof(NetworkCredentialProvider), new NetworkCredentialProvider());
 
@@ -23,6 +23,12 @@ internal class HttpTestContext
             throw new InvalidOperationException("Low resolution timer(Stopwatch) is not supported.");
     }
 
+    /// <summary>
+    /// TODO: return strong typed object
+    /// </summary>
+    /// <param name="testCase"></param>
+    /// <param name="credentials"></param>
+    /// <exception cref="ArgumentNullException"></exception>
     private async Task Execute(TestCase testCase, ICredentials? credentials)
     {
         if (testCase is null)
@@ -62,7 +68,7 @@ internal class HttpTestContext
                 if (credentialConfigurations == null)
                     throw new ArgumentNullException(nameof(credentialConfigurations));
 
-                Console.WriteLine($"Creating credentials for '{testCase.Configuration.Name}");
+                _logger.Log($"Creating credentials for '{testCase.Configuration.Name}");
 
                 var credentialConfiguration = credentialConfigurations.SingleOrDefault(f =>
                     f.Key == testCase.Configuration.CredentialConfigurationKey);
@@ -79,78 +85,9 @@ internal class HttpTestContext
                     credentials = provider.FromConfiguration(credentialConfiguration.Data);
             }
 
-            Console.WriteLine($"Executing test case '{testCase.Configuration.Name}'");
+            _logger.Log($"Executing test case '{testCase.Configuration.Name}'");
             await Execute(testCase, credentials);
         }
-    }
-
-
-    public async Task Execute(CaseConfiguration caseConfiguration)
-    {
-        var configuration = new TestConfiguration()
-        {
-            TestCases = new[] {caseConfiguration}
-        };
-
-        var testContext = new HttpTestContext();
-        var testCases = new List<TestCase>()
-        {
-            new TestCase(configuration.TestCases[0])
-        };
-        await testContext.Execute(testCases, null);
-        await ExecuteTestCases(testCases, testContext, null);
-    }
-
-    public async Task Execute(FileInfo configurationFile)
-    {
-        if (configurationFile == null)
-            throw new ArgumentNullException(nameof(configurationFile));
-        if (!configurationFile.Exists)
-            throw new FileNotFoundException(nameof(configurationFile));
-        
-        Console.WriteLine($"Reading configuration file: {configurationFile.FullName}");
-        
-        var configurationData = JsonNode.Parse(await File.ReadAllTextAsync(configurationFile.FullName));
-        var testConfigurations = configurationData?["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
-        var credentialConfigurations =
-            configurationData?["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
-
-        if (testConfigurations == null)
-            throw new InvalidDataException();
-
-        Console.WriteLine("Configuration Loaded. Creating test cases");
-
-        var testContext = new HttpTestContext();
-        var testCases = testConfigurations
-            .Select(f => new TestCase(f))
-            .ToList();
-
-        await ExecuteTestCases(testCases, testContext, credentialConfigurations);
-    }
-
-    public async Task ExecuteTestCases(ICollection<TestCase> testCases, HttpTestContext testContext,
-        ICollection<CredentialConfiguration>? credentialConfigurations)
-    {
-        Console.WriteLine("Test cases created. Executing test cases");
-        Console.WriteLine($"Executing test cases: {testCases.Count}");
-        await testContext.Execute(testCases, credentialConfigurations);
-
-        var asTable = testCases.ToStringTable(
-            new[] {"Name", "NoR", "Pll", "BC", "Err", "Avg", "Min", "Max", "P90", "P80", "Median"},
-            f => f.Configuration.Name ?? string.Empty,
-            f => f.Configuration.RequestCount,
-            f => f.Configuration.Parallelism,
-            f => f.Configuration.BoundedCapacity,
-            f => f.Errors.Count,
-            f => f.Timings.Average().TotalMilliseconds.ToString("N"),
-            f => f.Timings.Any() ? f.Timings.Min().TotalMilliseconds.ToString("N") : "0",
-            f => f.Timings.Any() ? f.Timings.Max().TotalMilliseconds.ToString("N") : "0",
-            f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),
-            f => f.Timings.Percentile(0.8d).TotalMilliseconds.ToString("N"),
-            f => f.Timings.Median().TotalMilliseconds.ToString("N")
-        );
-        Console.WriteLine();
-        Console.WriteLine(asTable);
     }
 
     private ActionBlock<TestCase> CreateActionBlock(

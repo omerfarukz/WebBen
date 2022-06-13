@@ -1,8 +1,10 @@
 # WebBen
 
-Yet another http benchmark tool written in .net 6.0. Declarative and easy to use. Execute test cases and compare the results. Parallelize the execution of test cases.
+Yet another http benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
+results. Parallelize the execution of test cases.
 
 ## Usage samples
+
 ```shell
 Usage:
   webben [command] [options]
@@ -23,7 +25,7 @@ Arguments:
 Options:
   -p, --parallelism         The number of parallelism to use.
   -b, --bounded-capacity    The bounded capacity to use.
-  -t, --timeout-in-ms       The bounded capacity to use.
+  -t, --timeout-in-ms       The timeout in milliseconds.
   -m, --http-method         The HTTP method to use.
   -f, --fetch-content       Whether to fetch the content of the URI.
   -r, --allow-redirect      Whether to allow redirects.
@@ -77,6 +79,7 @@ Examples:
 ```
 
 ## Output
+
 ```shell
  | Name                    | NoR  | Pll | BC  | Err | Avg    | Min   | Max      | P90    | P80    | Median | 
  |---------------------------------------------------------------------------------------------------------| 
