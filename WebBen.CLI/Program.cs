@@ -1,13 +1,49 @@
-﻿using System.Text.Json;
+﻿using System.CommandLine;
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebBen.CLI.Common;
 using WebBen.CLI.Configuration;
 using WebBen.CLI.Extensions;
 
-if(args?.Length < 1)
-    throw new Exception("No configuration file path provided");
+var fileOption = new Option<FileInfo>(new[] {"-c", "--configuration-file"}, "The configuration file to use.");
+var uriOption = new Option<Uri>(new[] {"-u", "--uri"}, "The URI to use.");
 
-await ExecuteConfiguration(args![0]);
+var rootCommand = new RootCommand
+{
+    fileOption, uriOption
+};
+
+rootCommand.SetHandler(async (FileInfo f) => { await ExecuteConfiguration(f.FullName); }, fileOption);
+rootCommand.SetHandler(async (Uri u) =>
+{
+    Console.WriteLine($"Using URI: {u}");
+    await ExecuteUri(u);
+}, uriOption);
+
+return rootCommand.Invoke(args);
+
+async Task ExecuteUri(Uri uri)
+{
+    var configuration = new Configuration()
+    {
+        TestCases = new[]
+        {
+            new CaseConfiguration()
+            {
+                Name = "TestCase1",
+                Uri = uri
+            }
+        }
+    };
+    
+     var testContext = new HttpTestContext();
+     var testCases = new List<TestCase>()
+     {
+         new TestCase(configuration.TestCases[0])
+     };
+     await testContext.Execute(testCases, null);
+     await ExecuteTestCases(testCases, testContext, null);
+}
 
 async Task ExecuteConfiguration(string filePath)
 {
@@ -15,7 +51,8 @@ async Task ExecuteConfiguration(string filePath)
 
     var configurationData = JsonNode.Parse(File.ReadAllText(filePath));
     var testConfigurations = configurationData?["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
-    var credentialConfigurations = configurationData?["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
+    var credentialConfigurations =
+        configurationData?["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
 
     if (testConfigurations == null)
         throw new InvalidDataException();
@@ -27,6 +64,12 @@ async Task ExecuteConfiguration(string filePath)
         .Select(f => new TestCase(f))
         .ToList();
 
+    await ExecuteTestCases(testCases, testContext, credentialConfigurations);
+}
+
+async Task ExecuteTestCases(ICollection<TestCase> testCases, HttpTestContext testContext, ICollection<CredentialConfiguration>? credentialConfigurations)
+{
+    Console.WriteLine("Test cases created. Executing test cases");
     Console.WriteLine($"Executing test cases: {testCases.Count}");
     await testContext.Execute(testCases, credentialConfigurations);
 

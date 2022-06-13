@@ -76,7 +76,7 @@ internal class HttpTestContext
                     credentials = provider.FromConfiguration(credentialConfiguration.Data);
             }
 
-            Console.WriteLine($"Executing test case '{testCase.Configuration.Name}");
+            Console.WriteLine($"Executing test case '{testCase.Configuration.Name}'");
             await Execute(testCase, credentials);
         }
     }
