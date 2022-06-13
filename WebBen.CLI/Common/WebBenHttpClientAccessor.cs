@@ -16,7 +16,7 @@ internal class WebBenHttpClientAccessor : IDisposable
         
         _handler = new HttpClientHandler
         {
-            AllowAutoRedirect = false,
+            AllowAutoRedirect = testCase.Configuration.AllowAutoRedirect,
             MaxConnectionsPerServer = int.MaxValue
         };
         _handler.UseDefaultCredentials = false;
@@ -24,7 +24,7 @@ internal class WebBenHttpClientAccessor : IDisposable
         if (credentials != null)
             _handler.Credentials = credentials;
 
-        
+        // Enable cookie handling
         if (_handler.UseCookies || testCase.Configuration.Cookies != null)
         {
             CookieContainer = new CookieContainer();

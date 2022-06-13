@@ -2,12 +2,12 @@
   "TestCaseConfigurations": [
     {
       "Name": "post_simple_1",
-      "Uri": "http://localhost:3000",
+      "Uri": "http://localhost:3000/api/v1/posts",
       "HttpMethod": "POST",
-      "NumberOfRequests": 5,
+      "NumberOfRequests": 1000,
       "FetchContent": false,
-      "Parallelism": 1,
-      "BoundedCapacity": 1,
+      "Parallelism": 500,
+      "BoundedCapacity": 500,
       "Headers": {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
       },

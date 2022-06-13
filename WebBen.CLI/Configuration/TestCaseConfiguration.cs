@@ -17,6 +17,7 @@ public class TestCaseConfiguration
     public Dictionary<string, object>? Headers { get; set; }
     public TestCaseBodyConfiguration? Body { get; set; }
     public Dictionary<string, object>? Cookies { get; set; }
+    public bool AllowAutoRedirect { get; set; }
 }
 
 public class TestCaseBodyConfiguration

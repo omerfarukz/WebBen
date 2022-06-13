@@ -114,7 +114,7 @@ internal class HttpTestContext
                     httpRequestMessage.Headers.Add(header.Key, $"{header.Value}");
                 }
             }
-
+            
             // SetBody
             if (testCaseInstance.Configuration.Body != null)
             {
