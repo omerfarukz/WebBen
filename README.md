@@ -4,11 +4,14 @@ An experimental http benchmark tool. Declarative and easy to use. Execute test c
 
 ## Usage samples
 ```shell
-webben -c config.json
-```
+Usage:
+  webben [options]
 
-```shell
-webben -u "https://contoso.com/?t=keyword&l=entr"
+Options:
+  -c, --configuration-file <configuration-file>  The file to use.
+  -u, --uri <uri>                                The URI to use.
+  --version                                      Show version information
+  -?, -h, --help                                 Show help and usage information
 ```
 
 ## Configuration Sample

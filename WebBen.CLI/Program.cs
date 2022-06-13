@@ -5,7 +5,7 @@ using WebBen.CLI.Common;
 using WebBen.CLI.Configuration;
 using WebBen.CLI.Extensions;
 
-var fileOption = new Option<FileInfo>(new[] {"-c", "--configuration-file"}, "The configuration file to use.");
+var fileOption = new Option<FileInfo>(new[] {"-c", "--configuration-file"}, "The file to use.");
 var uriOption = new Option<Uri>(new[] {"-u", "--uri"}, "The URI to use.");
 
 var rootCommand = new RootCommand
