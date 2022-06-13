@@ -1,13 +1,10 @@
 using System.Net;
-using WebBen.CLI.CredentialProviders;
 
 namespace WebBen.CLI.Common;
 
 internal class WebBenHttpClientAccessor : IDisposable
 {
     private readonly HttpClientHandler _handler;
-    public HttpClient Client { get; }
-    public CookieContainer CookieContainer { get; }
 
     public WebBenHttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {
@@ -37,6 +34,9 @@ internal class WebBenHttpClientAccessor : IDisposable
         Client.MaxResponseContentBufferSize = testCase.Configuration.MaxResponseContentBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
     }
+
+    public HttpClient Client { get; }
+    public CookieContainer? CookieContainer { get; }
 
     public void Dispose()
     {

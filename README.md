@@ -1,7 +1,13 @@
 # WebBen
-An experimental http benchmark tool.
+
+An experimental http benchmark tool. Declarative and easy to use. Execute test cases and compare the results. Parallelize the execution of test cases.
+
+```
+webben config.json
+```
 
 ## Configuration Sample
+
 ```
 {
   "TestCaseConfigurations": [
@@ -40,6 +46,7 @@ An experimental http benchmark tool.
 ```
 
 ## Output
+
 ```
  | Name                    | NoR  | Pll | BC  | Err | Avg    | Min   | Max      | P90    | P80    | Median | 
  |---------------------------------------------------------------------------------------------------------| 
@@ -48,7 +55,11 @@ An experimental http benchmark tool.
 ```
 
 ## Other features
-Support for NTLM authentication, cookie containers, and default credentials. It is possible to use the same credential configuration for multiple test cases. The credential configuration is specified by the `CredentialConfigurationKey` property.
+
+Support for NTLM authentication, cookie containers, and default credentials. It is possible to use the same credential
+configuration for multiple test cases. The credential configuration is specified by the `CredentialConfigurationKey`
+property.
+
 ```
 "CredentialConfigurations": [
     {
@@ -63,6 +74,7 @@ Support for NTLM authentication, cookie containers, and default credentials. It 
 ```
 
 Http request headers can be specified.
+
 ```
 {
   "TestCaseConfigurations": [
@@ -87,7 +99,8 @@ Http request headers can be specified.
 }
 ```
 
-### Http request 
+### Http request
+
 ```
 POST / HTTP/1.1
 Host: localhost:3000

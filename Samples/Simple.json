@@ -1,0 +1,24 @@
+﻿{
+  "TestCaseConfigurations": [
+    {
+      "Name": "post_simple_1",
+      "Uri": "http://localhost:3000/api/v1/posts",
+      "HttpMethod": "POST",
+      "NumberOfRequests": 500,
+      "FetchContent": false,
+      "Parallelism": 500,
+      "BoundedCapacity": 500,
+      "Headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+      },
+      "Cookies": {
+        "X-Session-Id": "44c00ac0-eae8-11ec-8fea-0242ac120002"
+      },
+      "Body": {
+        "Content": "{\"name\":\"test\"}",
+        "ContentType": "application/json",
+        "Encoding": "utf-8"
+      }
+    }
+  ]
+}

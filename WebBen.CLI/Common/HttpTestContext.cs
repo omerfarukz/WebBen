@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.Net;
-using System.Net.Mime;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
 using WebBen.CLI.Configuration;
@@ -10,9 +9,7 @@ namespace WebBen.CLI.Common;
 
 internal class HttpTestContext
 {
-    private const string DefaultCredentialProvider = nameof(NetworkCredentialProvider);
-
-    private Dictionary<string, ICredentialProvider> _credentialProviders;
+    private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
 
     public HttpTestContext()
     {
@@ -29,8 +26,11 @@ internal class HttpTestContext
             throw new ArgumentNullException(nameof(testCase));
 
         using var accessor = new WebBenHttpClientAccessor(testCase, credentials);
-        var actionBlock = CreateActionBlock(accessor, testCase.Configuration.Parallelism,
-            testCase.Configuration.BoundedCapacity);
+        var actionBlock = CreateActionBlock(
+            accessor,
+            testCase.Configuration.Parallelism,
+            testCase.Configuration.BoundedCapacity
+        );
 
         var stopWatch = new Stopwatch();
         stopWatch.Start();
@@ -38,9 +38,7 @@ internal class HttpTestContext
         for (var iterationCounter = 0;
              iterationCounter < testCase.Configuration.NumberOfRequests;
              iterationCounter++)
-        {
             await actionBlock.SendAsync(testCase);
-        }
 
         actionBlock.Complete();
         await actionBlock.Completion;
@@ -48,7 +46,7 @@ internal class HttpTestContext
     }
 
     public async Task Execute(IEnumerable<TestCase> testCases,
-        IEnumerable<CredentialConfiguration>? credentialConfigurations)
+        ICollection<CredentialConfiguration>? credentialConfigurations)
     {
         if (testCases is null)
             throw new ArgumentNullException(nameof(testCases));
@@ -58,15 +56,22 @@ internal class HttpTestContext
             ICredentials? credentials = null;
             if (testCase.Configuration.CredentialConfigurationKey != null)
             {
+                if (credentialConfigurations == null)
+                    throw new ArgumentNullException(nameof(credentialConfigurations));
+
                 Console.WriteLine($"Creating credentials for '{testCase.Configuration.Name}");
 
-                var credentialConfiguration =
-                    credentialConfigurations?.SingleOrDefault(f =>
-                        f.Key == testCase.Configuration.CredentialConfigurationKey);
+                var credentialConfiguration = credentialConfigurations.SingleOrDefault(f =>
+                    f.Key == testCase.Configuration.CredentialConfigurationKey);
                 if (credentialConfigurations == null || credentialConfiguration == null)
                     throw new InvalidDataException(nameof(credentialConfiguration));
 
-                var provider = _credentialProviders[credentialConfiguration.Provider ?? DefaultCredentialProvider];
+                if (!_credentialProviders.ContainsKey(credentialConfiguration.Provider))
+                    throw new InvalidProgramException(
+                        $"Credential provider '{credentialConfiguration.Provider}' is not registered."
+                    );
+
+                var provider = _credentialProviders[credentialConfiguration.Provider];
                 if (credentialConfiguration.Data != null)
                     credentials = provider.FromConfiguration(credentialConfiguration.Data);
             }
@@ -89,42 +94,7 @@ internal class HttpTestContext
             if (testCaseInstance.Configuration == null)
                 throw new ArgumentNullException(nameof(testCaseInstance.Configuration));
 
-            var httpRequestMessage = new HttpRequestMessage(
-                new HttpMethod(testCaseInstance.Configuration.HttpMethod),
-                testCaseInstance.Configuration.Uri
-            );
-            
-            // Set cookies
-            if (testCaseInstance.Configuration.Cookies != null)
-            {
-                foreach (var cookie in testCaseInstance.Configuration.Cookies)
-                {
-                    webBenHttpClientAccessor.CookieContainer.Add(
-                        testCaseInstance.Configuration.Uri!,
-                        new Cookie(cookie.Key, $"{cookie.Value}")
-                    );
-                }
-            }
-            
-            // Set headers
-            if (testCaseInstance.Configuration!.Headers != null)
-            {
-                foreach (var header in testCaseInstance.Configuration.Headers)
-                {
-                    httpRequestMessage.Headers.Add(header.Key, $"{header.Value}");
-                }
-            }
-            
-            // SetBody
-            if (testCaseInstance.Configuration.Body != null)
-            {
-                var encoding = Encoding.GetEncoding(testCaseInstance.Configuration.Body.Encoding);
-                httpRequestMessage.Content = new StringContent(
-                    testCaseInstance.Configuration.Body.Content,
-                    encoding,
-                    testCaseInstance.Configuration.Body.ContentType
-                );
-            }
+            var httpRequestMessage = BuildHttpRequestMessage(testCaseInstance, webBenHttpClientAccessor);
 
             try
             {
@@ -152,5 +122,45 @@ internal class HttpTestContext
         });
 
         return actionBlock;
+    }
+
+    private HttpRequestMessage BuildHttpRequestMessage(TestCase testCaseInstance,
+        WebBenHttpClientAccessor webBenHttpClientAccessor)
+    {
+        var httpRequestMessage = new HttpRequestMessage(
+            new HttpMethod(testCaseInstance.Configuration.HttpMethod),
+            testCaseInstance.Configuration.Uri
+        );
+
+        // Set cookies
+        if (testCaseInstance.Configuration.Cookies != null)
+        {
+            if (webBenHttpClientAccessor.CookieContainer == null)
+                throw new InvalidProgramException("Cookie container is null");
+
+            foreach (var cookie in testCaseInstance.Configuration.Cookies)
+                webBenHttpClientAccessor.CookieContainer.Add(
+                    testCaseInstance.Configuration.Uri!,
+                    new Cookie(cookie.Key, $"{cookie.Value}")
+                );
+        }
+
+        // Set headers
+        if (testCaseInstance.Configuration.Headers != null)
+            foreach (var header in testCaseInstance.Configuration.Headers)
+                httpRequestMessage.Headers.Add(header.Key, $"{header.Value}");
+
+        // SetBody
+        if (testCaseInstance.Configuration.Body != null)
+        {
+            var encoding = Encoding.GetEncoding(testCaseInstance.Configuration.Body.Encoding);
+            httpRequestMessage.Content = new StringContent(
+                testCaseInstance.Configuration.Body.Content,
+                encoding,
+                testCaseInstance.Configuration.Body.ContentType
+            );
+        }
+
+        return httpRequestMessage;
     }
 }

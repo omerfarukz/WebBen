@@ -4,8 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBen.CLI", "WebBen.CLI\We
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6D5D4AAE-8445-4EBF-925E-373FBE337A4C}"
 	ProjectSection(SolutionItems) = preProject
-		Sample.json = Sample.json
 		README.md = README.md
+		Samples\Simple.json = Samples\Simple.json
+		Samples\Multiple.json = Samples\Multiple.json
 	EndProjectSection
 EndProject
 Global

@@ -1,8 +1,6 @@
-using System.Text;
-
 namespace WebBen.CLI.Configuration;
 
-public class TestCaseConfiguration
+public class CaseConfiguration
 {
     public string? Name { get; set; } = $"{Guid.NewGuid()}";
     public Uri? Uri { get; set; }
@@ -13,18 +11,11 @@ public class TestCaseConfiguration
     public int BoundedCapacity { get; set; } = 100;
     public bool UseDefaultCredentials { get; set; }
     public bool UseCookieContainer { get; set; }
-    public string? CredentialConfigurationKey { get; set; }
-    public Dictionary<string, object>? Headers { get; set; }
-    public TestCaseBodyConfiguration? Body { get; set; }
-    public Dictionary<string, object>? Cookies { get; set; }
-    public bool AllowAutoRedirect { get; set; }
+    public bool AllowAutoRedirect { get; set; } = false;
     public int MaxResponseContentBufferSize { get; set; } = int.MaxValue;
     public int TimeoutInMs { get; set; } = int.MaxValue;
-}
-
-public class TestCaseBodyConfiguration
-{
-    public string Content { get; set; }
-    public string ContentType { get; set; }
-    public string Encoding { get; set; } = System.Text.Encoding.UTF8.WebName;
+    public string? CredentialConfigurationKey { get; set; }
+    public Dictionary<string, object>? Headers { get; set; }
+    public Dictionary<string, object>? Cookies { get; set; }
+    public BodyConfiguration? Body { get; set; }
 }
