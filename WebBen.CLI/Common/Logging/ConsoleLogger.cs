@@ -1,6 +1,6 @@
 namespace WebBen.CLI.Common.Logging;
 
-public class ConsoleLogger : ILogger
+internal class ConsoleLogger : ILogger
 {
     public void Log(string message)
     {

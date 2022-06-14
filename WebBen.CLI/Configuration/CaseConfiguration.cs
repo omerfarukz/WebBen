@@ -1,6 +1,6 @@
 namespace WebBen.CLI.Configuration;
 
-public class CaseConfiguration
+internal class CaseConfiguration
 {
     public string? Name { get; set; } = $"{Guid.NewGuid()}";
     public Uri? Uri { get; set; }

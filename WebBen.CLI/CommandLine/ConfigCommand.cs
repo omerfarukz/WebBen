@@ -3,7 +3,7 @@ using System.CommandLine.NamingConventionBinder;
 
 namespace WebBen.CLI.CommandLine;
 
-public class ConfigCommand : Command
+internal class ConfigCommand : Command
 {
     public ConfigCommand(Func<FileInfo, Task> handler) : base("config")
     {

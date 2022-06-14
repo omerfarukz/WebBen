@@ -3,7 +3,7 @@ using WebBen.CLI.Configuration;
 
 namespace WebBen.CLI.Common;
 
-public record TestCase(CaseConfiguration Configuration)
+internal record TestCase(CaseConfiguration Configuration)
 {
     public CaseConfiguration Configuration { get; } =
         Configuration ?? throw new ArgumentNullException(nameof(Configuration));

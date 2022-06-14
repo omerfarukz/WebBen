@@ -1,6 +1,6 @@
 namespace WebBen.CLI.Common.Logging;
 
-public interface ILogger
+internal interface ILogger
 {
     void Log(string message);
 }

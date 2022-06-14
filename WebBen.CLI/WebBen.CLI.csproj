@@ -13,6 +13,13 @@
         <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
         <Version Condition=" '$(VersionSuffix)' == '' ">0.0.1.0</Version>
         <Version Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</Version>
+        <Title>Web Benchmark Tool</Title>
+        <Authors>Omer Faruk Zorlu</Authors>
+        <Copyright>2022-06</Copyright>
+        <PackageProjectUrl>https://github.com/omerfarukz/WebBen</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/omerfarukz/WebBen/blob/master/LICENSE</PackageLicenseUrl>
+        <RepositoryUrl>https://github.com/omerfarukz/WebBen/</RepositoryUrl>
+        <PackageTags>benchmark http</PackageTags>
 
     </PropertyGroup>
 
@@ -34,8 +41,8 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
-        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1"/>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
 </Project>

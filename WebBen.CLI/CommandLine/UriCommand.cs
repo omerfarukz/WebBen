@@ -4,7 +4,7 @@ using WebBen.CLI.Configuration;
 
 namespace WebBen.CLI.CommandLine;
 
-public class UriCommand : Command
+internal class UriCommand : Command
 {
     public UriCommand(Func<CaseConfiguration, Task> handler) : base("uri")
     {
