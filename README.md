@@ -150,3 +150,10 @@ Content-Length: 15
 
 {"name":"test"}
 ```
+
+
+## :yum: How to contribute
+Have an idea? Found a bug? Do not hasistate to contirubute. Starring and sharing the projects you like :rocket:
+
+Thanks! :heart:
+
