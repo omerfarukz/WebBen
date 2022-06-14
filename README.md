@@ -153,7 +153,7 @@ Content-Length: 15
 
 
 ## :yum: How to contribute
-Have an idea? Found a bug? Do not hasistate to contirubute. Starring and sharing the projects you like :rocket:
+Have an idea? Found a bug? Do not hasistate to contirubute. :rocket:
 
 Thanks! :heart:
 
