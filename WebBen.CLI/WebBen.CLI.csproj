@@ -8,6 +8,9 @@
         <AssemblyName>webben</AssemblyName>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
+        <PackAsTool>true</PackAsTool>
+        <ToolCommandName>webben</ToolCommandName>
+
         <VersionSuffix>1.$([System.DateTime]::UtcNow.ToString(yy))$([System.DateTime]::UtcNow.ToString(MM)).$([System.DateTime]::UtcNow.ToString(ddHH)).$([System.DateTime]::UtcNow.ToString(mmss))</VersionSuffix>
         <AssemblyVersion Condition=" '$(VersionSuffix)' == '' ">0.0.0.1</AssemblyVersion>
         <AssemblyVersion Condition=" '$(VersionSuffix)' != '' ">$(VersionSuffix)</AssemblyVersion>
