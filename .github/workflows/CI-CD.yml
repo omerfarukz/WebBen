@@ -23,4 +23,4 @@ jobs:
       - name: Test
         run: dotnet test --no-restore --verbosity normal
       - name: Publish the package to nuget
-        run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_TOKEN}}" --source https://api.nuget.org/v3/index.json
+        run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "oy2nfy5mkzne3x6npynqaglkxqmrtete3cem4sodgqpvgi" --source https://api.nuget.org/v3/index.json
