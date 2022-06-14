@@ -1,7 +1,7 @@
 # WebBen[chmark]
 
 Yet another http benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
-results. Parallelize the execution of test cases.
+results. Parallelize the execution of test cases. Run on mac, linux and windows.
 
 ## Install
 ```shell
