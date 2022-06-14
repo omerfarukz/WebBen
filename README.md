@@ -45,7 +45,7 @@ Examples:
 {
   "TestCaseConfigurations": [
     {
-      "Name": "search_term_page_2./web  _ntlm",
+      "Name": "search_term_page_2_ntlm",
       "Uri": "https://internal.contoso.com/Ajax.ashx?search=term&page=2",
       "NumberOfRequests": 50,
       "FetchContent": false,
