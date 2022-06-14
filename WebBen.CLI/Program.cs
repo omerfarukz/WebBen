@@ -20,5 +20,4 @@ var uriCommand = new UriCommand(async configuration =>
 });
 
 var rootCommand = new RootCommand {configCommand, uriCommand};
-rootCommand.Invoke(" config Simple.json");
-// await rootCommand.InvokeAsync(args);
+await rootCommand.InvokeAsync(args);
