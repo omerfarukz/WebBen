@@ -3,6 +3,11 @@
 Yet another http benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
 results. Parallelize the execution of test cases.
 
+## Install
+```shell
+dotnet tool install --global webben
+```
+
 ## Usage samples
 
 ```shell
