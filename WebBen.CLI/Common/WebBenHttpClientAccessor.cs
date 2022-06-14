@@ -31,7 +31,7 @@ internal class WebBenHttpClientAccessor : IDisposable
         }
 
         Client = new HttpClient(_handler, true) {BaseAddress = testCase.Configuration.Uri};
-        Client.MaxResponseContentBufferSize = testCase.Configuration.MaxResponseContentBufferSize;
+        Client.MaxResponseContentBufferSize = testCase.Configuration.MaxBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
     }
 

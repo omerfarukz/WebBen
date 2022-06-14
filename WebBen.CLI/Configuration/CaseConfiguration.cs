@@ -12,7 +12,11 @@ public class CaseConfiguration
     public bool UseDefaultCredentials { get; set; }
     public bool UseCookieContainer { get; set; }
     public bool AllowAutoRedirect { get; set; } = false;
-    public int MaxResponseContentBufferSize { get; set; } = int.MaxValue;
+    
+    /// <summary>
+    /// MaxResponseContent is in bytes
+    /// </summary>
+    public int MaxBufferSize { get; set; } = int.MaxValue;
     public int TimeoutInMs { get; set; } = int.MaxValue;
     public string? CredentialConfigurationKey { get; set; }
     public Dictionary<string, object>? Headers { get; set; }
