@@ -22,3 +22,5 @@ jobs:
         run: dotnet build --configuration Release --no-restore
       - name: Test
         run: dotnet test --no-restore --verbosity normal
+      - name: Publish the package to nuget
+        run: dotnet nuget push webben/bin/Release/*.nupkg --api-key "${{secrets.GITHUB_TOKEN}}"
