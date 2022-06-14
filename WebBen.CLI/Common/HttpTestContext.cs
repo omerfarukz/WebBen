@@ -54,13 +54,16 @@ internal class HttpTestContext
         stopWatch.Stop();
     }
 
-    public async Task Execute(IEnumerable<TestCase> testCases,
+    public async Task<IEnumerable<TestCase>> Execute(IEnumerable<TestCase> testCases,
         ICollection<CredentialConfiguration>? credentialConfigurations)
     {
         if (testCases is null)
             throw new ArgumentNullException(nameof(testCases));
 
-        foreach (var testCase in testCases)
+        // Prevent multiple enumeration
+        var enumerable = testCases as TestCase[] ?? testCases.ToArray();
+        
+        foreach (var testCase in enumerable)
         {
             ICredentials? credentials = null;
             if (testCase.Configuration.CredentialConfigurationKey != null)
@@ -88,6 +91,8 @@ internal class HttpTestContext
             _logger.Log($"Executing test case '{testCase.Configuration.Name}'");
             await Execute(testCase, credentials);
         }
+
+        return enumerable;
     }
 
     private ActionBlock<TestCase> CreateActionBlock(
@@ -95,15 +100,15 @@ internal class HttpTestContext
         int parallelism, int boundedCapacity
     )
     {
-        var actionBlock = new ActionBlock<TestCase>(async testCaseInstance =>
+        var actionBlock = new ActionBlock<TestCase>(async testCase =>
         {
-            if (testCaseInstance == null)
-                throw new ArgumentNullException(nameof(testCaseInstance));
+            if (testCase == null)
+                throw new ArgumentNullException(nameof(testCase));
 
-            if (testCaseInstance.Configuration == null)
-                throw new ArgumentNullException(nameof(testCaseInstance.Configuration));
+            if (testCase.Configuration == null)
+                throw new ArgumentNullException(nameof(testCase.Configuration));
 
-            var httpRequestMessage = BuildHttpRequestMessage(testCaseInstance, webBenHttpClientAccessor);
+            var httpRequestMessage = BuildHttpRequestMessage(testCase, webBenHttpClientAccessor);
 
             try
             {
@@ -111,18 +116,18 @@ internal class HttpTestContext
                 stopWatch.Start();
 
                 var httpResponseMessage = await webBenHttpClientAccessor.Client.SendAsync(httpRequestMessage);
-                if (testCaseInstance.Configuration!.FetchContent)
+                if (testCase.Configuration!.FetchContent)
                     await httpResponseMessage.Content.ReadAsStringAsync();
 
                 stopWatch.Stop();
-                testCaseInstance.Timings.Add(stopWatch.Elapsed);
+                testCase.Timings.Add(stopWatch.Elapsed);
 
                 if (!httpResponseMessage.IsSuccessStatusCode)
-                    testCaseInstance.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate
+                    testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate
             }
             catch (HttpRequestException e)
             {
-                testCaseInstance.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
+                testCase.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
             }
         }, new ExecutionDataflowBlockOptions
         {

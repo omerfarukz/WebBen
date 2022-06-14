@@ -7,7 +7,7 @@ namespace WebBen.CLI.Extensions;
 
 internal static class HttpTestContextExtensions
 {
-    public static async Task<ICollection<TestCase>> Execute(this HttpTestContext httpTestContext,
+    public static async Task<IEnumerable<TestCase>> Execute(this HttpTestContext httpTestContext,
         CaseConfiguration caseConfiguration)
     {
         var configuration = new TestConfiguration
@@ -15,15 +15,15 @@ internal static class HttpTestContextExtensions
             TestCases = new[] {caseConfiguration}
         };
 
-        var testCases = new List<TestCase>
+        var testCases = new TestCase[]
         {
             new(configuration.TestCases[0])
         };
-        await httpTestContext.Execute(testCases, null);
-        return testCases;
+        
+        return await httpTestContext.Execute(testCases, null);
     }
 
-    public static async Task<ICollection<TestCase>> Execute(this HttpTestContext httpTestContext,
+    public static async Task<IEnumerable<TestCase>> Execute(this HttpTestContext httpTestContext,
         FileInfo configurationFile)
     {
         if (configurationFile == null)
@@ -40,14 +40,12 @@ internal static class HttpTestContextExtensions
             throw new InvalidDataException();
 
         var testCases = testConfigurations
-            .Select(f => new TestCase(f))
-            .ToList();
+            .Select(f => new TestCase(f));
 
-        await httpTestContext.Execute(testCases, credentialConfigurations);
-        return testCases;
+        return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
 
-    public static string AsTable(this ICollection<TestCase> testCases)
+    public static string AsTable(this IEnumerable<TestCase> testCases)
     {
         var asTable = testCases.ToStringTable(
             new[] {"Name", "NoR", "Pll", "BC", "Err", "Avg", "Min", "Max", "P90", "P80", "Median"},
