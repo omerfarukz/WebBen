@@ -16,8 +16,10 @@ internal class HttpTestContext
     public HttpTestContext(ILogger logger)
     {
         _logger = logger;
-        _credentialProviders = new Dictionary<string, ICredentialProvider>();
-        _credentialProviders.Add(nameof(NetworkCredentialProvider), new NetworkCredentialProvider());
+        _credentialProviders = new Dictionary<string, ICredentialProvider>
+        {
+            {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
+        };
 
         if (!Stopwatch.IsHighResolution)
             throw new InvalidOperationException("Low resolution timer(Stopwatch) is not supported.");
@@ -34,6 +36,10 @@ internal class HttpTestContext
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
 
+        _logger.Debug($"Executing test case: {testCase.Configuration.Name}");
+        _logger.Debug($"Parallelism:\t{testCase.Configuration.Parallelism}");
+        _logger.Debug($"BoundedCapacity:\t{testCase.Configuration.BoundedCapacity}");
+
         using var accessor = new WebBenHttpClientAccessor(testCase, credentials);
         var actionBlock = CreateActionBlock(
             accessor,
@@ -47,8 +53,12 @@ internal class HttpTestContext
         for (var iterationCounter = 0;
              iterationCounter < testCase.Configuration.RequestCount;
              iterationCounter++)
+        {
             await actionBlock.SendAsync(testCase);
+        }
 
+        _logger.Debug($"Waiting for all requests to finish...");
+        
         actionBlock.Complete();
         await actionBlock.Completion;
         stopWatch.Stop();
@@ -62,7 +72,8 @@ internal class HttpTestContext
 
         // Prevent multiple enumeration
         var enumerable = testCases as TestCase[] ?? testCases.ToArray();
-        
+        _logger.Debug($"Preparing test cases: {enumerable.Count()}");
+
         foreach (var testCase in enumerable)
         {
             ICredentials? credentials = null;
@@ -71,7 +82,7 @@ internal class HttpTestContext
                 if (credentialConfigurations == null)
                     throw new ArgumentNullException(nameof(credentialConfigurations));
 
-                _logger.Log($"Creating credentials for '{testCase.Configuration.Name}");
+                _logger.Debug($"Creating credentials for case '{testCase.Configuration.Name}");
 
                 var credentialConfiguration = credentialConfigurations.SingleOrDefault(f =>
                     f.Key == testCase.Configuration.CredentialConfigurationKey);
@@ -88,7 +99,7 @@ internal class HttpTestContext
                     credentials = provider.FromConfiguration(credentialConfiguration.Data);
             }
 
-            _logger.Log($"Executing test case '{testCase.Configuration.Name}'");
+            _logger.Debug($"Executing test case '{testCase.Configuration.Name}'");
             await Execute(testCase, credentials);
         }
 
@@ -128,6 +139,7 @@ internal class HttpTestContext
             catch (HttpRequestException e)
             {
                 testCase.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
+                _logger.Error($"{testCase.Configuration.Name}: {e.Message}");
             }
         }, new ExecutionDataflowBlockOptions
         {

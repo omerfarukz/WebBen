@@ -4,33 +4,31 @@ namespace WebBen.CLI.Common;
 
 internal class WebBenHttpClientAccessor : IDisposable
 {
-    private readonly HttpClientHandler _handler;
-
     public WebBenHttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {
         if (testCase == null)
             throw new ArgumentNullException(nameof(testCase));
 
-        _handler = new HttpClientHandler
+        var handler = new HttpClientHandler
         {
             AllowAutoRedirect = testCase.Configuration.AllowAutoRedirect,
             MaxConnectionsPerServer = int.MaxValue
         };
-        _handler.UseDefaultCredentials = false;
+        handler.UseDefaultCredentials = false;
 
         if (credentials != null)
-            _handler.Credentials = credentials;
+            handler.Credentials = credentials;
 
         // Enable cookie handling
-        if (_handler.UseCookies || testCase.Configuration.Cookies != null)
+        if (handler.UseCookies || testCase.Configuration.Cookies != null)
         {
             CookieContainer = new CookieContainer();
 
-            _handler.UseCookies = true;
-            _handler.CookieContainer = CookieContainer;
+            handler.UseCookies = true;
+            handler.CookieContainer = CookieContainer;
         }
 
-        Client = new HttpClient(_handler, true) {BaseAddress = testCase.Configuration.Uri};
+        Client = new HttpClient(handler, true) {BaseAddress = testCase.Configuration.Uri};
         Client.MaxResponseContentBufferSize = testCase.Configuration.MaxBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
     }
