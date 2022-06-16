@@ -54,7 +54,7 @@ Examples:
 webben analyze <uri>
 
 Example:
-webben analyze http://zor.lu
+webben analyze http://contoso.com
 
 Output:
 Max RPS for this uri is: 283.
