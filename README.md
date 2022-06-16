@@ -5,6 +5,8 @@ results. Parallelize the execution of test cases.
 
 Runs on mac, linux and windows.
 
+[![dotnet build & pack](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml)
+
 ## Install
 ```shell
 dotnet tool install --global webben
