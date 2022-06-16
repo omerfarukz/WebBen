@@ -14,6 +14,8 @@ internal class AnalyzeCommand : Command
     public AnalyzeCommand(ILogger logger) : base("analyze")
     {
         _logger = logger;
+        
+        AddAlias("analyse");
         AddArgument(new Argument<Uri>("uri", "The URI to use."));
         AddOption(new Option<bool>(new[] {"-f", "--fetch-content"}, "Whether to fetch the content of the URI."));
         AddOption(new Option<bool>(new[] {"-r", "--allow-redirect"}, "Whether to allow redirects."));
