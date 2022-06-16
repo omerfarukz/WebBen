@@ -9,7 +9,6 @@ Runs on mac, linux and windows.
 ```shell
 dotnet tool install --global webben
 ```
-
 ## Usage samples
 
 ```shell
@@ -60,6 +59,7 @@ webben analyze http://zor.lu
 Output:
 Max RPS for this uri is: 283.
 ```
+[![asciicast](https://asciinema.org/a/jQvZa12ppxt6ROng6yY097Rxh.svg)](https://asciinema.org/a/jQvZa12ppxt6ROng6yY097Rxh)
 
 ## Configuration Sample
 
