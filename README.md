@@ -20,8 +20,14 @@ Commands:
   config <fileInfo>
   uri <uri>
 
+Options:
+  -?, -h, --help            Show help and usage information
+  -v, --verbose             Enable verbose output
+
 Example:
   webben config <filePath>
+
+#--------------
 
 Usage:
   webben uri <uri> [options]
@@ -38,13 +44,22 @@ Options:
   -r, --allow-redirect      Whether to allow redirects.
   -n, --request-count       The number of requests to make.
   -s, --buffer-size         The maximum size of the response content buffer.
-  -?, -h, --help            Show help and usage information
-  -v, --verbose             Enable verbose output
 
 Examples:
   webben uri http://localhost:3000
   webben uri http://localhost:3000 -n 10000
   webben uri http://localhost:3000 -p 100 -b 50 -t 5000 -m GET -f false -r false -n 10000
+
+#--------------
+
+Usage:
+webben analyze <uri>
+
+Example:
+webben analyze http://zor.lu
+
+Output:
+Max RPS for this uri is: 283.
 ```
 
 ## Configuration Sample
