@@ -13,8 +13,7 @@ dotnet tool install --global webben
 ## Usage samples
 
 ```shell
-Usage:
-  webben [command] [options]
+webben [command] [options]
 
 Commands:
   config <fileInfo>
@@ -27,10 +26,10 @@ Options:
 Example:
   webben config <filePath>
 
-#--------------
+```
 
-Usage:
-  webben uri <uri> [options]
+```shell
+webben uri <uri> [options]
 
 Arguments:
   <uri>  The URI to use.
@@ -50,9 +49,9 @@ Examples:
   webben uri http://localhost:3000 -n 10000
   webben uri http://localhost:3000 -p 100 -b 50 -t 5000 -m GET -f false -r false -n 10000
 
-#--------------
+```
 
-Usage:
+```shell
 webben analyze <uri>
 
 Example:
