@@ -14,4 +14,5 @@ internal record TestCase(CaseConfiguration Configuration)
     public ConcurrentBag<TimeSpan> Timings { get; internal set; } = new();
 
     public ConcurrentBag<string> Errors { get; set; } = new();
+    public TimeSpan Elapsed { get; internal set; }
 }

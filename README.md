@@ -39,6 +39,7 @@ Options:
   -n, --request-count       The number of requests to make.
   -s, --buffer-size         The maximum size of the response content buffer.
   -?, -h, --help            Show help and usage information
+  -v, --verbose             Enable verbose output
 
 Examples:
   webben uri http://localhost:3000

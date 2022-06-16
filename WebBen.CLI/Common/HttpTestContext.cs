@@ -37,7 +37,7 @@ internal class HttpTestContext
             throw new ArgumentNullException(nameof(testCase));
 
         _logger.Debug($"Executing test case: {testCase.Configuration.Name}");
-        _logger.Debug($"Parallelism:\t{testCase.Configuration.Parallelism}");
+        _logger.Debug($"Parallelism:\t\t{testCase.Configuration.Parallelism}");
         _logger.Debug($"BoundedCapacity:\t{testCase.Configuration.BoundedCapacity}");
 
         using var accessor = new WebBenHttpClientAccessor(testCase, credentials);
@@ -61,7 +61,9 @@ internal class HttpTestContext
         
         actionBlock.Complete();
         await actionBlock.Completion;
+
         stopWatch.Stop();
+        testCase.Elapsed = stopWatch.Elapsed;
     }
 
     public async Task<IEnumerable<TestCase>> Execute(IEnumerable<TestCase> testCases,
@@ -131,10 +133,16 @@ internal class HttpTestContext
                     await httpResponseMessage.Content.ReadAsStringAsync();
 
                 stopWatch.Stop();
-                testCase.Timings.Add(stopWatch.Elapsed);
 
-                if (!httpResponseMessage.IsSuccessStatusCode)
-                    testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate
+                if (httpResponseMessage.IsSuccessStatusCode)
+                {
+                    testCase.Timings.Add(stopWatch.Elapsed);
+                }
+                else
+                {
+                    testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate   
+                    _logger.Error($"Test case {testCase.Configuration.Name} returned {httpResponseMessage.StatusCode}");
+                }
             }
             catch (HttpRequestException e)
             {
@@ -150,7 +158,8 @@ internal class HttpTestContext
         return actionBlock;
     }
 
-    private HttpRequestMessage BuildHttpRequestMessage(TestCase testCaseInstance,
+    private static HttpRequestMessage BuildHttpRequestMessage(
+        TestCase testCaseInstance,
         WebBenHttpClientAccessor webBenHttpClientAccessor)
     {
         var httpRequestMessage = new HttpRequestMessage(

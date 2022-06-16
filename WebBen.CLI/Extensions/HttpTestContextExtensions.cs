@@ -48,8 +48,9 @@ internal static class HttpTestContextExtensions
     public static string AsTable(this IEnumerable<TestCase> testCases)
     {
         var asTable = testCases.ToStringTable(
-            new[] {"Name", "NoR", "Pll", "BC", "Err", "Avg", "Min", "Max", "P90", "P80", "Median"},
+            new[] {"Name", "Elapsed", "NoR", "Pll", "BC", "Err", "Avg", "Min", "Max", "P90", "P80", "Median"},
             f => f.Configuration.Name ?? string.Empty,
+            f => f.Elapsed.TotalSeconds.ToString(),
             f => f.Configuration.RequestCount.ToString(),
             f => f.Configuration.Parallelism.ToString(),
             f => f.Configuration.BoundedCapacity.ToString(),
@@ -61,7 +62,7 @@ internal static class HttpTestContextExtensions
             f => f.Timings.Percentile(0.8d).TotalMilliseconds.ToString("N"),
             f => f.Timings.Median().TotalMilliseconds.ToString("N")
         );
-
+        
         return asTable;
     }
 }

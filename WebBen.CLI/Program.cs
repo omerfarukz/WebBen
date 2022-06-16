@@ -1,37 +1,30 @@
 ﻿using System.CommandLine;
-using System.CommandLine.Parsing;
 using WebBen.CLI.CommandLine;
-using WebBen.CLI.Common;
 using WebBen.CLI.Common.Logging;
-using WebBen.CLI.Configuration;
-using WebBen.CLI.Extensions;
 
+// int workerThreads;
+// int portThreads;
+//
+// ThreadPool.GetMaxThreads(out workerThreads, out portThreads);
+
+// TODO: use core hosting
 var logger = new ConsoleLogger();
 AppDomain.CurrentDomain.UnhandledException += (sender, unhandledExceptionEventArgs) =>
 {
     logger.Error($"{unhandledExceptionEventArgs.ExceptionObject}");
 };
 
-var configCommand = new ConfigCommand(async (FileInfo fileInfo) =>
-{
-    var context = new HttpTestContext(logger);
-    var result = await context.Execute(fileInfo);
-    logger.Info(result.AsTable());
-});
-var uriCommand = new UriCommand(async (CaseConfiguration configuration) =>
-{
-    var context = new HttpTestContext(logger);
-    var result = await context.Execute(configuration);
-    logger.Info(result.AsTable());
-});
-
+var configCommand = new ConfigCommand(logger);
+var uriCommand = new UriCommand(logger);
+var analyzeCommand = new AnalyzeCommand(logger);
+ 
 var verboseOption = new Option<bool>(new[] {"--verbose", "-v"}, "Enable verbose output");
 
-var rootCommand = new RootCommand {configCommand, uriCommand};
+var rootCommand = new RootCommand {configCommand, uriCommand, analyzeCommand};
 rootCommand.AddGlobalOption(verboseOption);
 
 var parseResult = rootCommand.Parse(args);
-
 var verbose = parseResult.GetValueForOption<bool>(verboseOption);
 logger.Verbose = verbose;
-await parseResult.InvokeAsync();
+// await parseResult.InvokeAsync();
+await rootCommand.InvokeAsync(args); // TODO: avoid double parsing
