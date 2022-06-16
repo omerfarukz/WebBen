@@ -19,7 +19,7 @@ internal static class HttpTestContextExtensions
         {
             new(configuration.TestCases[0])
         };
-        
+
         return await httpTestContext.Execute(testCases, null);
     }
 
@@ -48,21 +48,18 @@ internal static class HttpTestContextExtensions
     public static string AsTable(this IEnumerable<TestCase> testCases)
     {
         var asTable = testCases.ToStringTable(
-            new[] {"Name", "Elapsed", "NoR", "Pll", "BC", "Err", "Avg", "Min", "Max", "P90", "P80", "Median"},
+            new[] {"Name", "Elapsed", "NoR", "Pll", "BC", "Err", "Avg", "P90", "Median"},
             f => f.Configuration.Name ?? string.Empty,
-            f => f.Elapsed.TotalSeconds.ToString(),
+            f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration.RequestCount.ToString(),
             f => f.Configuration.Parallelism.ToString(),
             f => f.Configuration.BoundedCapacity.ToString(),
             f => f.Errors.Count.ToString(),
             f => f.Timings.Average().TotalMilliseconds.ToString("N"),
-            f => f.Timings.Any() ? f.Timings.Min().TotalMilliseconds.ToString("N") : "0",
-            f => f.Timings.Any() ? f.Timings.Max().TotalMilliseconds.ToString("N") : "0",
             f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),
-            f => f.Timings.Percentile(0.8d).TotalMilliseconds.ToString("N"),
             f => f.Timings.Median().TotalMilliseconds.ToString("N")
         );
-        
+
         return asTable;
     }
 }

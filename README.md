@@ -54,13 +54,28 @@ Examples:
 ```
 
 ```shell
-webben analyze <uri>
+Usage:
+  webben analyze <uri> [options]
+  webben analyse <uri> [options]
 
-Example:
-webben analyze http://contoso.com
+Arguments:
+  <uri>  The URI to use.
+
+Options:
+  -f, --fetch-content                                      Whether to fetch the content of the URI.
+  -r, --allow-redirect                                     Whether to allow redirects.
+  -t, --timeout-in-ms <timeout-in-ms>                      The bounded capacity to use.
+  -m, --max-trial-count <max-trial-count>                  Iteration count for calculation. See -c
+  -c, --calculation-function <Average|Median|P70|P80|P90>  Function for RPS calculation
+
+Examples:
+  analyze "https://contoso.com/?q=test"
+  analyze "https://contoso.com/?q=test" -c Median  
+  analyze "https://contoso.com/?q=test" -m 5 -c P80
 
 Output:
-Max RPS for this uri is: 283.
+  Max RPS for this uri is: 283.
+
 ```
 ![analyze2](https://raw.githubusercontent.com/omerfarukz/WebBen/master/Assets/analyze2.gif)
 

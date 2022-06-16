@@ -1,7 +1,23 @@
+using WebBen.CLI.Configuration;
+
 namespace WebBen.CLI.Extensions;
 
 internal static class EnumerableOfDoubleExtensions
 {
+    public static TimeSpan Timing(this IEnumerable<TimeSpan> source, CalculationFunciton calculationFunction)
+    {
+        return calculationFunction switch
+        {
+            CalculationFunciton.Average => source.Average(),
+            CalculationFunciton.Median => source.Median(),
+            CalculationFunciton.P90 => source.Percentile(0.9d),
+            CalculationFunciton.P80 => source.Percentile(0.8d),
+            CalculationFunciton.P70 => source.Percentile(0.7d),
+            _ => throw new NotSupportedException(
+                $"{nameof(calculationFunction)}: {calculationFunction}")
+        };
+    }
+    
     public static TimeSpan Average(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Average());
