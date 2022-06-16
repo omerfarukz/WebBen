@@ -11,7 +11,7 @@ internal class WebBenHttpClientAccessor : IDisposable
 
         var handler = new HttpClientHandler
         {
-            AllowAutoRedirect = testCase.Configuration.AllowAutoRedirect,
+            AllowAutoRedirect = testCase.Configuration.AllowRedirect,
             MaxConnectionsPerServer = int.MaxValue
         };
         handler.UseDefaultCredentials = false;

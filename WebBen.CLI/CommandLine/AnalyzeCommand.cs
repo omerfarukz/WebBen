@@ -1,6 +1,5 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using System.Reflection.Metadata;
 using WebBen.CLI.Common;
 using WebBen.CLI.Common.Logging;
 using WebBen.CLI.Configuration;
@@ -16,30 +15,33 @@ internal class AnalyzeCommand : Command
     {
         _logger = logger;
         AddArgument(new Argument<Uri>("uri", "The URI to use."));
+        AddOption(new Option<bool>(new[] {"-f", "--fetch-content"}, "Whether to fetch the content of the URI."));
+        AddOption(new Option<bool>(new[] {"-r", "--allow-redirect"}, "Whether to allow redirects."));
+        AddOption(new Option<int>(new[] {"-t", "--timeout-in-ms"}, "The bounded capacity to use."));
 
         Handler = CommandHandler.Create(Handle);
     }
 
-    private async Task Handle(Uri uri)
+    private async Task Handle(ConfigurationBase configurationBase)
     {
-        // TODO: Move this logic to HttpTestContext
-        
-        // Find best request count by binary search
+        // Find best request per second by binary search
         // 1, 2, 4, 8, 16 ... 2^32
-        int requestCount = 1;
-        int lastMinimumRequestCount = 1;
+        var lastMinimumRequestCount = 1;
 
         var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
-
         _logger.Info("Range: " + string.Join(',', requestCountCacheQueue));
 
         var context = new HttpTestContext(_logger);
         var caseConfiguration = new CaseConfiguration();
-        caseConfiguration.Uri = uri;
+        caseConfiguration.Uri = configurationBase.Uri;
+        caseConfiguration.FetchContent = configurationBase.FetchContent;
+        caseConfiguration.TimeoutInMs = configurationBase.TimeoutInMs;
+        caseConfiguration.AllowRedirect = configurationBase.AllowRedirect;
 
+        Console.WriteLine(caseConfiguration.AllowRedirect);
         while (requestCountCacheQueue.Any())
         {
-            requestCount = requestCountCacheQueue.Dequeue();
+            var requestCount = requestCountCacheQueue.Dequeue();
 
             caseConfiguration.Parallelism = requestCount;
             caseConfiguration.BoundedCapacity = requestCount;
