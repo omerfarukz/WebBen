@@ -17,7 +17,7 @@ webben [command] [options]
 Commands:
   config <fileInfo>
   uri <uri>
-  analyze <uri>
+  analyse, analyze <uri>
 
 Options:
   -?, -h, --help            Show help and usage information
