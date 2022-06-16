@@ -1,4 +1,4 @@
-name: dotnet package
+name: dotnet build & pack
 
 on: [push]
 
