@@ -17,6 +17,7 @@ webben [command] [options]
 Commands:
   config <fileInfo>
   uri <uri>
+  analyze <uri>
 
 Options:
   -?, -h, --help            Show help and usage information
@@ -59,7 +60,7 @@ webben analyze http://contoso.com
 Output:
 Max RPS for this uri is: 283.
 ```
-[![asciicast](https://asciinema.org/a/jQvZa12ppxt6ROng6yY097Rxh.svg)](https://asciinema.org/a/jQvZa12ppxt6ROng6yY097Rxh)
+![analyze2](https://raw.githubusercontent.com/omerfarukz/WebBen/master/Assets/analyze2.gif)
 
 ## Configuration Sample
 
