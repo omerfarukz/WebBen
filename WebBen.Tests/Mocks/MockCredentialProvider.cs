@@ -15,7 +15,7 @@ public class MockCredentialProvider : ICredentialProvider
 
 public class MockCredential : ICredentials
 {
-    public NetworkCredential? GetCredential(Uri uri, string authType)
+    public NetworkCredential GetCredential(Uri uri, string authType)
     {
         return null;
     }

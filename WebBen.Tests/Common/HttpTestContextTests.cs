@@ -19,7 +19,7 @@ public class HttpTestContextTests
     private HttpTestContext _httpTestContext;
 
     [SetUp]
-    public async Task Setup()
+    public void Setup()
     {
         _server = MockWebApplication.CreateServer();
         _uri = new Uri(_server.Urls.First());
