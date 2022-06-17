@@ -1,8 +1,8 @@
-using WebBen.CLI.Configuration;
+using WebBen.Common.Configuration;
 
-namespace WebBen.CLI.Extensions;
+namespace WebBen.Common.Extensions;
 
-internal static class EnumerableOfDoubleExtensions
+public static class EnumerableOfDoubleExtensions
 {
     public static TimeSpan Timing(this IEnumerable<TimeSpan> source, CalculationFunction calculationFunction)
     {

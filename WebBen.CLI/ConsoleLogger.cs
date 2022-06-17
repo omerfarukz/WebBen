@@ -1,4 +1,6 @@
-namespace WebBen.CLI.Common.Logging;
+using WebBen.Common.Logging;
+
+namespace WebBen.CLI;
 
 internal class ConsoleLogger : ILogger
 {

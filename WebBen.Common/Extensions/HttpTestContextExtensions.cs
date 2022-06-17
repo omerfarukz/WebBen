@@ -1,11 +1,11 @@
 using System.Text.Json;
 using System.Text.Json.Nodes;
-using WebBen.CLI.Common;
-using WebBen.CLI.Configuration;
+using WebBen.CLI.Extensions;
+using WebBen.Common.Configuration;
 
-namespace WebBen.CLI.Extensions;
+namespace WebBen.Common.Extensions;
 
-internal static class HttpTestContextExtensions
+public static class HttpTestContextExtensions
 {
     public static async Task<IEnumerable<TestCase>> Execute(this HttpTestContext httpTestContext,
         CaseConfiguration caseConfiguration)

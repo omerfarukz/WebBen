@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace WebBen.CLI.CredentialProviders;
+namespace WebBen.Common.CredentialProviders;
 
-internal class NetworkCredentialProvider : ICredentialProvider
+public class NetworkCredentialProvider : ICredentialProvider
 {
     public ICredentials FromConfiguration(IDictionary<string, object> props)
     {

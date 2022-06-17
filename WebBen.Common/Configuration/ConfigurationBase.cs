@@ -1,6 +1,6 @@
-namespace WebBen.CLI.Configuration;
+namespace WebBen.Common.Configuration;
 
-internal class ConfigurationBase
+public abstract class ConfigurationBase
 {
     public string? Name { get; set; }
     public Uri? Uri { get; set; }

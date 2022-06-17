@@ -1,6 +1,6 @@
 using System.Net;
 
-namespace WebBen.CLI.Common;
+namespace WebBen.Common;
 
 internal class WebBenHttpClientAccessor : IDisposable
 {

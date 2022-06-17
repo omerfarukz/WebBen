@@ -1,6 +1,6 @@
 ﻿using System.CommandLine;
+using WebBen.CLI;
 using WebBen.CLI.CommandLine;
-using WebBen.CLI.Common.Logging;
 
 var logger = new ConsoleLogger();
 AppDomain.CurrentDomain.UnhandledException += (s, e) => { logger.Error($"{e.ExceptionObject}"); };

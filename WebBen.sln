@@ -6,8 +6,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{6D5D
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
 		Samples\Simple.json = Samples\Simple.json
-		Samples\Multiple.json = Samples\Multiple.json
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBen.Tests", "WebBen.Tests\WebBen.Tests.csproj", "{0D3A09D7-E508-4209-9AFC-AE49D7B0AB67}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebBen.Common", "WebBen.Common\WebBen.Common.csproj", "{3502E8FE-E921-4A7C-B21F-3AE6FB3423D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,5 +22,13 @@ Global
 		{C17A48CB-DBB3-4A25-B6EE-453B129CAF8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C17A48CB-DBB3-4A25-B6EE-453B129CAF8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C17A48CB-DBB3-4A25-B6EE-453B129CAF8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0D3A09D7-E508-4209-9AFC-AE49D7B0AB67}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0D3A09D7-E508-4209-9AFC-AE49D7B0AB67}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0D3A09D7-E508-4209-9AFC-AE49D7B0AB67}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0D3A09D7-E508-4209-9AFC-AE49D7B0AB67}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3502E8FE-E921-4A7C-B21F-3AE6FB3423D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3502E8FE-E921-4A7C-B21F-3AE6FB3423D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3502E8FE-E921-4A7C-B21F-3AE6FB3423D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3502E8FE-E921-4A7C-B21F-3AE6FB3423D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

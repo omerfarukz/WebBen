@@ -6,7 +6,7 @@ namespace WebBen.CLI.Extensions;
 ///     How To: Best way to draw table in console app (C#)
 ///     https://stackoverflow.com/questions/856845/how-to-best-way-to-draw-table-in-console-app-c
 /// </summary>
-internal static class TableParser
+public static class TableParser
 {
     public static string ToStringTable<T>(
         this IEnumerable<T> values,

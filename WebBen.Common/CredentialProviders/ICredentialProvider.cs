@@ -1,8 +1,8 @@
 ﻿using System.Net;
 
-namespace WebBen.CLI.CredentialProviders;
+namespace WebBen.Common.CredentialProviders;
 
-internal interface ICredentialProvider
+public interface ICredentialProvider
 {
     ICredentials FromConfiguration(IDictionary<string, object> props);
 }

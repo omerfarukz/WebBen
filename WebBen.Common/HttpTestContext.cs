@@ -2,14 +2,14 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
-using WebBen.CLI.Common.Logging;
-using WebBen.CLI.Configuration;
-using WebBen.CLI.CredentialProviders;
-using WebBen.CLI.Extensions;
+using WebBen.Common.Configuration;
+using WebBen.Common.CredentialProviders;
+using WebBen.Common.Extensions;
+using WebBen.Common.Logging;
 
-namespace WebBen.CLI.Common;
+namespace WebBen.Common;
 
-internal class HttpTestContext
+public class HttpTestContext
 {
     private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
     private readonly ILogger _logger;

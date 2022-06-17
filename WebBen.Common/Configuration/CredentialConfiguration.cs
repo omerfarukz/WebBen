@@ -1,8 +1,8 @@
-using WebBen.CLI.CredentialProviders;
+using WebBen.Common.CredentialProviders;
 
-namespace WebBen.CLI.Configuration;
+namespace WebBen.Common.Configuration;
 
-internal class CredentialConfiguration
+public class CredentialConfiguration
 {
     public string Key { get; set; } = null!;
     public string Provider { get; set; } = nameof(NetworkCredentialProvider);

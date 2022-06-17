@@ -1,6 +1,6 @@
-namespace WebBen.CLI.Configuration;
+namespace WebBen.Common.Configuration;
 
-internal class BodyConfiguration
+public class BodyConfiguration
 {
     public string Content { get; set; } = null!;
     public string ContentType { get; set; } = "text/plain";

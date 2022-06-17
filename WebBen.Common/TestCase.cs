@@ -1,9 +1,9 @@
 using System.Collections.Concurrent;
-using WebBen.CLI.Configuration;
+using WebBen.Common.Configuration;
 
-namespace WebBen.CLI.Common;
+namespace WebBen.Common;
 
-internal record TestCase(CaseConfiguration Configuration)
+public record TestCase(CaseConfiguration Configuration)
 {
     public CaseConfiguration Configuration { get; } =
         Configuration ?? throw new ArgumentNullException(nameof(Configuration));

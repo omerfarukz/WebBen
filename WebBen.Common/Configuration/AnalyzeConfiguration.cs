@@ -1,6 +1,6 @@
-namespace WebBen.CLI.Configuration;
+namespace WebBen.Common.Configuration;
 
-internal class AnalyzeConfiguration : ConfigurationBase
+public class AnalyzeConfiguration : ConfigurationBase
 {
     public int MaxTrialCount { get; set; } = 3;
     public CalculationFunction CalculationFunction { get; set; }
