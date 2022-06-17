@@ -4,15 +4,15 @@ namespace WebBen.CLI.Extensions;
 
 internal static class EnumerableOfDoubleExtensions
 {
-    public static TimeSpan Timing(this IEnumerable<TimeSpan> source, CalculationFunciton calculationFunction)
+    public static TimeSpan Timing(this IEnumerable<TimeSpan> source, CalculationFunction calculationFunction)
     {
         return calculationFunction switch
         {
-            CalculationFunciton.Average => source.Average(),
-            CalculationFunciton.Median => source.Median(),
-            CalculationFunciton.P90 => source.Percentile(0.9d),
-            CalculationFunciton.P80 => source.Percentile(0.8d),
-            CalculationFunciton.P70 => source.Percentile(0.7d),
+            CalculationFunction.Average => source.Average(),
+            CalculationFunction.Median => source.Median(),
+            CalculationFunction.P90 => source.Percentile(0.9d),
+            CalculationFunction.P80 => source.Percentile(0.8d),
+            CalculationFunction.P70 => source.Percentile(0.7d),
             _ => throw new NotSupportedException(
                 $"{nameof(calculationFunction)}: {calculationFunction}")
         };

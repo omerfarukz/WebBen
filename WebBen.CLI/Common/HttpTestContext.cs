@@ -5,6 +5,7 @@ using System.Threading.Tasks.Dataflow;
 using WebBen.CLI.Common.Logging;
 using WebBen.CLI.Configuration;
 using WebBen.CLI.CredentialProviders;
+using WebBen.CLI.Extensions;
 
 namespace WebBen.CLI.Common;
 
@@ -108,6 +109,94 @@ internal class HttpTestContext
         return enumerable;
     }
 
+    public async Task<int> Execute(AnalyzeConfiguration configuration)
+    {
+        var lastMinimumRequestCount = 1;
+        
+        // Find best request per second by scaling time
+        // 1, 2, 4, 8, 16 ... 2^32
+        var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
+        _logger.Info($"Range: {string.Join(',', requestCountCacheQueue)}");
+
+        var caseConfiguration = new CaseConfiguration
+        {
+            Name = "analyze",
+            Uri = configuration.Uri,
+            FetchContent = configuration.FetchContent,
+            TimeoutInMs = configuration.TimeoutInMs,
+            AllowRedirect = configuration.AllowRedirect
+        };
+
+        while (requestCountCacheQueue.Any())
+        {
+            var requestCount = requestCountCacheQueue.Dequeue();
+
+            caseConfiguration.Parallelism = requestCount;
+            caseConfiguration.BoundedCapacity = requestCount;
+            caseConfiguration.RequestCount = requestCount;
+            
+            _logger.Info($"Create request with maximum parallelism: {requestCount}");
+            
+            var failed = false;
+            var trialTimespans = new TimeSpan[configuration.MaxTrialCount];
+            for (var i = 0; i < configuration.MaxTrialCount; i++)
+            {
+                var results = await HttpTestContextExtensions.Execute(this, caseConfiguration);
+                var testCases = results as TestCase[] ?? results.ToArray();
+                var result = testCases.First();
+
+                if (!result.Errors.IsEmpty)
+                {
+                    _logger.Info($"Error(s) occured {result.Errors.Count}");
+                    failed = true;
+                    break;
+                }
+
+                _logger.Debug(testCases.AsTable());
+                _logger.Debug($"#{i+1}. {result.Elapsed.TotalSeconds:N} sec(s)");
+                trialTimespans[i] = result.Elapsed;
+            }
+
+            if (failed)
+                break;
+
+            var averageTiming = trialTimespans.Timing(configuration.CalculationFunction);
+            _logger.Info($"{configuration.CalculationFunction}: {averageTiming.TotalSeconds:N}");
+
+            if (averageTiming.TotalSeconds < 1d)
+            {
+                lastMinimumRequestCount = requestCount;
+            }
+            else
+            {
+                _logger.Debug($"requestCount:{requestCount}, lastMinimumRequestCount:{lastMinimumRequestCount}");
+
+                // Found maximum request count. Now, try to determine limits.
+                requestCountCacheQueue.Clear();
+                Enumerable.Range(0, 31)
+                    .Select(f => lastMinimumRequestCount + (int) Math.Pow(2, f))
+                    .Where(f => f < requestCount)
+                    .ToList()
+                    .ForEach(f => requestCountCacheQueue.Enqueue(f));
+
+                if (requestCountCacheQueue.Any())
+                {
+                    var last = requestCountCacheQueue.Last();
+                    var lastPartLength = requestCount - last;
+
+                    // Fill last gap between last value of the limit and last value
+                    Enumerable.Range(last, lastPartLength)
+                        .ToList()
+                        .ForEach(f => requestCountCacheQueue.Enqueue(f));
+                }
+
+                _logger.Debug($"New range: [{string.Join(',', requestCountCacheQueue)}]");
+            }
+        }
+
+        return lastMinimumRequestCount;
+    }
+    
     private ActionBlock<TestCase> CreateActionBlock(
         WebBenHttpClientAccessor webBenHttpClientAccessor,
         int parallelism, int boundedCapacity
