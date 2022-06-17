@@ -38,7 +38,6 @@ Arguments:
 
 Options:
   -p, --parallelism         The number of parallelism to use.
-  -b, --bounded-capacity    The bounded capacity to use.
   -t, --timeout-in-ms       The timeout in milliseconds.
   -m, --http-method         The HTTP method to use.
   -f, --fetch-content       Whether to fetch the content of the URI.

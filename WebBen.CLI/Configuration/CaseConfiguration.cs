@@ -5,7 +5,6 @@ internal class CaseConfiguration : ConfigurationBase
     public string HttpMethod { get; set; } = System.Net.Http.HttpMethod.Get.Method;
     public int RequestCount { get; set; } = 100;
     public int Parallelism { get; set; } = 100;
-    public int BoundedCapacity { get; set; } = 100;
     public bool UseDefaultCredentials { get; set; }
     public bool UseCookieContainer { get; set; }
     

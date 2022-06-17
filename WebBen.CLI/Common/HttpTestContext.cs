@@ -39,13 +39,11 @@ internal class HttpTestContext
 
         _logger.Debug($"Executing test case: {testCase.Configuration.Name}");
         _logger.Debug($"Parallelism:\t\t{testCase.Configuration.Parallelism}");
-        _logger.Debug($"BoundedCapacity:\t{testCase.Configuration.BoundedCapacity}");
 
         using var accessor = new WebBenHttpClientAccessor(testCase, credentials);
         var actionBlock = CreateActionBlock(
             accessor,
-            testCase.Configuration.Parallelism,
-            testCase.Configuration.BoundedCapacity
+            testCase.Configuration.Parallelism
         );
 
         var stopWatch = new Stopwatch();
@@ -132,7 +130,6 @@ internal class HttpTestContext
             var requestCount = requestCountCacheQueue.Dequeue();
 
             caseConfiguration.Parallelism = requestCount;
-            caseConfiguration.BoundedCapacity = requestCount;
             caseConfiguration.RequestCount = requestCount;
             
             _logger.Info($"Create request with maximum parallelism: {requestCount}");
@@ -199,7 +196,7 @@ internal class HttpTestContext
     
     private ActionBlock<TestCase> CreateActionBlock(
         WebBenHttpClientAccessor webBenHttpClientAccessor,
-        int parallelism, int boundedCapacity
+        int parallelism
     )
     {
         var actionBlock = new ActionBlock<TestCase>(async testCase =>
@@ -241,7 +238,7 @@ internal class HttpTestContext
         }, new ExecutionDataflowBlockOptions
         {
             MaxDegreeOfParallelism = parallelism,
-            BoundedCapacity = boundedCapacity
+            BoundedCapacity = parallelism
         });
 
         return actionBlock;

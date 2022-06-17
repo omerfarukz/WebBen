@@ -53,7 +53,6 @@ internal static class HttpTestContextExtensions
             f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration.RequestCount.ToString(),
             f => f.Configuration.Parallelism.ToString(),
-            f => f.Configuration.BoundedCapacity.ToString(),
             f => f.Errors.Count.ToString(),
             f => f.Timings.Average().TotalMilliseconds.ToString("N"),
             f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),

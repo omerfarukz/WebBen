@@ -15,7 +15,6 @@ internal class UriCommand : Command
     {
         _logger = logger;
         AddArgument(new Argument<Uri>("uri", "The URI to use."));
-        AddOption(new Option<int>(new[] {"-b", "--bounded-capacity"}, "The bounded capacity to use."));
         AddOption(new Option<bool>(new[] {"-f", "--fetch-content"}, "Whether to fetch the content of the URI."));
         AddOption(new Option<string>(new[] {"-m", "--http-method"}, "The HTTP method to use."));
         AddOption(new Option<int>(new[] {"-n", "--request-count"}, "The number of requests to make."));
