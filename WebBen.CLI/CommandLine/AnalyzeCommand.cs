@@ -1,8 +1,9 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using WebBen.Common;
-using WebBen.Common.Configuration;
-using WebBen.Common.Logging;
+using WebBen.Core;
+using WebBen.Core.Configuration;
+using WebBen.Core.Extensions;
+using WebBen.Core.Logging;
 
 namespace WebBen.CLI.CommandLine;
 
@@ -26,10 +27,10 @@ internal class AnalyzeCommand : Command
         Handler = CommandHandler.Create(Handle);
     }
 
-    private async Task Handle(AnalyzeConfiguration configuration)
+    internal async Task Handle(AnalyzeConfiguration configuration)
     {
         var context = new HttpTestContext(_logger);
-        var maxRPS = await context.Execute(configuration);
-        _logger.Info($"Maximum request per second value is : {maxRPS}");
+        var result = await context.GetLastRPS(configuration, _logger);
+        _logger.Info($"Best RPS is {result}");
     }
 }

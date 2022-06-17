@@ -1,6 +1,6 @@
 using System.Text;
 
-namespace WebBen.CLI.Extensions;
+namespace WebBen.Core.Extensions;
 
 /// <summary>
 ///     How To: Best way to draw table in console app (C#)

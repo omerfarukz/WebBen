@@ -1,4 +1,4 @@
-using WebBen.Common.Logging;
+using WebBen.Core.Logging;
 
 namespace WebBen.CLI;
 

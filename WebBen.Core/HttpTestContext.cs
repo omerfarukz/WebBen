@@ -2,12 +2,11 @@ using System.Diagnostics;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks.Dataflow;
-using WebBen.Common.Configuration;
-using WebBen.Common.CredentialProviders;
-using WebBen.Common.Extensions;
-using WebBen.Common.Logging;
+using WebBen.Core.Configuration;
+using WebBen.Core.CredentialProviders;
+using WebBen.Core.Logging;
 
-namespace WebBen.Common;
+namespace WebBen.Core;
 
 public class HttpTestContext
 {
@@ -32,7 +31,7 @@ public class HttpTestContext
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    private async Task Execute(TestCase testCase, ICredentials? credentials)
+    public async Task Execute(TestCase testCase, ICredentials? credentials)
     {
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
@@ -40,7 +39,7 @@ public class HttpTestContext
         _logger.Debug($"Executing test case: {testCase.Configuration.Name}");
         _logger.Debug($"Parallelism:\t\t{testCase.Configuration.Parallelism}");
 
-        using var accessor = new WebBenHttpClientAccessor(testCase, credentials);
+        using var accessor = new HttpClientAccessor(testCase, credentials);
         var actionBlock = CreateActionBlock(
             accessor,
             testCase.Configuration.Parallelism
@@ -107,95 +106,15 @@ public class HttpTestContext
         return enumerable;
     }
 
-    public async Task<int> Execute(AnalyzeConfiguration configuration)
+    public void AddCredentialProvider(ICredentialProvider credentialProvider)
     {
-        var lastMinimumRequestCount = 1;
+        if (credentialProvider == null)
+            throw new ArgumentNullException(nameof(credentialProvider));
         
-        // Find best request per second by scaling time
-        // 1, 2, 4, 8, 16 ... 2^32
-        var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
-        _logger.Info($"Range: {string.Join(',', requestCountCacheQueue)}");
-
-        var caseConfiguration = new CaseConfiguration
-        {
-            Name = "analyze",
-            Uri = configuration.Uri,
-            FetchContent = configuration.FetchContent,
-            TimeoutInMs = configuration.TimeoutInMs,
-            AllowRedirect = configuration.AllowRedirect
-        };
-
-        while (requestCountCacheQueue.Any())
-        {
-            var requestCount = requestCountCacheQueue.Dequeue();
-
-            caseConfiguration.Parallelism = requestCount;
-            caseConfiguration.RequestCount = requestCount;
-            
-            _logger.Info($"Create request with maximum parallelism: {requestCount}");
-            
-            var failed = false;
-            var trialTimespans = new TimeSpan[configuration.MaxTrialCount];
-            for (var i = 0; i < configuration.MaxTrialCount; i++)
-            {
-                var results = await HttpTestContextExtensions.Execute(this, caseConfiguration);
-                var testCases = results as TestCase[] ?? results.ToArray();
-                var result = testCases.First();
-
-                if (!result.Errors.IsEmpty)
-                {
-                    _logger.Info($"Error(s) occured {result.Errors.Count}");
-                    failed = true;
-                    break;
-                }
-
-                _logger.Debug(testCases.AsTable());
-                _logger.Debug($"#{i+1}. {result.Elapsed.TotalSeconds:N} sec(s)");
-                trialTimespans[i] = result.Elapsed;
-            }
-
-            if (failed)
-                break;
-
-            var averageTiming = trialTimespans.Timing(configuration.CalculationFunction);
-            _logger.Info($"{configuration.CalculationFunction}: {averageTiming.TotalSeconds:N}");
-
-            if (averageTiming.TotalSeconds < 1d)
-            {
-                lastMinimumRequestCount = requestCount;
-            }
-            else
-            {
-                _logger.Debug($"requestCount:{requestCount}, lastMinimumRequestCount:{lastMinimumRequestCount}");
-
-                // Found maximum request count. Now, try to determine limits.
-                requestCountCacheQueue.Clear();
-                Enumerable.Range(0, 31)
-                    .Select(f => lastMinimumRequestCount + (int) Math.Pow(2, f))
-                    .Where(f => f < requestCount)
-                    .ToList()
-                    .ForEach(f => requestCountCacheQueue.Enqueue(f));
-
-                if (requestCountCacheQueue.Any())
-                {
-                    var last = requestCountCacheQueue.Last();
-                    var lastPartLength = requestCount - last;
-
-                    // Fill last gap between last value of the limit and last value
-                    Enumerable.Range(last, lastPartLength)
-                        .ToList()
-                        .ForEach(f => requestCountCacheQueue.Enqueue(f));
-                }
-
-                _logger.Debug($"New range: [{string.Join(',', requestCountCacheQueue)}]");
-            }
-        }
-
-        return lastMinimumRequestCount;
+        _credentialProviders.Add(credentialProvider.GetType().Name, credentialProvider);
     }
-    
     private ActionBlock<TestCase> CreateActionBlock(
-        WebBenHttpClientAccessor webBenHttpClientAccessor,
+        HttpClientAccessor httpClientAccessor,
         int parallelism
     )
     {
@@ -207,14 +126,14 @@ public class HttpTestContext
             if (testCase.Configuration == null)
                 throw new ArgumentNullException(nameof(testCase.Configuration));
 
-            var httpRequestMessage = BuildHttpRequestMessage(testCase, webBenHttpClientAccessor);
+            var httpRequestMessage = BuildHttpRequestMessage(testCase, httpClientAccessor);
 
             try
             {
                 var stopWatch = new Stopwatch();
                 stopWatch.Start();
 
-                var httpResponseMessage = await webBenHttpClientAccessor.Client.SendAsync(httpRequestMessage);
+                var httpResponseMessage = await httpClientAccessor.Client.SendAsync(httpRequestMessage);
                 if (testCase.Configuration!.FetchContent)
                     await httpResponseMessage.Content.ReadAsStringAsync();
 
@@ -246,7 +165,7 @@ public class HttpTestContext
 
     private static HttpRequestMessage BuildHttpRequestMessage(
         TestCase testCaseInstance,
-        WebBenHttpClientAccessor webBenHttpClientAccessor)
+        HttpClientAccessor httpClientAccessor)
     {
         var httpRequestMessage = new HttpRequestMessage(
             new HttpMethod(testCaseInstance.Configuration.HttpMethod),
@@ -256,11 +175,11 @@ public class HttpTestContext
         // Set cookies
         if (testCaseInstance.Configuration.Cookies != null)
         {
-            if (webBenHttpClientAccessor.CookieContainer == null)
+            if (httpClientAccessor.CookieContainer == null)
                 throw new InvalidProgramException("Cookie container is null");
 
             foreach (var cookie in testCaseInstance.Configuration.Cookies)
-                webBenHttpClientAccessor.CookieContainer.Add(
+                httpClientAccessor.CookieContainer.Add(
                     testCaseInstance.Configuration.Uri!,
                     new Cookie(cookie.Key, $"{cookie.Value}")
                 );

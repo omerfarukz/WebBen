@@ -1,6 +1,6 @@
-using WebBen.Common.CredentialProviders;
+using WebBen.Core.CredentialProviders;
 
-namespace WebBen.Common.Configuration;
+namespace WebBen.Core.Configuration;
 
 public class CredentialConfiguration
 {

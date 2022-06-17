@@ -1,13 +1,13 @@
 using System.Net;
 
-namespace WebBen.Common;
+namespace WebBen.Core;
 
-internal class WebBenHttpClientAccessor : IDisposable
+internal class HttpClientAccessor : IDisposable
 {
     public HttpClient Client { get; }
     public CookieContainer? CookieContainer { get; }
-    
-    public WebBenHttpClientAccessor(TestCase testCase, ICredentials? credentials)
+
+    public HttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {
         if (testCase == null)
             throw new ArgumentNullException(nameof(testCase));
@@ -17,7 +17,7 @@ internal class WebBenHttpClientAccessor : IDisposable
             AllowAutoRedirect = testCase.Configuration.AllowRedirect,
             MaxConnectionsPerServer = int.MaxValue
         };
- 
+
         // Credential
         handler.UseDefaultCredentials = testCase.Configuration.UseDefaultCredentials;
         if (credentials != null)
@@ -27,7 +27,7 @@ internal class WebBenHttpClientAccessor : IDisposable
         if (testCase.Configuration.UseCookieContainer || testCase.Configuration.Cookies != null)
         {
             CookieContainer = new CookieContainer();
-            
+
             handler.UseCookies = true;
             handler.CookieContainer = CookieContainer;
         }

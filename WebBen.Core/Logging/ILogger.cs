@@ -1,4 +1,4 @@
-namespace WebBen.Common.Logging;
+namespace WebBen.Core.Logging;
 
 public interface ILogger
 {

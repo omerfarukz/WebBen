@@ -1,7 +1,7 @@
 using System.Collections.Concurrent;
-using WebBen.Common.Configuration;
+using WebBen.Core.Configuration;
 
-namespace WebBen.Common;
+namespace WebBen.Core;
 
 public record TestCase(CaseConfiguration Configuration)
 {
@@ -11,8 +11,8 @@ public record TestCase(CaseConfiguration Configuration)
     /// <summary>
     ///     Keep time spend in milliseconds
     /// </summary>
-    public ConcurrentBag<TimeSpan> Timings { get; internal set; } = new();
+    public ConcurrentBag<TimeSpan> Timings { get; } = new();
 
-    public ConcurrentBag<string> Errors { get; set; } = new();
+    public ConcurrentBag<string> Errors { get; } = new();
     public TimeSpan Elapsed { get; internal set; }
 }

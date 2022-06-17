@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace WebBen.Common.CredentialProviders;
+namespace WebBen.Core.CredentialProviders;
 
 public class NetworkCredentialProvider : ICredentialProvider
 {

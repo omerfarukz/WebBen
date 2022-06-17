@@ -1,8 +1,9 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using WebBen.Common;
-using WebBen.Common.Logging;
-using WebBen.Common.Extensions;
+using WebBen.Core;
+using WebBen.Core.Configuration.Source;
+using WebBen.Core.Logging;
+using WebBen.Core.Extensions;
 
 namespace WebBen.CLI.CommandLine;
 
@@ -20,7 +21,7 @@ internal class ConfigCommand : Command
     private async Task Handle(FileInfo fileInfo)
     {
         var context = new HttpTestContext(_logger);
-        var result = await context.Execute(fileInfo);
+        var result = await context.Execute(new FileConfigurationSource(fileInfo.FullName));
         _logger.Info(result.AsTable());
     }
 }

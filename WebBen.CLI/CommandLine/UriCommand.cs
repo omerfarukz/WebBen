@@ -1,9 +1,9 @@
 using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
-using WebBen.Common;
-using WebBen.Common.Configuration;
-using WebBen.Common.Logging;
-using WebBen.Common.Extensions;
+using WebBen.Core;
+using WebBen.Core.Configuration;
+using WebBen.Core.Logging;
+using WebBen.Core.Extensions;
 
 namespace WebBen.CLI.CommandLine;
 

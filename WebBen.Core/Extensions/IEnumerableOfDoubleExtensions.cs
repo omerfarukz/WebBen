@@ -1,6 +1,6 @@
-using WebBen.Common.Configuration;
+using WebBen.Core.Configuration;
 
-namespace WebBen.Common.Extensions;
+namespace WebBen.Core.Extensions;
 
 public static class EnumerableOfDoubleExtensions
 {

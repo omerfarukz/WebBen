@@ -45,7 +45,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebBen.Common\WebBen.Common.csproj" />
+      <ProjectReference Include="..\WebBen.Core\WebBen.Core.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+            <_Parameter1>WebBen.Tests</_Parameter1>
+        </AssemblyAttribute>
+    </ItemGroup>
+    
 </Project>

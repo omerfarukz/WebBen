@@ -1,4 +1,4 @@
-namespace WebBen.Common.Configuration;
+namespace WebBen.Core.Configuration;
 
 public enum CalculationFunction
 {
