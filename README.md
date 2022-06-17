@@ -1,6 +1,6 @@
 # WebBen[chmark]
 
-Yet another http benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
+Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
 results. Parallelize the execution of test cases.
 
 Runs on mac, linux and windows.
