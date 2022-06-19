@@ -85,7 +85,7 @@ Output:
   "TestCaseConfigurations": [
     {
       "Name": "search_term_page_2_ntlm",
-      "Uri": "https://internal.contoso.com/Ajax.ashx?search=term&page=2",
+      "Uri": "https://internal.contoso.com/products?search=term&page=2",
       "NumberOfRequests": 50,
       "FetchContent": false,
       "Parallelism": 50,
