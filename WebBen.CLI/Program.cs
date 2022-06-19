@@ -2,22 +2,17 @@
 using WebBen.CLI;
 using WebBen.CLI.CommandLine;
 
-var logger = new ConsoleLogger();
-AppDomain.CurrentDomain.UnhandledException += (s, e) => { logger.Error($"{e.ExceptionObject}"); };
-
-// Build commands
-var rootCommand = new RootCommand
+var logger = new ConsoleLogger(Console.Out);
+AppDomain.CurrentDomain.UnhandledException += (s, e) =>
 {
-    new ConfigCommand(logger),
-    new UriCommand(logger),
-    new AnalyzeCommand(logger)
+    logger.Error($"{e.ExceptionObject}");
 };
-var verboseOption = new Option<bool>(new[] {"--verbose", "-v"}, "Enable verbose output");
-rootCommand.AddGlobalOption(verboseOption);
+
+var rootCommand = new WebBenRootCommand(logger);
 
 // Invoke command
 var parseResult = rootCommand.Parse(args);
-var verbose = parseResult.GetValueForOption<bool>(verboseOption);
+var verbose = parseResult.GetValueForOption<bool>(rootCommand.VerboseOption);
 logger.Verbose = verbose;
 
 await rootCommand.InvokeAsync(args);

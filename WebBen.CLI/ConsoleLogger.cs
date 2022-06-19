@@ -4,29 +4,32 @@ namespace WebBen.CLI;
 
 internal class ConsoleLogger : ILogger
 {
+    private readonly TextWriter _writer;
+
+    public ConsoleLogger(TextWriter writer)
+    {
+        _writer = writer;
+    }
+
     public void Info(string message)
     {
-        Console.WriteLine(message);
+        WriteOut(nameof(Info), message);
     }
 
     public void Debug(string message)
     {
         if (Verbose)
-            Console.WriteLine(message);
+            WriteOut(nameof(Debug), message);
     }
 
     public void Error(string message)
     {
-        if(!Verbose)
-            return;
-        
-        lock (Console.Out)
-        {
-            var foregroundColor = Console.ForegroundColor;
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(message);
-            Console.ForegroundColor = foregroundColor;
-        }
+        WriteOut(nameof(Error), message);
+    }
+
+    private void WriteOut(string level, string message)
+    {
+        _writer.WriteLine($"{level}: {message}");
     }
 
     public bool Verbose { get; set; }

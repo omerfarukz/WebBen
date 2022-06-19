@@ -28,11 +28,32 @@ public class HttpTestContextTests
     }
 
     [Test]
+    public void Add_Null_Credential_Provider_Should_Throw()
+    {
+        Assert.Throws<ArgumentNullException>(() => _httpTestContext.AddCredentialProvider(null!));
+    }
+    
+    [Test]
+    public async Task Non_Existing_Url_Should_Return_Error()
+    {
+        var caseConfiguration = new CaseConfiguration();
+        caseConfiguration.Uri = new Uri("http://non.existing.url");
+        caseConfiguration.RequestCount = 1;
+        
+        var allResults = await _httpTestContext.Execute(caseConfiguration);
+        Assert.NotNull(allResults);
+        var testCases = allResults as TestCase[] ?? allResults.ToArray();
+        Assert.NotNull(testCases.First().Errors);
+        Assert.IsNotEmpty(testCases.First().Errors);
+        Assert.AreEqual(1, testCases.First().Errors.Count);
+    }
+
+    [Test]
     public async Task LoadFromConfiguration_Should_Execute()
     {
         var caseConfiguration = new CaseConfiguration();
         caseConfiguration.Uri = _uri;
-        caseConfiguration.RequestCount = 3;
+        caseConfiguration.RequestCount = 1;
 
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
@@ -116,7 +137,7 @@ public class HttpTestContextTests
         configuration.MaxTrialCount = 1;
         configuration.CalculationFunction = CalculationFunction.Median;
 
-        var RPS = await _httpTestContext.GetLastRPS(configuration, new MockLogger());
+        var RPS = await _httpTestContext.GetLastRequestPerSecond(configuration, new MockLogger());
         Assert.NotZero(RPS);
     }
 
@@ -134,6 +155,24 @@ public class HttpTestContextTests
             Encoding = Encoding.UTF8.WebName
         };
 
+        var allResults = await _httpTestContext.Execute(caseConfiguration);
+        Assert.NotNull(allResults);
+        Assert.AreEqual(1, allResults.Count());
+    }
+
+    [Test]
+    public async Task BuildHttpClient_Should_Execute_With_HeaderCookieAndBody()
+    {
+        var caseConfiguration = new CaseConfiguration();
+        caseConfiguration.Uri = _uri;
+        caseConfiguration.Headers = new Dictionary<string, object>() {{"foo", "bar"}};
+        caseConfiguration.Cookies = new Dictionary<string, object>() {{"foo", "bar"}};
+        caseConfiguration.Body = new BodyConfiguration()
+        {
+            Content = "foo",
+            ContentType = "text/plain",
+            Encoding = Encoding.UTF8.WebName
+        };
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
         Assert.AreEqual(1, allResults.Count());

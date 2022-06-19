@@ -7,12 +7,13 @@ public class FileConfigurationSource : IConfigurationSource
     public FileConfigurationSource(string filePath)
     {
         _filePath = filePath ?? throw new ArgumentNullException(nameof(filePath));
-        if (!File.Exists(filePath))
-            throw new FileNotFoundException(nameof(filePath));
     }
 
     public async Task<string> GetContent()
     {
+        if (!File.Exists(_filePath))
+            throw new FileNotFoundException(nameof(_filePath));
+        
         return await File.ReadAllTextAsync(_filePath);
     }
 }

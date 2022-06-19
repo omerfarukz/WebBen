@@ -21,8 +21,7 @@ public class HttpTestContext
             {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
         };
 
-        if (!Stopwatch.IsHighResolution)
-            throw new InvalidOperationException("Low resolution timer(Stopwatch) is not supported.");
+        _logger.Debug($"Resolution timer is '{Stopwatch.IsHighResolution}' precision");
     }
 
     /// <summary>
@@ -56,7 +55,7 @@ public class HttpTestContext
         }
 
         _logger.Debug($"Waiting for all requests to finish...");
-        
+
         actionBlock.Complete();
         await actionBlock.Completion;
 
@@ -110,9 +109,10 @@ public class HttpTestContext
     {
         if (credentialProvider == null)
             throw new ArgumentNullException(nameof(credentialProvider));
-        
+
         _credentialProviders.Add(credentialProvider.GetType().Name, credentialProvider);
     }
+
     private ActionBlock<TestCase> CreateActionBlock(
         HttpClientAccessor httpClientAccessor,
         int parallelism

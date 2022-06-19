@@ -44,7 +44,7 @@ public static class HttpTestContextExtensions
         return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
 
-    public static async Task<int> GetLastRPS(this HttpTestContext httpTestContext, AnalyzeConfiguration analyzeConfiguration, ILogger logger)
+    public static async Task<int> GetLastRequestPerSecond(this HttpTestContext httpTestContext, AnalyzeConfiguration analyzeConfiguration, ILogger logger)
     {
         var lastMinimumRequestCount = 1;
         

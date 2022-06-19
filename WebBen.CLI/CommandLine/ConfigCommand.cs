@@ -10,12 +10,13 @@ namespace WebBen.CLI.CommandLine;
 internal class ConfigCommand : Command
 {
     private readonly ILogger _logger;
+    public const string CommandName = "config";
 
-    public ConfigCommand(ILogger logger) : base("config")
+    public ConfigCommand(ILogger logger) : base(CommandName)
     {
-        _logger = logger;
         AddArgument(new Argument<FileInfo>("fileInfo", "The file to read the configuration from"));
         Handler = CommandHandler.Create(Handle);
+        _logger = logger;
     }
 
     private async Task Handle(FileInfo fileInfo)

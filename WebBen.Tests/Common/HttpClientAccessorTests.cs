@@ -27,6 +27,22 @@ public class HttpClientAccessorTests
         Assert.Null(httpClientAccessor.CookieContainer);
         
         httpClientAccessor.Dispose();
+    }   
+    
+    [Test]
+    public void Cookie_Container_Should_Not_Be_Null()
+    {
+        var caseConfiguration = new CaseConfiguration();
+        caseConfiguration.Uri = new Uri("http://localhost");
+        caseConfiguration.UseCookieContainer = true;
+        
+        var testCase = new TestCase(caseConfiguration);
+        var httpClientAccessor = new HttpClientAccessor(testCase, null);
+        
+        Assert.NotNull(httpClientAccessor.Client);
+        Assert.NotNull(httpClientAccessor.CookieContainer);
+        
+        httpClientAccessor.Dispose();
     }
 
     [Test]

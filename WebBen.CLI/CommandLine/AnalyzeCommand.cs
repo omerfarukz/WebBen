@@ -10,8 +10,9 @@ namespace WebBen.CLI.CommandLine;
 internal class AnalyzeCommand : Command
 {
     private readonly ILogger _logger;
-
-    public AnalyzeCommand(ILogger logger) : base("analyze")
+    public const string CommandName = "analyze";
+    
+    public AnalyzeCommand(ILogger logger) : base(CommandName)
     {
         _logger = logger;
 
@@ -27,10 +28,10 @@ internal class AnalyzeCommand : Command
         Handler = CommandHandler.Create(Handle);
     }
 
-    internal async Task Handle(AnalyzeConfiguration configuration)
+    private async Task Handle(AnalyzeConfiguration configuration)
     {
         var context = new HttpTestContext(_logger);
-        var result = await context.GetLastRPS(configuration, _logger);
+        var result = await context.GetLastRequestPerSecond(configuration, _logger);
         _logger.Info($"Best RPS is {result}");
     }
 }
