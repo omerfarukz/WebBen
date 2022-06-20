@@ -1,13 +1,9 @@
-using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace WebBen.Core;
 
 internal class HttpClientAccessor : IDisposable
 {
-    public HttpClient Client { get; }
-    public CookieContainer? CookieContainer { get; }
-
     public HttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {
         if (testCase == null)
@@ -37,6 +33,9 @@ internal class HttpClientAccessor : IDisposable
         Client.MaxResponseContentBufferSize = testCase.Configuration.MaxBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
     }
+
+    public HttpClient Client { get; }
+    public CookieContainer? CookieContainer { get; }
 
     public void Dispose()
     {

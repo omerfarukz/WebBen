@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Newtonsoft.Json;
 using WebBen.Core.Configuration;
 using WebBen.Core.Configuration.Source;
@@ -14,7 +13,7 @@ public class MockConfigurationSource : IConfigurationSource
     {
         _content = JsonConvert.SerializeObject(testConfiguration);
     }
-    
+
     public Task<string> GetContent()
     {
         return Task.FromResult(_content);

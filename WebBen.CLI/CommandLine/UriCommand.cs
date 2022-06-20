@@ -2,8 +2,8 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using WebBen.Core;
 using WebBen.Core.Configuration;
-using WebBen.Core.Logging;
 using WebBen.Core.Extensions;
+using WebBen.Core.Logging;
 
 namespace WebBen.CLI.CommandLine;
 
@@ -30,6 +30,6 @@ internal class UriCommand : Command
     {
         var context = new HttpTestContext(_logger);
         var result = await context.Execute(configuration);
-        _logger.Info(result.AsTable());
+        Console.WriteLine(result.AsTable());
     }
 }

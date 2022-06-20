@@ -30,7 +30,7 @@ public static class HttpTestContextExtensions
     {
         if (configurationFile == null)
             throw new ArgumentNullException(nameof(configurationFile));
-        
+
         var configurationData = JsonNode.Parse(await configurationFile.GetContent());
         var testConfigurations = configurationData?["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
         var credentialConfigurations =
@@ -45,10 +45,11 @@ public static class HttpTestContextExtensions
         return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
 
-    public static async Task<AnalyzeResult> Analyze(this HttpTestContext httpTestContext, AnalyzeConfiguration analyzeConfiguration, ILogger logger)
+    public static async Task<AnalyzeResult> Analyze(this HttpTestContext httpTestContext,
+        AnalyzeConfiguration analyzeConfiguration, ILogger logger)
     {
         var maxRequestForSecond = 1;
-        
+
         // Find best request per second by scaling time
         // 1, 2, 4, 8, 16 ... 2^32
         var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
@@ -70,9 +71,9 @@ public static class HttpTestContextExtensions
 
             caseConfiguration.Parallelism = requestCount;
             caseConfiguration.RequestCount = requestCount;
-            
+
             logger.Info($"Create request with maximum parallelism: {requestCount}");
-            
+
             var failed = false;
             var trialTimespans = new TimeSpan[analyzeConfiguration.MaxTrialCount];
             for (var i = 0; i < analyzeConfiguration.MaxTrialCount; i++)
@@ -92,7 +93,7 @@ public static class HttpTestContextExtensions
 
                 resultBag.Add(result);
                 logger.Debug(testCases.AsTable());
-                logger.Debug($"#{i+1}. {result.Elapsed.TotalSeconds:N} sec(s)");
+                logger.Debug($"#{i + 1}. {result.Elapsed.TotalSeconds:N} sec(s)");
                 trialTimespans[i] = result.Elapsed;
             }
 
@@ -139,12 +140,6 @@ public static class HttpTestContextExtensions
         return analyzeResult;
     }
 
-    public class AnalyzeResult
-    {
-        public IReadOnlyCollection<TestCase> AllResults { get; set; }
-        public int MaxRPS { get; set; }
-    }
-
     public static string AsTable(this IEnumerable<TestCase> testCases)
     {
         var asTable = testCases.ToStringTable(
@@ -160,5 +155,11 @@ public static class HttpTestContextExtensions
         );
 
         return asTable;
+    }
+
+    public class AnalyzeResult
+    {
+        public IReadOnlyCollection<TestCase> AllResults { get; set; }
+        public int MaxRPS { get; set; }
     }
 }

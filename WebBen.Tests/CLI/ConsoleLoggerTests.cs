@@ -25,7 +25,7 @@ public class ConsoleLoggerTests
         var message = Guid.NewGuid().ToString();
         logger.Debug(message);
 
-        string actual = ReadAndClearConsoleOut();
+        var actual = ReadAndClearConsoleOut();
         Assert.AreEqual(0, actual.Length);
 
         logger.Verbose = true;
@@ -37,7 +37,7 @@ public class ConsoleLoggerTests
         logger.Info(message);
         actual = ReadAndClearConsoleOut();
         Assert.AreEqual($"Info: {message}\n", actual);
-        
+
         logger.Error(message);
         actual = ReadAndClearConsoleOut();
         Assert.AreEqual($"Error: {message}\n", actual);
@@ -46,7 +46,7 @@ public class ConsoleLoggerTests
     private string ReadAndClearConsoleOut()
     {
         _streamWriter.Flush();
-        var text= Encoding.ASCII.GetString(_memoryStream.ToArray());
+        var text = Encoding.ASCII.GetString(_memoryStream.ToArray());
         _memoryStream.SetLength(0);
         return text;
     }

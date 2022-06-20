@@ -14,9 +14,9 @@ namespace WebBen.Tests.Common;
 
 public class HttpTestContextTests
 {
-    private Uri _uri = null!;
-    private WebApplication _server;
     private HttpTestContext _httpTestContext;
+    private WebApplication _server;
+    private Uri _uri = null!;
 
     [SetUp]
     public void Setup()
@@ -32,14 +32,14 @@ public class HttpTestContextTests
     {
         Assert.Throws<ArgumentNullException>(() => _httpTestContext.AddCredentialProvider(null!));
     }
-    
+
     [Test]
     public async Task Non_Existing_Url_Should_Return_Error()
     {
         var caseConfiguration = new CaseConfiguration();
         caseConfiguration.Uri = new Uri("http://non.existing.url");
         caseConfiguration.RequestCount = 1;
-        
+
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
         var testCases = allResults as TestCase[] ?? allResults.ToArray();
@@ -75,9 +75,9 @@ public class HttpTestContextTests
         caseConfiguration.RequestCount = 3;
         caseConfiguration.CredentialConfigurationKey = "Mock";
 
-        var credentialConfiguration = new CredentialConfiguration()
+        var credentialConfiguration = new CredentialConfiguration
         {
-            Data = new Dictionary<string, object>()
+            Data = new Dictionary<string, object>
             {
                 {"username", "test"},
                 {"password", "test"}
@@ -86,7 +86,7 @@ public class HttpTestContextTests
             Provider = nameof(MockCredentialProvider)
         };
 
-        var testConfiguration = new TestConfiguration()
+        var testConfiguration = new TestConfiguration
         {
             TestCaseConfigurations = new[] {caseConfiguration},
             CredentialConfigurations = new[] {credentialConfiguration}
@@ -111,7 +111,7 @@ public class HttpTestContextTests
         caseConfiguration.Uri = _uri;
         caseConfiguration.RequestCount = 3;
 
-        var testConfiguration = new TestConfiguration()
+        var testConfiguration = new TestConfiguration
         {
             TestCaseConfigurations = new[] {caseConfiguration}
         };
@@ -149,7 +149,7 @@ public class HttpTestContextTests
         caseConfiguration.HttpMethod = "POST";
         caseConfiguration.Uri = _uri;
         caseConfiguration.RequestCount = 3;
-        caseConfiguration.Body = new BodyConfiguration()
+        caseConfiguration.Body = new BodyConfiguration
         {
             Content = "test",
             ContentType = "text/plain",
@@ -166,9 +166,9 @@ public class HttpTestContextTests
     {
         var caseConfiguration = new CaseConfiguration();
         caseConfiguration.Uri = _uri;
-        caseConfiguration.Headers = new Dictionary<string, object>() {{"foo", "bar"}};
-        caseConfiguration.Cookies = new Dictionary<string, object>() {{"foo", "bar"}};
-        caseConfiguration.Body = new BodyConfiguration()
+        caseConfiguration.Headers = new Dictionary<string, object> {{"foo", "bar"}};
+        caseConfiguration.Cookies = new Dictionary<string, object> {{"foo", "bar"}};
+        caseConfiguration.Body = new BodyConfiguration
         {
             Content = "foo",
             ContentType = "text/plain",

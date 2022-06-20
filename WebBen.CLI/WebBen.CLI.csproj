@@ -40,12 +40,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
-        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
+        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\WebBen.Core\WebBen.Core.csproj" />
+        <ProjectReference Include="..\WebBen.Core\WebBen.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
@@ -53,5 +53,5 @@
             <_Parameter1>WebBen.Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
-    
+
 </Project>

@@ -6,7 +6,7 @@ namespace WebBen.CLI.CommandLine;
 internal class WebBenRootCommand : RootCommand
 {
     public readonly Option<bool> VerboseOption;
-    
+
     public WebBenRootCommand(ILogger logger)
     {
         AddCommand(new ConfigCommand(logger));

@@ -13,7 +13,7 @@ public class FileConfigurationSource : IConfigurationSource
     {
         if (!File.Exists(_filePath))
             throw new FileNotFoundException(nameof(_filePath));
-        
+
         return await File.ReadAllTextAsync(_filePath);
     }
 }

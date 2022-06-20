@@ -17,7 +17,7 @@ public static class EnumerableOfDoubleExtensions
                 $"{nameof(calculationFunction)}: {calculationFunction}")
         };
     }
-    
+
     public static TimeSpan Average(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Average());
@@ -79,7 +79,7 @@ public static class EnumerableOfDoubleExtensions
         var num = array.Length;
         if (num == 0) return 0;
 
-        if (num % 2 == 0) 
+        if (num % 2 == 0)
             return (array[num / 2] + array[num / 2 - 1]) / 2.0;
 
         return array[num / 2];

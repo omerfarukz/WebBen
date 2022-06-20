@@ -2,15 +2,15 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using WebBen.Core;
 using WebBen.Core.Configuration.Source;
-using WebBen.Core.Logging;
 using WebBen.Core.Extensions;
+using WebBen.Core.Logging;
 
 namespace WebBen.CLI.CommandLine;
 
 internal class ConfigCommand : Command
 {
-    private readonly ILogger _logger;
     public const string CommandName = "config";
+    private readonly ILogger _logger;
 
     public ConfigCommand(ILogger logger) : base(CommandName)
     {
@@ -23,6 +23,6 @@ internal class ConfigCommand : Command
     {
         var context = new HttpTestContext(_logger);
         var result = await context.Execute(new FileConfigurationSource(fileInfo.FullName));
-        _logger.Info(result.AsTable());
+        Console.WriteLine(result.AsTable());
     }
 }

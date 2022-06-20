@@ -25,12 +25,12 @@ public class HttpTestContext
     }
 
     /// <summary>
-    /// TODO: return strong typed object
+    ///     TODO: return strong typed object
     /// </summary>
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    public async Task Execute(TestCase testCase, ICredentials? credentials)
+    private async Task Execute(TestCase testCase, ICredentials? credentials)
     {
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
@@ -54,7 +54,7 @@ public class HttpTestContext
             await actionBlock.SendAsync(testCase);
         }
 
-        _logger.Debug($"Waiting for all requests to finish...");
+        _logger.Debug("Waiting for all requests to finish...");
 
         actionBlock.Complete();
         await actionBlock.Completion;

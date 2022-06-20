@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -8,13 +9,13 @@ public class MockWebApplication
 {
     public static WebApplication CreateServer()
     {
-        var builder = WebApplication.CreateBuilder(new string[0]);
+        var builder = WebApplication.CreateBuilder(Array.Empty<string>());
         builder.Services.AddEndpointsApiExplorer();
 
         var app = builder.Build();
         app.Map("/", () => "hello");
         app.Start();
-        
+
         return app;
     }
 }

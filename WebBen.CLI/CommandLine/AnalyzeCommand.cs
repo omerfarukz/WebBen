@@ -9,9 +9,9 @@ namespace WebBen.CLI.CommandLine;
 
 internal class AnalyzeCommand : Command
 {
-    private readonly ILogger _logger;
     public const string CommandName = "analyze";
-    
+    private readonly ILogger _logger;
+
     public AnalyzeCommand(ILogger logger) : base(CommandName)
     {
         _logger = logger;
@@ -33,6 +33,6 @@ internal class AnalyzeCommand : Command
         var context = new HttpTestContext(_logger);
         var result = await context.Analyze(configuration, _logger);
 
-        _logger.Info($"Best RPS is {result.MaxRPS}");
+        Console.WriteLine($"Best RPS is {result.MaxRPS}");
     }
 }

@@ -1,15 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Builder;
 using NUnit.Framework;
-using WebBen.Core;
-using WebBen.Core.Configuration;
 using WebBen.Core.CredentialProviders;
-using WebBen.Core.Extensions;
-using WebBen.Tests.Mocks;
 
 namespace WebBen.Tests.Common;
 
@@ -21,7 +14,7 @@ public class NetworkCredentiaProviderlTests
         var provider = new NetworkCredentialProvider();
         var username = "username";
         var password = "password";
-        var credentials = provider.FromConfiguration(new Dictionary<string, object>()
+        var credentials = provider.FromConfiguration(new Dictionary<string, object>
         {
             {"username", username},
             {"password", password}
@@ -37,22 +30,20 @@ public class NetworkCredentiaProviderlTests
     {
         var provider = new NetworkCredentialProvider();
         Assert.Throws<InvalidDataException>(() => provider.FromConfiguration(
-            new Dictionary<string, object>()
+            new Dictionary<string, object>
             {
                 {"username", "username"}
             }), "username or password node is null or empty");
-        
+
         provider = new NetworkCredentialProvider();
         Assert.Throws<InvalidDataException>(() => provider.FromConfiguration(
-            new Dictionary<string, object>()
+            new Dictionary<string, object>
             {
                 {"password", "password"}
             }), "username or password node is null or empty");
-        
+
         provider = new NetworkCredentialProvider();
         Assert.Throws<InvalidDataException>(() => provider.FromConfiguration(
-            new Dictionary<string, object>()
-            { }), "username or password node is null or empty");
-
+            new Dictionary<string, object>()), "username or password node is null or empty");
     }
 }

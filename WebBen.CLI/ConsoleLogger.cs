@@ -11,6 +11,8 @@ internal class ConsoleLogger : ILogger
         _writer = writer;
     }
 
+    public bool Verbose { get; set; }
+
     public void Info(string message)
     {
         WriteOut(nameof(Info), message);
@@ -31,6 +33,4 @@ internal class ConsoleLogger : ILogger
     {
         _writer.WriteLine($"{level}: {message}");
     }
-
-    public bool Verbose { get; set; }
 }

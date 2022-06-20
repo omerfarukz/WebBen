@@ -1,6 +1,7 @@
 # WebBen[chmark]
 
-Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and compare the
+Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and
+compare the
 results. Parallelize the execution of test cases.
 
 Runs on mac, linux and windows.
@@ -8,9 +9,11 @@ Runs on mac, linux and windows.
 [![dotnet build & pack](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml)
 
 ## Install
+
 ```shell
 dotnet tool install --global webben
 ```
+
 ## Usage samples
 
 ```shell
@@ -76,6 +79,7 @@ Output:
   Max RPS for this uri is: 283.
 
 ```
+
 ![analyze2](https://raw.githubusercontent.com/omerfarukz/WebBen/master/Assets/analyze2.gif)
 
 ## Configuration Sample
@@ -120,10 +124,10 @@ Output:
 ## Output
 
 ```shell
- | Name                    | NoR  | Pll | BC  | Err | Avg    | Min   | Max      | P90    | P80    | Median | 
- |---------------------------------------------------------------------------------------------------------| 
- | search_term_page_2_ntlm | 1000 | 500 | 250 | 0   | 345.50 | 25.36 | 1,240.98 | 924.09 | 748.85 | 248.23 | 
- | another_uri_anonym      | 1000 | 100 | 100 | 0   | 125.02 | 74.94 | 240.27   | 193.38 | 168.92 | 101.66 |
+ | Name                    | NoR  | Pll | Err | Avg    | Min   | Max      | P90    | P80    | 
+ |------------------------------------------------------------------------------------------| 
+ | search_term_page_2_ntlm | 1000 | 500 | 0   | 345.50 | 25.36 | 1,240.98 | 924.09 | 748.85 | 
+ | another_uri_anonym      | 1000 | 100 | 0   | 125.02 | 74.94 | 240.27   | 193.38 | 168.92 |
 ```
 
 ## Other features
@@ -186,6 +190,7 @@ Content-Length: 15
 ```
 
 ## :yum: How to contribute
+
 Have an idea? Found a bug? Do not hasistate to contirubute. :rocket:
 
 Thanks! :heart:
