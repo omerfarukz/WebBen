@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebBen.Core.Configuration;
@@ -44,9 +45,9 @@ public static class HttpTestContextExtensions
         return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
 
-    public static async Task<int> GetLastRequestPerSecond(this HttpTestContext httpTestContext, AnalyzeConfiguration analyzeConfiguration, ILogger logger)
+    public static async Task<AnalyzeResult> Analyze(this HttpTestContext httpTestContext, AnalyzeConfiguration analyzeConfiguration, ILogger logger)
     {
-        var lastMinimumRequestCount = 1;
+        var maxRequestForSecond = 1;
         
         // Find best request per second by scaling time
         // 1, 2, 4, 8, 16 ... 2^32
@@ -62,6 +63,7 @@ public static class HttpTestContextExtensions
             AllowRedirect = analyzeConfiguration.AllowRedirect
         };
 
+        var resultBag = new ConcurrentBag<TestCase>();
         while (requestCountCacheQueue.Any())
         {
             var requestCount = requestCountCacheQueue.Dequeue();
@@ -88,6 +90,7 @@ public static class HttpTestContextExtensions
                     break;
                 }
 
+                resultBag.Add(result);
                 logger.Debug(testCases.AsTable());
                 logger.Debug($"#{i+1}. {result.Elapsed.TotalSeconds:N} sec(s)");
                 trialTimespans[i] = result.Elapsed;
@@ -101,16 +104,16 @@ public static class HttpTestContextExtensions
 
             if (averageTiming.TotalSeconds < 1d)
             {
-                lastMinimumRequestCount = requestCount;
+                maxRequestForSecond = requestCount;
             }
             else
             {
-                logger.Debug($"requestCount:{requestCount}, lastMinimumRequestCount:{lastMinimumRequestCount}");
+                logger.Debug($"requestCount:{requestCount}, lastMinimumRequestCount:{maxRequestForSecond}");
 
                 // Found maximum request count. Now, try to determine limits.
                 requestCountCacheQueue.Clear();
                 Enumerable.Range(0, 31)
-                    .Select(f => lastMinimumRequestCount + (int) Math.Pow(2, f))
+                    .Select(f => maxRequestForSecond + (int) Math.Pow(2, f))
                     .Where(f => f < requestCount)
                     .ToList()
                     .ForEach(f => requestCountCacheQueue.Enqueue(f));
@@ -130,7 +133,16 @@ public static class HttpTestContextExtensions
             }
         }
 
-        return lastMinimumRequestCount;
+        var analyzeResult = new AnalyzeResult();
+        analyzeResult.AllResults = resultBag;
+        analyzeResult.MaxRPS = maxRequestForSecond;
+        return analyzeResult;
+    }
+
+    public class AnalyzeResult
+    {
+        public IReadOnlyCollection<TestCase> AllResults { get; set; }
+        public int MaxRPS { get; set; }
     }
 
     public static string AsTable(this IEnumerable<TestCase> testCases)

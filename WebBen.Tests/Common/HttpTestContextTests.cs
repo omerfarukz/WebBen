@@ -137,8 +137,9 @@ public class HttpTestContextTests
         configuration.MaxTrialCount = 1;
         configuration.CalculationFunction = CalculationFunction.Median;
 
-        var RPS = await _httpTestContext.GetLastRequestPerSecond(configuration, new MockLogger());
-        Assert.NotZero(RPS);
+        var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
+        Assert.IsNotEmpty(analyzeResult.AllResults);
+        Assert.NotZero(analyzeResult.MaxRPS);
     }
 
     [Test]

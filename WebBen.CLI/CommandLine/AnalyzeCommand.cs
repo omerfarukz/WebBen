@@ -31,7 +31,8 @@ internal class AnalyzeCommand : Command
     private async Task Handle(AnalyzeConfiguration configuration)
     {
         var context = new HttpTestContext(_logger);
-        var result = await context.GetLastRequestPerSecond(configuration, _logger);
-        _logger.Info($"Best RPS is {result}");
+        var result = await context.Analyze(configuration, _logger);
+
+        _logger.Info($"Best RPS is {result.MaxRPS}");
     }
 }
