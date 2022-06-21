@@ -3,14 +3,34 @@ using System.CommandLine;
 using System.CommandLine.Invocation;
 using System.IO;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using NUnit.Framework;
 using WebBen.CLI.CommandLine;
+using WebBen.Core.Configuration;
 using WebBen.Tests.Mocks;
 
 namespace WebBen.Tests.CLI;
 
 public class CommandTests
 {
+    private string _filePath;
+
+    [SetUp]
+    public void Setup()
+    {
+        var configuration = new TestConfiguration();
+        configuration.TestCaseConfigurations = new[]
+        {
+            new CaseConfiguration()
+            {
+                Uri = new Uri("http://foo.bar")
+            }
+        };
+
+        _filePath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        File.WriteAllText(_filePath, JsonConvert.SerializeObject(configuration));
+    }
+
     [Test]
     public async Task AnalyzeCommand_Should_Parse_Args()
     {
@@ -69,5 +89,11 @@ public class CommandTests
         parseResult = command.Parse("analyze http://foo.bar");
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
+    }
+    
+    [TearDown]
+    public void TearDown()
+    {
+        File.Delete(_filePath);
     }
 }
