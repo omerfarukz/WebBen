@@ -9,6 +9,12 @@ namespace WebBen.Tests.Common;
 public class HttpClientAccessorTests
 {
     [Test]
+    public void Create_New_With_Null_TestCase_Should_Throw_Exception()
+    {
+        Assert.Throws<ArgumentNullException>(() => new HttpClientAccessor(null!, null));
+    }
+
+    [Test]
     public void Create_New_Without_Credential_TestCase_Should_Pass()
     {
         var caseConfiguration = new CaseConfiguration();
@@ -50,7 +56,10 @@ public class HttpClientAccessorTests
         caseConfiguration.TimeoutInMs = caseConfigurationTimeoutInSeconds * 1000;
 
         var testCase = new TestCase(caseConfiguration);
-        var httpClientAccessor = new HttpClientAccessor(testCase, new MockCredential());
+        var mockCredential = new MockCredential();
+        Assert.Null(mockCredential.GetCredential(null!, null!));
+        
+        var httpClientAccessor = new HttpClientAccessor(testCase, mockCredential);
 
         Assert.NotNull(httpClientAccessor.Client);
         Assert.Null(httpClientAccessor.CookieContainer);

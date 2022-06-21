@@ -1,4 +1,8 @@
+using System;
 using System.CommandLine;
+using System.CommandLine.Invocation;
+using System.IO;
+using System.Threading.Tasks;
 using NUnit.Framework;
 using WebBen.CLI.CommandLine;
 using WebBen.Tests.Mocks;
@@ -8,7 +12,7 @@ namespace WebBen.Tests.CLI;
 public class CommandTests
 {
     [Test]
-    public void AnalyzeCommand_Should_Parse_Args()
+    public async Task AnalyzeCommand_Should_Parse_Args()
     {
         var command = new AnalyzeCommand(new MockLogger());
 
@@ -17,20 +21,26 @@ public class CommandTests
 
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
+        
+        
+        Assert.NotNull(command.Handler);
+        await command.Handler.InvokeAsync(new InvocationContext(parseResult));
     }
 
     [Test]
-    public void ConfigCommand_Should_Parse_Args()
+    public async Task ConfigCommand_Should_Parse_Args()
     {
         var command = new ConfigCommand(new MockLogger());
-        var parseResult = command.Parse("config.json");
+        var parseResult = command.Parse("assets/simple.json");
 
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
+
+        await command.Handle(new FileInfo("assets/simple.json"));
     }
 
     [Test]
-    public void UriCommand_Should_Parse_Args()
+    public async Task UriCommand_Should_Parse_Args()
     {
         var command = new UriCommand(new MockLogger());
 
@@ -39,6 +49,9 @@ public class CommandTests
 
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
+        
+        Assert.NotNull(command.Handler);
+        await command.Handler.InvokeAsync(new InvocationContext(parseResult));
     }
 
     [Test]

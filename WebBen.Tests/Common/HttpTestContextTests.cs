@@ -34,6 +34,84 @@ public class HttpTestContextTests
     }
 
     [Test]
+    public void Add_Null_Configuration_Args_Should_Throw()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var testCases = _httpTestContext.Execute(new[]
+            {
+                new TestCase(null)
+            }, null).Result;
+        });
+
+        Assert.Throws<AggregateException>(() =>
+        {
+            var testCases = _httpTestContext.Execute(new TestCase[]
+            {
+                null
+            }, null).Result;
+        });
+
+        Assert.Throws<AggregateException>(() =>
+        {
+            var testCases = _httpTestContext.Execute(null, null).Result;
+        });
+
+        Assert.Throws<AggregateException>(() =>
+        {
+            var configuration = new CaseConfiguration();
+            configuration.Uri = new Uri("http://foo.bar");
+            configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
+
+            var testCases = _httpTestContext.Execute(new List<TestCase>()
+            {
+                new TestCase(configuration)
+            }, null).Result;
+
+           
+        });
+        
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var configuration = new CaseConfiguration();
+            configuration.Uri = new Uri("http://foo.bar");
+            configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
+
+            var testCases = _httpTestContext.Execute(new List<TestCase>()
+            {
+                new TestCase(null!)
+            }, null).Result;
+
+           
+        });
+
+        Assert.Throws<AggregateException>(() =>
+        {
+            var testConfiguration = new TestConfiguration();
+            testConfiguration.CredentialConfigurations = new[]
+            {
+                new CredentialConfiguration()
+                {
+                    Data = new Dictionary<string, object>(),
+                    Key = Guid.NewGuid().ToString(),
+                    Provider = "NonExistingProviderName"
+                }
+            };
+            var configuration = new CaseConfiguration();
+            configuration.Uri = new Uri("http://foo.bar");
+            configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
+            testConfiguration.TestCaseConfigurations = new[]
+            {
+                new CaseConfiguration()
+            };
+
+            var testCases = _httpTestContext.Execute(
+                testConfiguration.TestCaseConfigurations.Select(f => new TestCase(f)),
+                testConfiguration.CredentialConfigurations).Result;
+        });
+    }
+
+    [Test]
     public async Task Non_Existing_Url_Should_Return_Error()
     {
         var caseConfiguration = new CaseConfiguration();

@@ -21,7 +21,7 @@ public class HttpTestContext
             {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
         };
 
-        _logger.Debug($"Resolution timer is '{Stopwatch.IsHighResolution}' precision");
+        _logger.Debug($"Timer resolution is set to '{(Stopwatch.IsHighResolution ? "high" : "low")}' precision");
     }
 
     /// <summary>
@@ -35,8 +35,7 @@ public class HttpTestContext
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
 
-        _logger.Debug($"Executing test case: {testCase.Configuration.Name}");
-        _logger.Debug($"Parallelism:\t\t{testCase.Configuration.Parallelism}");
+        _logger.Debug($"Executing test case: {testCase.Configuration.Name}, Parallelism:\t\t{testCase.Configuration.Parallelism}");
 
         using var accessor = new HttpClientAccessor(testCase, credentials);
         var actionBlock = CreateActionBlock(
@@ -85,7 +84,7 @@ public class HttpTestContext
 
                 var credentialConfiguration = credentialConfigurations.SingleOrDefault(f =>
                     f.Key == testCase.Configuration.CredentialConfigurationKey);
-                if (credentialConfigurations == null || credentialConfiguration == null)
+                if (credentialConfiguration == null)
                     throw new InvalidDataException(nameof(credentialConfiguration));
 
                 if (!_credentialProviders.ContainsKey(credentialConfiguration.Provider))
@@ -175,14 +174,13 @@ public class HttpTestContext
         // Set cookies
         if (testCaseInstance.Configuration.Cookies != null)
         {
-            if (httpClientAccessor.CookieContainer == null)
-                throw new InvalidProgramException("Cookie container is null");
-
             foreach (var cookie in testCaseInstance.Configuration.Cookies)
-                httpClientAccessor.CookieContainer.Add(
+            {
+                httpClientAccessor.CookieContainer!.Add(
                     testCaseInstance.Configuration.Uri!,
                     new Cookie(cookie.Key, $"{cookie.Value}")
                 );
+            }
         }
 
         // Set headers

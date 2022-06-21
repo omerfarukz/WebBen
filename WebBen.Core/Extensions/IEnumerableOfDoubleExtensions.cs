@@ -39,7 +39,7 @@ public static class EnumerableOfDoubleExtensions
         return TimeSpan.FromMilliseconds(func(source.Select(f => f.TotalMilliseconds)));
     }
 
-    public static double Average(this IEnumerable<double> source)
+    private static double Average(this IEnumerable<double> source)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -57,7 +57,7 @@ public static class EnumerableOfDoubleExtensions
         return num / num2;
     }
 
-    public static double Percentile(this IEnumerable<double> source, double percent)
+    private static double Percentile(this IEnumerable<double> source, double percent)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
@@ -70,7 +70,7 @@ public static class EnumerableOfDoubleExtensions
         return array[num];
     }
 
-    public static double Median(this IEnumerable<double> source)
+    private static double Median(this IEnumerable<double> source)
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));

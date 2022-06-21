@@ -19,7 +19,7 @@ internal class ConfigCommand : Command
         _logger = logger;
     }
 
-    private async Task Handle(FileInfo fileInfo)
+    internal async Task Handle(FileInfo fileInfo)
     {
         var context = new HttpTestContext(_logger);
         var result = await context.Execute(new FileConfigurationSource(fileInfo.FullName));
