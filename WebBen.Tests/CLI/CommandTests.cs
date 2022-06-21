@@ -51,12 +51,12 @@ public class CommandTests
     public async Task ConfigCommand_Should_Parse_Args()
     {
         var command = new ConfigCommand(new MockLogger());
-        var parseResult = command.Parse("assets/simple.json");
+        var parseResult = command.Parse(_filePath);
 
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
 
-        await command.Handle(new FileInfo("assets/simple.json"));
+        await command.Handle(new FileInfo(_filePath));
     }
 
     [Test]
