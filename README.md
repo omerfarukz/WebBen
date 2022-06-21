@@ -132,7 +132,7 @@ Output:
 
 ## Other features
 
-Support for NTLM authentication, cookie containers, and default credentials. It is possible to use the same credential
+Support for authentication, cookie containers, and default credentials. It is possible to use the same credential
 configuration for multiple test cases. The credential configuration is specified by the `CredentialConfigurationKey`
 property.
 
