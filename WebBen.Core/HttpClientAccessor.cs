@@ -17,8 +17,7 @@ internal class HttpClientAccessor : IDisposable
 
         // Credential
         handler.UseDefaultCredentials = testCase.Configuration.UseDefaultCredentials;
-        if (credentials != null)
-            handler.Credentials = credentials;
+        handler.Credentials = credentials;
 
         // Cookie
         if (testCase.Configuration.UseCookieContainer || testCase.Configuration.Cookies != null)
@@ -32,7 +31,7 @@ internal class HttpClientAccessor : IDisposable
         Client = new HttpClient(handler, true) {BaseAddress = testCase.Configuration.Uri};
         Client.MaxResponseContentBufferSize = testCase.Configuration.MaxBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
-    }
+    }   
 
     public HttpClient Client { get; }
     public CookieContainer? CookieContainer { get; }

@@ -1,15 +1,25 @@
 ﻿using System.CommandLine;
-using WebBen.CLI;
 using WebBen.CLI.CommandLine;
 
-var logger = new ConsoleLogger(Console.Out);
-AppDomain.CurrentDomain.UnhandledException += (s, e) => { logger.Error($"{e.ExceptionObject}"); };
+namespace WebBen.CLI;
 
-var rootCommand = new WebBenRootCommand(logger);
+public class Program
+{
+    public static async Task Main(string[] args)
+    {
+        var logger = new ConsoleLogger(Console.Out);
+        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        {
+            logger.Error($"{e.ExceptionObject}");
+        };
 
-// Invoke command
-var parseResult = rootCommand.Parse(args);
-var verbose = parseResult.GetValueForOption(rootCommand.VerboseOption);
-logger.Verbose = verbose;
+        var rootCommand = new WebBenRootCommand(logger);
 
-await rootCommand.InvokeAsync(args);
+        // Invoke command
+        var parseResult = rootCommand.Parse(args);
+        var verbose = parseResult.GetValueForOption(rootCommand.VerboseOption);
+        logger.Verbose = verbose;
+
+        await rootCommand.InvokeAsync(args);
+    }
+}
