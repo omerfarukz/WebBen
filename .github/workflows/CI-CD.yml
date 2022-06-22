@@ -20,6 +20,6 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore
       - name: Test
-        run: dotnet test --no-restore --verbosity detailed
+        run: dotnet test --no-restore
       - name: Publish the package to nuget
         run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json

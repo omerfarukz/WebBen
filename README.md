@@ -1,12 +1,11 @@
 # WebBen[chmark]
+[![dotnet build & pack](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml) [![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![CodeQL](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml) [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE) 
 
 Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and
 compare the
 results. Parallelize the execution of test cases.
 
 Runs on mac, linux and windows.
-
-[![dotnet build & pack](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI-CD.yml)
 
 ## Install
 
@@ -132,7 +131,7 @@ Output:
 
 ## Other features
 
-Support for NTLM authentication, cookie containers, and default credentials. It is possible to use the same credential
+Support for authentication, cookie containers, and default credentials. It is possible to use the same credential
 configuration for multiple test cases. The credential configuration is specified by the `CredentialConfigurationKey`
 property.
 
