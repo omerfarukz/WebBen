@@ -136,7 +136,7 @@ public static class HttpTestContextExtensions
 
         var analyzeResult = new AnalyzeResult(resultBag)
         {
-            MaxRPS = maxRequestForSecond
+            MaxRequestsPerSecond = maxRequestForSecond
         };
         return analyzeResult;
     }
@@ -160,12 +160,12 @@ public static class HttpTestContextExtensions
 
     public class AnalyzeResult
     {
-        public AnalyzeResult(IReadOnlyCollection<TestCase> allResults)
+        public AnalyzeResult(IReadOnlyCollection<TestCase> results)
         {
-            AllResults = allResults;
+            Results = results;
         }
 
-        public IReadOnlyCollection<TestCase> AllResults { get; set; }
-        public int MaxRPS { get; set; }
+        public IReadOnlyCollection<TestCase> Results { get; set; }
+        public int MaxRequestsPerSecond { get; init; }
     }
 }

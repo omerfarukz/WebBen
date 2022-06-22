@@ -16,12 +16,13 @@ public static class TableParser
         return ToStringTable(values.ToArray(), columnHeaders, valueSelectors);
     }
 
-    public static string ToStringTable<T>(
+    private static string ToStringTable<T>(
         this T[] values,
         string?[] columnHeaders,
         params Func<T, object>[] valueSelectors)
     {
-        if (columnHeaders.Length != valueSelectors.Length) throw new ArgumentException();
+        if (columnHeaders.Length != valueSelectors.Length)
+            throw new ArgumentException();
 
         var arrValues = new string?[values.Length + 1, valueSelectors.Length];
 
@@ -41,7 +42,7 @@ public static class TableParser
     public static string ToStringTable(this string?[,] arrValues)
     {
         var maxColumnsWidth = GetMaxColumnsWidth(arrValues);
-        var headerSpliter = new string('-', maxColumnsWidth.Sum(i => i + 3) - 1);
+        var headerSplitter = new string('-', maxColumnsWidth.Sum(i => i + 3) - 1);
 
         var sb = new StringBuilder();
         for (var rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
@@ -62,7 +63,7 @@ public static class TableParser
             // Print splitter
             if (rowIndex == 0)
             {
-                sb.Append($" |{headerSpliter}| ");
+                sb.Append($" |{headerSplitter}| ");
                 sb.AppendLine();
             }
         }
@@ -79,7 +80,7 @@ public static class TableParser
             var newLength = arrValues[rowIndex, colIndex]?.Length;
             var oldLength = maxColumnsWidth[colIndex];
 
-            if (newLength.HasValue && newLength > oldLength) maxColumnsWidth[colIndex] = newLength.Value;
+            if (newLength > oldLength) maxColumnsWidth[colIndex] = newLength.Value;
         }
 
         return maxColumnsWidth;

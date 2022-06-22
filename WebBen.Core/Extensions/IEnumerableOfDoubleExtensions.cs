@@ -44,15 +44,16 @@ public static class EnumerableOfDoubleExtensions
         if (source == null)
             throw new ArgumentNullException(nameof(source));
 
-        var num = 0.0;
+        var num = 0d;
         var num2 = 0L;
         foreach (var num3 in source)
         {
             num += num3;
-            num2 += 1L;
+            num2 += 1;
         }
 
-        if (num2 == 0L) return 0.0d;
+        if (num2 == 0)
+            return 0d;
 
         return num / num2;
     }

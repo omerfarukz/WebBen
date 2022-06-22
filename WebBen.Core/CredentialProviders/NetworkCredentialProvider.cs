@@ -11,7 +11,8 @@ public class NetworkCredentialProvider : ICredentialProvider
 
         var username = props["username"]?.ToString();
         var password = props["password"]?.ToString();
+        var domain = props["domain"] as string;
 
-        return new NetworkCredential(username, password);
+        return new NetworkCredential(username, password, domain);
     }
 }

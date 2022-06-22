@@ -6,7 +6,7 @@ using WebBen.Core.CredentialProviders;
 
 namespace WebBen.Tests.Common;
 
-public class NetworkCredentiaProviderlTests
+public class NetworkCredentialProviderTests
 {
     [Test]
     public void Test_GetCredentials_Returns_Credentials()
@@ -14,10 +14,13 @@ public class NetworkCredentiaProviderlTests
         var provider = new NetworkCredentialProvider();
         var username = "username";
         var password = "password";
+        var domain = "domain";
+
         var credentials = provider.FromConfiguration(new Dictionary<string, object>
         {
             {"username", username},
-            {"password", password}
+            {"password", password},
+            {"domain", domain}
         });
         Assert.NotNull(credentials);
         var credential = credentials.GetCredential(new Uri("http://test.com"), "Negotiate");

@@ -8,10 +8,10 @@ public class Program
     public static async Task Main(string[] args)
     {
         var logger = new ConsoleLogger(Console.Out);
-        AppDomain.CurrentDomain.UnhandledException += (s, e) =>
-        {
-            logger.Error($"{e.ExceptionObject}");
-        };
+        // AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+        // {
+        //     logger.Error($"{e.ExceptionObject}");
+        // };
 
         var rootCommand = new WebBenRootCommand(logger);
 

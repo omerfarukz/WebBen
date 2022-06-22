@@ -34,16 +34,71 @@ public class HttpTestContextTests
     }
 
     [Test]
-    public void Add_Null_Configuration_Args_Should_Throw()
+    public async Task Pass_Null_To_CreateActionBlockInternal_Should_Throw()
     {
-        Assert.Throws<ArgumentNullException>(() =>
+        var testCase = new TestCase(new CaseConfiguration()
         {
-            var testCases = _httpTestContext.Execute(new[]
-            {
-                new TestCase(null)
-            }, null).Result;
+            Uri = _uri,
+            FetchContent = true
         });
 
+        var httpClientAccessor = new HttpClientAccessor(testCase, null);
+        await _httpTestContext.CreateActionBlockInternal(httpClientAccessor, testCase);
+
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _httpTestContext.CreateActionBlockInternal(httpClientAccessor, null!));
+        Assert.ThrowsAsync<ArgumentNullException>(() =>
+            _httpTestContext.CreateActionBlockInternal(httpClientAccessor, new TestCase(null!)));
+
+        testCase = new TestCase(new CaseConfiguration()
+        {
+            Uri = new Uri($"{_uri}/notfound"),
+            FetchContent = true
+        });
+        await _httpTestContext.CreateActionBlockInternal(httpClientAccessor, testCase);
+
+        testCase = new TestCase(new CaseConfiguration()
+        {
+            Uri = new Uri($"http://foo.bar.local"),
+            FetchContent = false
+        });
+
+        await _httpTestContext.CreateActionBlockInternal(httpClientAccessor, testCase);
+    }
+
+    [Test]
+    public void Http_Request_Exception_Should_Catch()
+    {
+        var configuration = new CaseConfiguration();
+        configuration.Uri = new Uri("http://foo.bar.local");
+        configuration.RequestCount = 1;
+
+        var testCases = _httpTestContext.Execute(new List<TestCase>()
+        {
+            new TestCase(configuration)
+        }, null).Result;
+
+        var collection = testCases as TestCase[] ?? testCases.ToArray();
+        Assert.IsNotEmpty(collection);
+        Assert.AreEqual(collection.Length, 1);
+        Assert.IsNotEmpty(collection[0].Errors);
+    }
+
+    [Test]
+    public void Add_Null_Configuration_Args_Should_Throw()
+    {
+        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        {
+            var testCases = await _httpTestContext.Execute(new[]
+            {
+                new TestCase(null!)
+            }, null);
+        });
+    }
+
+    [Test]
+    public void Add_Null_Test_Case_In_Collection_Args_Should_Throw()
+    {
         Assert.Throws<AggregateException>(() =>
         {
             var testCases = _httpTestContext.Execute(new TestCase[]
@@ -51,40 +106,36 @@ public class HttpTestContextTests
                 null
             }, null).Result;
         });
+    }
 
-        Assert.Throws<AggregateException>(() =>
-        {
-            var testCases = _httpTestContext.Execute(null, null).Result;
-        });
-
+    [Test]
+    public void Add_Non_Existing_Credential_Key_Should_Throw()
+    {
         Assert.Throws<AggregateException>(() =>
         {
             var configuration = new CaseConfiguration();
             configuration.Uri = new Uri("http://foo.bar");
             configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
-
+            configuration.RequestCount = 1;
             var testCases = _httpTestContext.Execute(new List<TestCase>()
             {
                 new TestCase(configuration)
             }, null).Result;
-
-           
         });
-        
-        Assert.Throws<ArgumentNullException>(() =>
+    }
+
+    [Test]
+    public void Add_Null_Test_Case_Args_Should_Throw()
+    {
+        Assert.CatchAsync( async ()=>
         {
-            var configuration = new CaseConfiguration();
-            configuration.Uri = new Uri("http://foo.bar");
-            configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
-
-            var testCases = _httpTestContext.Execute(new List<TestCase>()
-            {
-                new TestCase(null!)
-            }, null).Result;
-
-           
+            await _httpTestContext.Execute(null!, null);
         });
+    }
 
+    [Test]
+    public void Add_Credential_Has_Invalid_Provider_Name_Should_Throw()
+    {
         Assert.Throws<AggregateException>(() =>
         {
             var testConfiguration = new TestConfiguration();
@@ -97,6 +148,7 @@ public class HttpTestContextTests
                     Provider = "NonExistingProviderName"
                 }
             };
+            
             var configuration = new CaseConfiguration();
             configuration.Uri = new Uri("http://foo.bar");
             configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
@@ -115,7 +167,7 @@ public class HttpTestContextTests
     public async Task Non_Existing_Url_Should_Return_Error()
     {
         var caseConfiguration = new CaseConfiguration();
-        caseConfiguration.Uri = new Uri("http://non.existing.url");
+        caseConfiguration.Uri = new Uri("http://non.existing.url:1234");
         caseConfiguration.RequestCount = 1;
 
         var allResults = await _httpTestContext.Execute(caseConfiguration);
@@ -180,6 +232,9 @@ public class HttpTestContextTests
         Assert.IsNotEmpty(result.Timings);
         Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
         Assert.NotZero(result.Elapsed.TotalSeconds);
+
+        caseConfiguration = null;
+        Assert.ThrowsAsync<ArgumentNullException>(async () => await _httpTestContext.Execute(caseConfiguration));
     }
 
     [Test]
@@ -216,8 +271,8 @@ public class HttpTestContextTests
         configuration.CalculationFunction = CalculationFunction.Median;
 
         var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
-        Assert.IsNotEmpty(analyzeResult.AllResults);
-        Assert.NotZero(analyzeResult.MaxRPS);
+        Assert.IsNotEmpty(analyzeResult.Results);
+        Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
     }
 
     [Test]

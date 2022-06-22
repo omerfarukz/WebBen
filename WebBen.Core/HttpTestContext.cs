@@ -35,7 +35,8 @@ public class HttpTestContext
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
 
-        _logger.Debug($"Executing test case: {testCase.Configuration.Name}, Parallelism:\t\t{testCase.Configuration.Parallelism}");
+        _logger.Debug(
+            $"Executing test case: {testCase.Configuration.Name}, Parallelism:\t\t{testCase.Configuration.Parallelism}");
 
         using var accessor = new HttpClientAccessor(testCase, credentials);
         var actionBlock = CreateActionBlock(
@@ -112,47 +113,14 @@ public class HttpTestContext
         _credentialProviders.Add(credentialProvider.GetType().Name, credentialProvider);
     }
 
-    private ActionBlock<TestCase> CreateActionBlock(
+    internal ActionBlock<TestCase> CreateActionBlock(
         HttpClientAccessor httpClientAccessor,
         int parallelism
     )
     {
         var actionBlock = new ActionBlock<TestCase>(async testCase =>
         {
-            if (testCase == null)
-                throw new ArgumentNullException(nameof(testCase));
-
-            if (testCase.Configuration == null)
-                throw new ArgumentNullException(nameof(testCase.Configuration));
-
-            var httpRequestMessage = BuildHttpRequestMessage(testCase, httpClientAccessor);
-
-            try
-            {
-                var stopWatch = new Stopwatch();
-                stopWatch.Start();
-
-                var httpResponseMessage = await httpClientAccessor.Client.SendAsync(httpRequestMessage);
-                if (testCase.Configuration!.FetchContent)
-                    await httpResponseMessage.Content.ReadAsStringAsync();
-
-                stopWatch.Stop();
-
-                if (httpResponseMessage.IsSuccessStatusCode)
-                {
-                    testCase.Timings.Add(stopWatch.Elapsed);
-                }
-                else
-                {
-                    testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate   
-                    _logger.Error($"Test case {testCase.Configuration.Name} returned {httpResponseMessage.StatusCode}");
-                }
-            }
-            catch (HttpRequestException e)
-            {
-                testCase.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
-                _logger.Error($"{testCase.Configuration.Name}: {e.Message}");
-            }
+            await CreateActionBlockInternal(httpClientAccessor, testCase);
         }, new ExecutionDataflowBlockOptions
         {
             MaxDegreeOfParallelism = parallelism,
@@ -160,6 +128,44 @@ public class HttpTestContext
         });
 
         return actionBlock;
+    }
+
+    internal async Task CreateActionBlockInternal(HttpClientAccessor httpClientAccessor, TestCase testCase)
+    {
+        if (testCase == null)
+            throw new ArgumentNullException(nameof(testCase));
+
+        if (testCase.Configuration == null)
+            throw new ArgumentNullException(nameof(testCase.Configuration));
+
+        var httpRequestMessage = BuildHttpRequestMessage(testCase, httpClientAccessor);
+
+        try
+        {
+            var stopWatch = new Stopwatch();
+            stopWatch.Start();
+
+            var httpResponseMessage = await httpClientAccessor.Client.SendAsync(httpRequestMessage);
+            if (testCase.Configuration!.FetchContent)
+                await httpResponseMessage.Content.ReadAsStringAsync();
+
+            stopWatch.Stop();
+
+            if (httpResponseMessage.IsSuccessStatusCode)
+            {
+                testCase.Timings.Add(stopWatch.Elapsed);
+            }
+            else
+            {
+                testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate   
+                _logger.Error($"Test case {testCase.Configuration.Name} returned {httpResponseMessage.StatusCode}");
+            }
+        }
+        catch (HttpRequestException e)
+        {
+            testCase.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
+            _logger.Error($"{testCase.Configuration.Name}: {e.Message}");
+        }
     }
 
     private static HttpRequestMessage BuildHttpRequestMessage(

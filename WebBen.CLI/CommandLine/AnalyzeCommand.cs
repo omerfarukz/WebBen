@@ -33,6 +33,6 @@ internal class AnalyzeCommand : Command
         var context = new HttpTestContext(_logger);
         var result = await context.Analyze(configuration, _logger);
 
-        Console.WriteLine($"Best RPS is {result.MaxRPS}");
+        Console.WriteLine($"Best RPS is {result.MaxRequestsPerSecond}");
     }
 }
