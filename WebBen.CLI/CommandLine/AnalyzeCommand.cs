@@ -2,6 +2,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using WebBen.Core;
 using WebBen.Core.Configuration;
+using WebBen.Core.Exporters;
 using WebBen.Core.Extensions;
 using WebBen.Core.Logging;
 
@@ -9,11 +10,13 @@ namespace WebBen.CLI.CommandLine;
 
 internal class AnalyzeCommand : Command
 {
-    public const string CommandName = "analyze";
+    private const string CommandName = "analyze";
+    private readonly IExporter _exporter;
     private readonly ILogger _logger;
 
-    public AnalyzeCommand(ILogger logger) : base(CommandName)
+    public AnalyzeCommand(IExporter exporter, ILogger logger) : base(CommandName)
     {
+        _exporter = exporter;
         _logger = logger;
 
         AddAlias("analyse");
@@ -32,7 +35,6 @@ internal class AnalyzeCommand : Command
     {
         var context = new HttpTestContext(_logger);
         var result = await context.Analyze(configuration, _logger);
-
-        Console.WriteLine($"Best RPS is {result.MaxRequestsPerSecond}");
+        _exporter.Export(result);
     }
 }

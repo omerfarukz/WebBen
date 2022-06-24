@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using NUnit.Framework;
 using WebBen.CLI;
+using WebBen.Core.Logging;
 
 namespace WebBen.Tests.CLI;
 
@@ -21,7 +22,7 @@ public class ConsoleLoggerTests
     [Test]
     public void Log_Should_Write_Console_Out()
     {
-        var logger = new ConsoleLogger(_streamWriter);
+        var logger = new TextWriterLogger(_streamWriter);
         var message = Guid.NewGuid().ToString();
         logger.Debug(message);
 

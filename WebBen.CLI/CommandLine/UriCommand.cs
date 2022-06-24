@@ -2,6 +2,7 @@ using System.CommandLine;
 using System.CommandLine.NamingConventionBinder;
 using WebBen.Core;
 using WebBen.Core.Configuration;
+using WebBen.Core.Exporters;
 using WebBen.Core.Extensions;
 using WebBen.Core.Logging;
 
@@ -9,11 +10,14 @@ namespace WebBen.CLI.CommandLine;
 
 internal class UriCommand : Command
 {
+    private readonly IExporter _exporter;
     private readonly ILogger _logger;
 
-    public UriCommand(ILogger logger) : base("uri")
+    public UriCommand(IExporter exporter, ILogger logger) : base("uri")
     {
+        _exporter = exporter;
         _logger = logger;
+        
         AddArgument(new Argument<Uri>("uri", "The URI to use."));
         AddOption(new Option<bool>(new[] {"-f", "--fetch-content"}, "Whether to fetch the content of the URI."));
         AddOption(new Option<string>(new[] {"-m", "--http-method"}, "The HTTP method to use."));
@@ -30,6 +34,6 @@ internal class UriCommand : Command
     {
         var context = new HttpTestContext(_logger);
         var result = await context.Execute(configuration);
-        Console.WriteLine(result.AsTable());
+        _exporter.Export(result);
     }
 }

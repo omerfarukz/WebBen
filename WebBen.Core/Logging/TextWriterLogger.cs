@@ -1,12 +1,10 @@
-using WebBen.Core.Logging;
+namespace WebBen.Core.Logging;
 
-namespace WebBen.CLI;
-
-internal class ConsoleLogger : ILogger
+public class TextWriterLogger : ILogger
 {
     private readonly TextWriter _writer;
 
-    public ConsoleLogger(TextWriter writer)
+    public TextWriterLogger(TextWriter writer)
     {
         _writer = writer;
     }
