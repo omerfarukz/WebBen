@@ -1,15 +1,17 @@
 using System.Collections.Concurrent;
+using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebBen.Core.Configuration;
 using WebBen.Core.Configuration.Source;
 using WebBen.Core.Logging;
+using WebBen.Core.Results;
 
 namespace WebBen.Core.Extensions;
 
 public static class HttpTestContextExtensions
 {
-    public static async Task<IEnumerable<TestCase>> Execute(this HttpTestContext httpTestContext,
+    public static async Task<TestResult> Execute(this HttpTestContext httpTestContext,
         CaseConfiguration caseConfiguration)
     {
         var configuration = new TestConfiguration
@@ -25,7 +27,7 @@ public static class HttpTestContextExtensions
         return await httpTestContext.Execute(testCases, null);
     }
 
-    public static async Task<IEnumerable<TestCase>> Execute(this HttpTestContext httpTestContext,
+    public static async Task<TestResult> Execute(this HttpTestContext httpTestContext,
         IConfigurationSource configurationFile)
     {
         if (configurationFile == null)
@@ -40,7 +42,9 @@ public static class HttpTestContextExtensions
             throw new InvalidDataException();
 
         var testCases = testConfigurations
-            .Select(f => new TestCase(f));
+            .Select(f => new TestCase(f))
+            .ToList()
+            .AsReadOnly();
 
         return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
@@ -53,23 +57,19 @@ public static class HttpTestContextExtensions
         // Find best request per second by scaling time
         // 1, 2, 4, 8, 16 ... 2^32
         var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
-        logger.Info($"Range: {string.Join(',', requestCountCacheQueue)}");
+        logger.Debug($"Range: {string.Join(',', requestCountCacheQueue)}");
         
-        var resultBag = new List<TestCase>();
+        var resultBag = new List<TestResult>();
         while (requestCountCacheQueue.Any())
         {
             var requestCount = requestCountCacheQueue.Dequeue();
-
-
-            logger.Info($"Create request with maximum parallelism: {requestCount}");
+            logger.Debug($"Create request with maximum parallelism: {requestCount}");
 
             var failed = false;
             var trialTimespans = new TimeSpan[analyzeConfiguration.MaxTrialCount];
             for (var i = 0; i < analyzeConfiguration.MaxTrialCount; i++)
             {
                 var context = new HttpTestContext(logger);
-
-                
                 var caseConfiguration = new CaseConfiguration
                 {
                     Uri = analyzeConfiguration.Uri,
@@ -79,19 +79,18 @@ public static class HttpTestContextExtensions
                     Parallelism = requestCount,
                     RequestCount = requestCount
                 };
-                var results = await context.Execute(caseConfiguration);
-                var testCases = results as TestCase[] ?? results.ToArray();
-                var result = testCases.First();
+                var testResult = await context.Execute(caseConfiguration);
+                var result = testResult.Items.First();
 
-                if (!result.Errors.IsEmpty)
+                if (result.Errors?.Length > 0)
                 {
-                    logger.Info($"Error(s) occured {result.Errors.Count}");
+                    logger.Debug($"Error(s) occured {result.Errors.Length}");
                     failed = true;
                     break;
                 }
 
-                resultBag.Add(result);
-                logger.Debug(testCases.AsTable());
+                resultBag.Add(testResult);
+
                 logger.Debug($"#{i + 1}. {result.Elapsed.TotalSeconds:N} sec(s)");
                 trialTimespans[i] = result.Elapsed;
             }
@@ -100,7 +99,7 @@ public static class HttpTestContextExtensions
                 break;
 
             var averageTiming = trialTimespans.Calculate(analyzeConfiguration.CalculationFunction);
-            logger.Info($"{analyzeConfiguration.CalculationFunction}: {averageTiming.TotalSeconds:N}");
+            logger.Debug($"{analyzeConfiguration.CalculationFunction}: {averageTiming.TotalSeconds:N}");
 
             if (averageTiming.TotalSeconds < 1d)
             {
@@ -140,17 +139,17 @@ public static class HttpTestContextExtensions
         return analyzeResult;
     }
 
-    public static string AsTable(this IEnumerable<TestCase> testCases)
+    public static string AsTable(this TestResult testCases)
     {
-        var asTable = testCases.ToStringTable(
+        var asTable = testCases.Items.ToStringTable(
             new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg", "StdDev", "P90", "Median"},
             f => f.Configuration.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration.RequestCount.ToString(),
             f => f.Configuration.Parallelism.ToString(),
-            f => f.Errors.Count.ToString(),
+            f => f.Errors.Length.ToString(),
             f => f.Timings.Average().TotalMilliseconds.ToString("N"),
-            f => f.Timings.CalculateStandardDeviation().TotalMilliseconds.ToString("N"),
+            f => f.Timings.StdDev().TotalMilliseconds.ToString("N"),
             f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),
             f => f.Timings.Median().TotalMilliseconds.ToString("N")
         );

@@ -5,6 +5,7 @@ using System.Threading.Tasks.Dataflow;
 using WebBen.Core.Configuration;
 using WebBen.Core.CredentialProviders;
 using WebBen.Core.Logging;
+using WebBen.Core.Results;
 
 namespace WebBen.Core;
 
@@ -30,7 +31,7 @@ public class HttpTestContext
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    private async Task Execute(TestCase testCase, ICredentials? credentials)
+    private async Task<TestResultItem> Execute(TestCase testCase, ICredentials? credentials)
     {
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));
@@ -60,20 +61,29 @@ public class HttpTestContext
         await actionBlock.Completion;
 
         stopWatch.Stop();
-        testCase.Elapsed = stopWatch.Elapsed;
+
+        var testResultItem = new TestResultItem();
+        testResultItem.Elapsed = stopWatch.Elapsed;
+        testResultItem.Errors = testCase.Errors.ToArray();
+        testResultItem.Timings = testCase.Timings.ToArray();
+
+        return testResultItem;
     }
 
-    public async Task<IEnumerable<TestCase>> Execute(IEnumerable<TestCase> testCases,
-        ICollection<CredentialConfiguration>? credentialConfigurations)
+    public async Task<TestResult> Execute(IReadOnlyCollection<TestCase> testCases,
+        IReadOnlyCollection<CredentialConfiguration>? credentialConfigurations)
     {
         if (testCases is null)
             throw new ArgumentNullException(nameof(testCases));
 
         // Prevent multiple enumeration
-        var enumerable = testCases as TestCase[] ?? testCases.ToArray();
-        _logger.Debug($"Preparing test cases: {enumerable.Count()}");
+        var enumerableTestCases = testCases as TestCase[] ?? testCases.ToArray();
+        _logger.Debug($"Preparing test cases: {enumerableTestCases.Length}");
 
-        foreach (var testCase in enumerable)
+        var testCaseIndex = 0;
+        var testResult = new TestResult(new TestResultItem[enumerableTestCases.Length]);
+
+        foreach (var testCase in enumerableTestCases)
         {
             ICredentials? credentials = null;
             if (testCase.Configuration.CredentialConfigurationKey != null)
@@ -99,10 +109,13 @@ public class HttpTestContext
             }
 
             _logger.Debug($"Executing test case '{testCase.Configuration.Name}'");
-            await Execute(testCase, credentials);
+            testResult.Items[testCaseIndex] = await Execute(testCase, credentials);
+            testResult.Items[testCaseIndex].Configuration = testCase.Configuration;
+
+            testCaseIndex++;
         }
 
-        return enumerable;
+        return testResult;
     }
 
     public void AddCredentialProvider(ICredentialProvider credentialProvider)

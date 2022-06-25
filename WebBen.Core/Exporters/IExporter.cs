@@ -1,9 +1,10 @@
 using WebBen.Core.Extensions;
+using WebBen.Core.Results;
 
 namespace WebBen.Core.Exporters;
 
 public interface IExporter
 {
-    void Export(IEnumerable<TestCase?> testCases);
-    void Export(AnalyzeResult testCases);
+    void Export(TestResult testResult);
+    void Export(AnalyzeResult analyzeResult);
 }

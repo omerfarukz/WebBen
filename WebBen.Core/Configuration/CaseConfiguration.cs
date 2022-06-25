@@ -1,6 +1,6 @@
 namespace WebBen.Core.Configuration;
 
-public class CaseConfiguration : ConfigurationBase
+public record CaseConfiguration : ConfigurationBase
 {
     public string HttpMethod { get; set; } = System.Net.Http.HttpMethod.Get.Method;
     public int RequestCount { get; set; } = 100;

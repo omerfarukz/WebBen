@@ -1,6 +1,6 @@
 namespace WebBen.Core.Configuration;
 
-public abstract class ConfigurationBase
+public abstract record ConfigurationBase
 {
     public string? Name { get; set; }
     public Uri? Uri { get; set; }

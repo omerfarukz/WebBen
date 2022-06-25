@@ -2,18 +2,17 @@ using System.Collections.Generic;
 using WebBen.Core;
 using WebBen.Core.Exporters;
 using WebBen.Core.Extensions;
+using WebBen.Core.Results;
 
 namespace WebBen.Tests.Mocks;
 
 public class MockExporter : IExporter
 {
-    public void Export(IEnumerable<TestCase> testCases)
+    public void Export(TestResult testResult)
     {
-        throw new System.NotImplementedException();
     }
 
-    public void Export(AnalyzeResult testCases)
+    public void Export(AnalyzeResult analyzeResult)
     {
-        throw new System.NotImplementedException();
     }
 }

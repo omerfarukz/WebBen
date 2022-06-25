@@ -9,6 +9,7 @@ public static class EnumerableOfDoubleExtensions
         return calculationFunction switch
         {
             CalculationFunction.Average => source.Average(),
+            CalculationFunction.StdDev => source.StdDev(),
             CalculationFunction.Median => source.Median(),
             CalculationFunction.P90 => source.Percentile(0.9d),
             CalculationFunction.P80 => source.Percentile(0.8d),
@@ -18,7 +19,7 @@ public static class EnumerableOfDoubleExtensions
         };
     }
 
-    public static TimeSpan CalculateStandardDeviation(this IEnumerable<TimeSpan> source)
+    public static TimeSpan StdDev(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles =>
         {
