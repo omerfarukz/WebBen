@@ -54,23 +54,12 @@ public static class HttpTestContextExtensions
         // 1, 2, 4, 8, 16 ... 2^32
         var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
         logger.Info($"Range: {string.Join(',', requestCountCacheQueue)}");
-
-        var caseConfiguration = new CaseConfiguration
-        {
-            Name = "analyze",
-            Uri = analyzeConfiguration.Uri,
-            FetchContent = analyzeConfiguration.FetchContent,
-            TimeoutInMs = analyzeConfiguration.TimeoutInMs,
-            AllowRedirect = analyzeConfiguration.AllowRedirect
-        };
-
-        var resultBag = new ConcurrentBag<TestCase>();
+        
+        var resultBag = new List<TestCase>();
         while (requestCountCacheQueue.Any())
         {
             var requestCount = requestCountCacheQueue.Dequeue();
 
-            caseConfiguration.Parallelism = requestCount;
-            caseConfiguration.RequestCount = requestCount;
 
             logger.Info($"Create request with maximum parallelism: {requestCount}");
 
@@ -80,6 +69,16 @@ public static class HttpTestContextExtensions
             {
                 var context = new HttpTestContext(logger);
 
+                
+                var caseConfiguration = new CaseConfiguration
+                {
+                    Uri = analyzeConfiguration.Uri,
+                    FetchContent = analyzeConfiguration.FetchContent,
+                    TimeoutInMs = analyzeConfiguration.TimeoutInMs,
+                    AllowRedirect = analyzeConfiguration.AllowRedirect,
+                    Parallelism = requestCount,
+                    RequestCount = requestCount
+                };
                 var results = await context.Execute(caseConfiguration);
                 var testCases = results as TestCase[] ?? results.ToArray();
                 var result = testCases.First();
@@ -100,7 +99,7 @@ public static class HttpTestContextExtensions
             if (failed)
                 break;
 
-            var averageTiming = trialTimespans.Timing(analyzeConfiguration.CalculationFunction);
+            var averageTiming = trialTimespans.Calculate(analyzeConfiguration.CalculationFunction);
             logger.Info($"{analyzeConfiguration.CalculationFunction}: {averageTiming.TotalSeconds:N}");
 
             if (averageTiming.TotalSeconds < 1d)
@@ -144,13 +143,14 @@ public static class HttpTestContextExtensions
     public static string AsTable(this IEnumerable<TestCase> testCases)
     {
         var asTable = testCases.ToStringTable(
-            new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg", "P90", "Median"},
-            f => f.Configuration.Name ?? string.Empty,
+            new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg", "StdDev", "P90", "Median"},
+            f => f.Configuration.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration.RequestCount.ToString(),
             f => f.Configuration.Parallelism.ToString(),
             f => f.Errors.Count.ToString(),
             f => f.Timings.Average().TotalMilliseconds.ToString("N"),
+            f => f.Timings.CalculateStandardDeviation().TotalMilliseconds.ToString("N"),
             f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),
             f => f.Timings.Median().TotalMilliseconds.ToString("N")
         );

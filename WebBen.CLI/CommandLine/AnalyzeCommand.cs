@@ -34,7 +34,7 @@ internal class AnalyzeCommand : Command
     private async Task Handle(AnalyzeConfiguration configuration)
     {
         var context = new HttpTestContext(_logger);
-        var result = await context.Analyze(configuration, _logger);
-        _exporter.Export(result);
+        var analyzeResult = await context.Analyze(configuration, _logger);
+        _exporter.Export(analyzeResult);
     }
 }

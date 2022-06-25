@@ -4,7 +4,7 @@ namespace WebBen.Core.Extensions;
 
 public static class EnumerableOfDoubleExtensions
 {
-    public static TimeSpan Timing(this IEnumerable<TimeSpan> source, CalculationFunction calculationFunction)
+    public static TimeSpan Calculate(this IEnumerable<TimeSpan> source, CalculationFunction calculationFunction)
     {
         return calculationFunction switch
         {
@@ -16,6 +16,16 @@ public static class EnumerableOfDoubleExtensions
             _ => throw new NotSupportedException(
                 $"{nameof(calculationFunction)}: {calculationFunction}")
         };
+    }
+
+    public static TimeSpan CalculateStandardDeviation(this IEnumerable<TimeSpan> source)
+    {
+        return CastDoubleAndProcess(source, doubles =>
+        {
+            var enumerable = doubles as double[] ?? doubles.ToArray();
+            var avg = enumerable.Average();
+            return Math.Sqrt(enumerable.Average(v => Math.Pow(v - avg, 2)));
+        });
     }
 
     public static TimeSpan Average(this IEnumerable<TimeSpan> source)
