@@ -14,7 +14,10 @@ public class TextWriterExporter : IExporter
     public TextWriterExporter(TextWriter writer)
     {
         _writer = writer;
-        _jsonSerializerOptions = new JsonSerializerOptions() {WriteIndented = true, MaxDepth = int.MaxValue};
+        _jsonSerializerOptions = new JsonSerializerOptions()
+        {
+            WriteIndented = true, MaxDepth = int.MaxValue, DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        };
     }
 
 
@@ -47,6 +50,5 @@ public class TextWriterExporter : IExporter
             default:
                 throw new NotImplementedException();
         }
-        
     }
 }

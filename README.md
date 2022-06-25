@@ -24,8 +24,9 @@ Commands:
   analyse, analyze <uri>
 
 Options:
-  -?, -h, --help            Show help and usage information
-  -v, --verbose             Enable verbose output
+  -v, --verbose                       Enable verbose output
+  -e, --export-format <Default|Json>  Export format [default: Default]
+  -?, -h, --help                      Show help and usage information
 
 Example:
   webben config <filePath>
@@ -39,14 +40,15 @@ Arguments:
   <uri>  The URI to use.
 
 Options:
-  -p, --parallelism         The number of parallelism to use.
-  -t, --timeout-in-ms       The timeout in milliseconds.
-  -m, --http-method         The HTTP method to use.
   -f, --fetch-content       Whether to fetch the content of the URI.
-  -r, --allow-redirect      Whether to allow redirects.
+  -l, --name                Name or label
+  -m, --http-method         The HTTP method to use.
   -n, --request-count       The number of requests to make.
+  -p, --parallelism         The number of parallelism to use.
+  -r, --allow-redirect      Whether to allow redirects.
   -s, --buffer-size         The maximum size of the response content buffer.
-
+  -t, --timeout-in-ms       The timeout in milliseconds.
+  
 Examples:
   webben uri http://localhost:3000
   webben uri http://localhost:3000 -n 10000
@@ -75,10 +77,10 @@ Examples:
   analyze "https://contoso.com/?q=test" -m 5 -c P80
 
 Output:
-  Max RPS for this uri is: 283.
+  Analyze result including max requests count per second
 
 ```
-
+### Analyzing session
 ![analyze2](https://raw.githubusercontent.com/omerfarukz/WebBen/master/Assets/analyze2.gif)
 
 ## Configuration Sample
@@ -87,46 +89,105 @@ Output:
 {
   "TestCaseConfigurations": [
     {
-      "Name": "search_term_page_2_ntlm",
-      "Uri": "https://internal.contoso.com/products?search=term&page=2",
-      "NumberOfRequests": 50,
-      "FetchContent": false,
-      "Parallelism": 50,
-      "BoundedCapacity": 50,
-      "CredentialConfigurationKey": "cred_1"
+      "Name": "get_simple_1",
+      "Uri": "http://localhost:3000/api/v1/posts/foo"
     },
     {
-      "Name": "another_uri_anonym",
-      "Uri": "https://public.contoso.com/",
-      "HttpMethod": "GET",
-      "NumberOfRequests": 10000,
+      "Name": "get_simple_2",
+      "Uri": "http://localhost:3000/api/v1/posts/bar"
+    },
+    {
+      "Name": "post_simple_1",
+      "Uri": "http://localhost:3000/api/v1/posts",
+      "HttpMethod": "POST",
+      "NumberOfRequests": 500,
       "FetchContent": false,
       "Parallelism": 500,
       "BoundedCapacity": 500,
-      "UseDefaultCredentials": false,
-      "UseCookieContainer": false
-    }
-  ],
-  "CredentialConfigurations": [
-    {
-      "Key": "cred_1",
-      "Provider": "NetworkCredentialProvider",
-      "Data": {
-        "username": "foo",
-        "password": "bar"
+      "Headers": {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+      },
+      "Cookies": {
+        "X-Session-Id": "44c00ac0-eae8-11ec-8fea-0242ac120002"
+      },
+      "Body": {
+        "Content": "{\"name\":\"test\"}",
+        "ContentType": "application/json",
+        "Encoding": "utf-8"
       }
     }
   ]
 }
 ```
 
-## Output
+## Usage
+```shell
+./webben config samples/Multiple.json
+```
+
+## Output ( Default Exporter )
 
 ```shell
- | Name                    | NoR  | Pll | Err | Avg    | Min   | Max      | P90    | P80    | 
- |------------------------------------------------------------------------------------------| 
- | search_term_page_2_ntlm | 1000 | 500 | 0   | 345.50 | 25.36 | 1,240.98 | 924.09 | 748.85 | 
- | another_uri_anonym      | 1000 | 100 | 0   | 125.02 | 74.94 | 240.27   | 193.38 | 168.92 |
+╭─────────────┬───────┬───┬───┬───┬────────┬────────┬────────╮
+│Name         │Elapsed│NoR│Pll│Err│Avg     │P90     │Median  │
+├─────────────┼───────┼───┼───┼───┼────────┼────────┼────────│
+│get_simple_1 │2.13   │100│100│0  │2,085.22│2,082.91│2,082.21│
+│get_simple_2 │2.03   │100│100│0  │2,016.29│2,025.80│2,015.81│
+│post_simple_1│2.08   │100│500│0  │2,023.77│2,025.94│2,022.79│
+╰─────────────┴───────┴───┴───┴───┴────────┴────────┴────────╯
+```
+
+## Usage
+```shell
+./webben config samples/Multiple.json -e Json
+```
+
+## Output ( JSON Exporter )
+```json
+[{
+  "Configuration": {
+    "HttpMethod": "GET",
+    "RequestCount": 100,
+    "Parallelism": 100,
+    "UseDefaultCredentials": false,
+    "UseCookieContainer": false,
+    "MaxBufferSize": 2147483647,
+    "Name": "get_simple_1",
+    "Uri": "http://localhost:3000/api/v1/posts/foo",
+    "FetchContent": false,
+    "AllowRedirect": false,
+    "TimeoutInMs": 2147483647
+  },
+  "Timings": [
+    "00:00:02.0780162",
+    "...",
+    "00:00:02.0726471"
+  ],
+  "Errors": [],
+  "Elapsed": "00:00:02.1292561"
+},
+{
+  "Configuration": {
+    "HttpMethod": "GET",
+    "RequestCount": 100,
+    "Parallelism": 100,
+    "UseDefaultCredentials": false,
+    "UseCookieContainer": false,
+    "MaxBufferSize": 2147483647,
+    "Name": "get_simple_2",
+    "Uri": "http://localhost:3000/api/v1/posts/bar",
+    "FetchContent": false,
+    "AllowRedirect": false,
+    "TimeoutInMs": 2147483647
+  },
+  "Timings": [
+    "00:00:02.0278468",
+    "...",
+    "00:00:02.0277827"
+  ],
+  "Errors": [],
+  "Elapsed": "00:00:02.0749580"
+}]
 ```
 
 ## Other features

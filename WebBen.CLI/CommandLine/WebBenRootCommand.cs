@@ -17,7 +17,7 @@ internal class WebBenRootCommand : RootCommand
         AddCommand(new AnalyzeCommand(exporter, logger));
 
         VerboseOption = new Option<bool>(new[] {"--verbose", "-v"}, "Enable verbose output");
-        ExportFormatOption = new Option<ExportFormat>(new[] {"--export-format", "-e"}, "Exporter option");
+        ExportFormatOption = new Option<ExportFormat>(new[] {"--export-format", "-e"}, "Export format");
         ExportFormatOption.SetDefaultValue(ExportFormat.Default);
         
         AddGlobalOption(VerboseOption);
