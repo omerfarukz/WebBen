@@ -23,6 +23,9 @@ public static class EnumerableOfDoubleExtensions
         return CastDoubleAndProcess(source, doubles =>
         {
             var enumerable = doubles as double[] ?? doubles.ToArray();
+            if (!enumerable.Any())
+                return 0;
+            
             var avg = enumerable.Average();
             return Math.Sqrt(enumerable.Average(v => Math.Pow(v - avg, 2)));
         });

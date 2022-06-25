@@ -113,7 +113,7 @@ public class HttpTestContext
         _credentialProviders.Add(credentialProvider.GetType().Name, credentialProvider);
     }
 
-    internal ActionBlock<TestCase> CreateActionBlock(
+    private ActionBlock<TestCase> CreateActionBlock(
         HttpClientAccessor httpClientAccessor,
         int parallelism
     )

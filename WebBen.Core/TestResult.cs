@@ -1,12 +1,14 @@
 using System.Collections.Concurrent;
-using WebBen.Core.Configuration;
 
 namespace WebBen.Core;
 
-public record TestCase(CaseConfiguration Configuration)
+public record TestResult
 {
-    public CaseConfiguration Configuration { get; } =
-        Configuration ?? throw new ArgumentNullException(nameof(Configuration));
+    
+}
+
+public record TestResultItem
+{
     public ConcurrentBag<TimeSpan> Timings { get; } = new();
     public ConcurrentBag<string> Errors { get; } = new();
     public TimeSpan Elapsed { get; internal set; }
