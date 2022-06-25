@@ -21,8 +21,8 @@ public class Program
 
         // Invoke command
         var parseResult = rootCommand.Parse(args);
-        var verbose = parseResult.GetValueForOption(rootCommand.VerboseOption);
-        logger.Verbose = verbose;
+        logger.Verbose = parseResult.GetValueForOption(rootCommand.VerboseOption);
+        exporter.Format = parseResult.GetValueForOption(rootCommand.ExportFormatOption);
 
         await rootCommand.InvokeAsync(args);
     }

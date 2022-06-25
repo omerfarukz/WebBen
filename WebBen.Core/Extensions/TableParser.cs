@@ -39,38 +39,66 @@ internal static class TableParser
         return ToStringTable(arrValues);
     }
 
-    public static string ToStringTable(this string?[,] arrValues)
+    private static string ToStringTable(string?[,] arrValues)
     {
         var maxColumnsWidth = GetMaxColumnsWidth(arrValues);
-        var headerSplitter = new string('-', maxColumnsWidth.Sum(i => i + 3) - 1);
-
         var sb = new StringBuilder();
-        for (var rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
+        // Top line
+        sb.Append('╭');
+        for (var colIndex = 0; colIndex < maxColumnsWidth.Length; colIndex++)
         {
+            sb.Append(new string('─', maxColumnsWidth[colIndex]));
+            sb.Append(maxColumnsWidth.Length == colIndex + 1 ? '╮' : '┬');
+        }
+        sb.AppendLine();
+
+        // Headers
+        for (var rowIndex = 0; rowIndex < 1; rowIndex++)
+        {
+            sb.Append('│');
             for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
             {
-                // Print cell
-                sb.Append(" | ");
-
                 var cell = arrValues[rowIndex, colIndex]?.PadRight(maxColumnsWidth[colIndex]);
                 sb.Append(cell);
-            }
-
-            // Print end of line
-            sb.Append(" | ");
-            sb.AppendLine();
-
-            // Print splitter
-            if (rowIndex == 0)
-            {
-                sb.Append($" |{headerSplitter}| ");
-                sb.AppendLine();
+                sb.Append('│');
             }
         }
+        sb.AppendLine();
+    
+        // Header bottom line
+        sb.Append('├');
+        for (var colIndex = 0; colIndex < maxColumnsWidth.Length; colIndex++)
+        {
+            sb.Append(new string('─', maxColumnsWidth[colIndex]));
+            sb.Append(maxColumnsWidth.Length == colIndex + 1 ? '│' : '┼');
+        }
+        sb.AppendLine();
+    
+        // Rows
+        for (var rowIndex = 1; rowIndex < arrValues.GetLength(0); rowIndex++)
+        {
+            sb.Append('│');
+            for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
+            {
+                var cell = arrValues[rowIndex, colIndex]?.PadRight(maxColumnsWidth[colIndex]);
+                sb.Append(cell);
+                sb.Append('│');
+            }
+            sb.AppendLine();
+        }
 
+        // Bottom line
+        sb.Append('╰');
+        for (var colIndex = 0; colIndex < maxColumnsWidth.Length; colIndex++)
+        {
+            sb.Append(new string('─', maxColumnsWidth[colIndex]));
+            sb.Append(maxColumnsWidth.Length == colIndex + 1 ? '╯' : '┴');
+        }
+        sb.AppendLine();
+    
         return sb.ToString();
     }
-
+    
     private static int[] GetMaxColumnsWidth(string?[,] arrValues)
     {
         var maxColumnsWidth = new int[arrValues.GetLength(1)];
