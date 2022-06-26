@@ -7,7 +7,7 @@ compare the
 results. Parallelize the execution of test cases.
 
 Runs on MacOS, Linux and Windows. For additional
-information: [all supported platforms](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md).
+information see [all supported platforms](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md).
 
 ## Install
 
