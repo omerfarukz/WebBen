@@ -25,7 +25,7 @@ jobs:
     - uses: actions/checkout@master
     - uses: codecov/codecov-action@v2
       with:
-        token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
+        token: ${{ secrets.CC_SECRET }} # not required for public repos
         files: ./coverage1.xml,./coverage2.xml # optional
         flags: unittests # optional
         name: codecov-umbrella # optional
