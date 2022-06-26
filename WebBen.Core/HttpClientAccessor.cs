@@ -20,7 +20,7 @@ internal class HttpClientAccessor : IDisposable
         handler.Credentials = credentials;
 
         // Cookie
-        if (testCase.Configuration.UseCookieContainer || testCase.Configuration.Cookies != null)
+        if (testCase.Configuration.UseCookieContainer || testCase.Configuration.Cookies.Any())
         {
             CookieContainer = new CookieContainer();
 

@@ -6,6 +6,7 @@ using WebBen.Core.Configuration;
 using WebBen.Core.CredentialProviders;
 using WebBen.Core.Logging;
 using WebBen.Core.Results;
+using System.Reflection;
 
 namespace WebBen.Core;
 
@@ -13,6 +14,13 @@ public class HttpTestContext
 {
     private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
     private readonly ILogger _logger;
+    private static readonly string DefaultUserAgent;
+
+    static HttpTestContext()
+    {
+        var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version!;
+        DefaultUserAgent = $"WebBen/{assemblyVersion.Major}.{assemblyVersion.Minor}";
+    }
 
     public HttpTestContext(ILogger logger)
     {
@@ -21,7 +29,6 @@ public class HttpTestContext
         {
             {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
         };
-
         _logger.Debug($"Timer resolution is set to '{(Stopwatch.IsHighResolution ? "high" : "low")}' precision");
     }
 
@@ -190,22 +197,21 @@ public class HttpTestContext
         );
 
         // Set cookies
-        if (testCaseInstance.Configuration.Cookies != null)
+        foreach (var cookie in testCaseInstance.Configuration.Cookies)
         {
-            foreach (var cookie in testCaseInstance.Configuration.Cookies)
-            {
-                httpClientAccessor.CookieContainer!.Add(
-                    testCaseInstance.Configuration.Uri!,
-                    new Cookie(cookie.Key, $"{cookie.Value}")
-                );
-            }
+            httpClientAccessor.CookieContainer!.Add(
+                testCaseInstance.Configuration.Uri!,
+                new Cookie(cookie.Key, $"{cookie.Value}")
+            );
         }
 
+        const string userAgentKey = "User-Agent";
+        httpRequestMessage.Headers.Add(userAgentKey, DefaultUserAgent);
+        
         // Set headers
-        if (testCaseInstance.Configuration.Headers != null)
-            foreach (var header in testCaseInstance.Configuration.Headers)
-                httpRequestMessage.Headers.Add(header.Key, $"{header.Value}");
-
+        foreach (var header in testCaseInstance.Configuration.Headers)
+            httpRequestMessage.Headers.Add(header.Key, $"{header.Value}");
+        
         // SetBody
         if (testCaseInstance.Configuration.Body != null)
         {

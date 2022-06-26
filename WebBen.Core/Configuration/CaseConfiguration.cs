@@ -14,7 +14,7 @@ public record CaseConfiguration : ConfigurationBase
     public int MaxBufferSize { get; set; } = int.MaxValue;
 
     public string? CredentialConfigurationKey { get; set; }
-    public Dictionary<string, object>? Headers { get; set; }
-    public Dictionary<string, object>? Cookies { get; set; }
+    public Dictionary<string, object> Headers { get; set; } = new();
+    public Dictionary<string, object> Cookies { get; set; } = new();
     public BodyConfiguration? Body { get; set; }
 }

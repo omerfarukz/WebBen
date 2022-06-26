@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace WebBen.Tests.Mocks;
 
-public class MockWebApplication
+public static class MockWebApplication
 {
     public static WebApplication CreateServer()
     {
