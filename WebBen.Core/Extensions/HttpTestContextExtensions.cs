@@ -1,5 +1,3 @@
-using System.Collections.Concurrent;
-using System.Collections.ObjectModel;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 using WebBen.Core.Configuration;
@@ -21,7 +19,7 @@ public static class HttpTestContextExtensions
 
         var testCases = new TestCase[]
         {
-            new(configuration.TestCaseConfigurations[0])
+            new(configuration.TestCaseConfigurations.FirstOrDefault())
         };
 
         return await httpTestContext.Execute(testCases, null);
@@ -58,7 +56,7 @@ public static class HttpTestContextExtensions
         // 1, 2, 4, 8, 16 ... 2^32
         var requestCountCacheQueue = new Queue<int>(Enumerable.Range(0, 32).Select(f => (int) Math.Pow(2, f)));
         logger.Debug($"Range: {string.Join(',', requestCountCacheQueue)}");
-        
+
         var resultBag = new List<TestResult>();
         while (requestCountCacheQueue.Any())
         {
@@ -82,7 +80,7 @@ public static class HttpTestContextExtensions
                 var testResult = await context.Execute(caseConfiguration);
                 var result = testResult.Items.First();
 
-                if (result.Errors?.Length > 0)
+                if (result.Errors is {Length: > 0})
                 {
                     logger.Debug($"Error(s) occured {result.Errors.Length}");
                     failed = true;
@@ -137,23 +135,5 @@ public static class HttpTestContextExtensions
             MaxRequestsPerSecond = maxRequestForSecond
         };
         return analyzeResult;
-    }
-
-    public static string AsTable(this TestResult testCases)
-    {
-        var asTable = testCases.Items.ToStringTable(
-            new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg", "StdDev", "P90", "Median"},
-            f => f.Configuration.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
-            f => f.Elapsed.TotalSeconds.ToString("N"),
-            f => f.Configuration.RequestCount.ToString(),
-            f => f.Configuration.Parallelism.ToString(),
-            f => f.Errors.Length.ToString(),
-            f => f.Timings.Average().TotalMilliseconds.ToString("N"),
-            f => f.Timings.StdDev().TotalMilliseconds.ToString("N"),
-            f => f.Timings.Percentile(0.9d).TotalMilliseconds.ToString("N"),
-            f => f.Timings.Median().TotalMilliseconds.ToString("N")
-        );
-
-        return asTable;
     }
 }

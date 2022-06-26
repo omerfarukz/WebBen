@@ -4,7 +4,7 @@ namespace WebBen.Core.Extensions;
 
 public static class EnumerableOfDoubleExtensions
 {
-    public static TimeSpan Calculate(this IEnumerable<TimeSpan> source, CalculationFunction calculationFunction)
+    public static TimeSpan Calculate(this IEnumerable<TimeSpan>? source, CalculationFunction calculationFunction)
     {
         return calculationFunction switch
         {
@@ -19,35 +19,35 @@ public static class EnumerableOfDoubleExtensions
         };
     }
 
-    public static TimeSpan StdDev(this IEnumerable<TimeSpan> source)
+    private static TimeSpan StdDev(this IEnumerable<TimeSpan>? source)
     {
         return CastDoubleAndProcess(source, doubles =>
         {
             var enumerable = doubles as double[] ?? doubles.ToArray();
             if (!enumerable.Any())
                 return 0;
-            
+
             var avg = enumerable.Average();
             return Math.Sqrt(enumerable.Average(v => Math.Pow(v - avg, 2)));
         });
     }
 
-    public static TimeSpan Average(this IEnumerable<TimeSpan> source)
+    private static TimeSpan Average(this IEnumerable<TimeSpan>? source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Average());
     }
 
-    public static TimeSpan Percentile(this IEnumerable<TimeSpan> source, double percent)
+    private static TimeSpan Percentile(this IEnumerable<TimeSpan>? source, double percent)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Percentile(percent));
     }
 
-    public static TimeSpan Median(this IEnumerable<TimeSpan> source)
+    private static TimeSpan Median(this IEnumerable<TimeSpan>? source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Median());
     }
 
-    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan> source,
+    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan>? source,
         Func<IEnumerable<double>, double> func)
     {
         return TimeSpan.FromMilliseconds(func(source.Select(f => f.TotalMilliseconds)));

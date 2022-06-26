@@ -9,8 +9,9 @@ public class LoggerTests
     public void ShouldLogWithAllLevels()
     {
         var logger = new MockLogger();
-        logger.Debug(string.Empty);
-        logger.Error(string.Empty);
-        logger.Info(string.Empty);
+        logger.Debug("a");
+        logger.Error("b");
+        logger.Info("c");
+        Assert.AreEqual("Debug: a\r\nError: b\r\nInfo: c\r\n", logger.Log);
     }
-}
+} 

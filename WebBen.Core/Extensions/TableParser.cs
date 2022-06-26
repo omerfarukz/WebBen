@@ -24,7 +24,7 @@ internal static class TableParser
     public static string ToStringTable<T>(
         this IEnumerable<T> values,
         string?[] columnHeaders,
-        params Func<T, object>[] valueSelectors)
+        params Func<T, object?>[] valueSelectors)
     {
         return ToStringTable(values.ToArray(), columnHeaders, valueSelectors);
     }
@@ -32,7 +32,7 @@ internal static class TableParser
     private static string ToStringTable<T>(
         this IReadOnlyList<T> values,
         string?[] columnHeaders,
-        params Func<T, object>[] valueSelectors)
+        params Func<T, object?>[] valueSelectors)
     {
         if (columnHeaders.Length != valueSelectors.Length)
             throw new ArgumentException();

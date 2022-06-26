@@ -1,28 +1,15 @@
 using System;
-using System.IO;
-using System.Text;
 using NUnit.Framework;
-using WebBen.CLI;
 using WebBen.Core.Logging;
 
 namespace WebBen.Tests.CLI;
 
-public class ConsoleLoggerTests
+public class TextWriterLoggerTests : TextWriterTestBase
 {
-    private MemoryStream _memoryStream;
-    private StreamWriter _streamWriter;
-
-    [SetUp]
-    public void Setup()
-    {
-        _memoryStream = new MemoryStream();
-        _streamWriter = new StreamWriter(_memoryStream, Encoding.ASCII);
-    }
-
     [Test]
     public void Log_Should_Write_Console_Out()
     {
-        var logger = new TextWriterLogger(_streamWriter);
+        var logger = new TextWriterLogger(StreamWriter);
         var message = Guid.NewGuid().ToString();
         logger.Debug(message);
 
@@ -42,13 +29,5 @@ public class ConsoleLoggerTests
         logger.Error(message);
         actual = ReadAndClearConsoleOut();
         Assert.AreEqual($"Error: {message}\n", actual);
-    }
-
-    private string ReadAndClearConsoleOut()
-    {
-        _streamWriter.Flush();
-        var text = Encoding.ASCII.GetString(_memoryStream.ToArray());
-        _memoryStream.SetLength(0);
-        return text;
     }
 }

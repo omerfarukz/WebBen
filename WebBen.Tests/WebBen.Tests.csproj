@@ -21,10 +21,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Include="..\Samples\Simple.json">
-        <Link>Assets/Simple.json</Link>
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
+        <None Include="..\Samples\Simple.json">
+            <Link>Assets/Simple.json</Link>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
 </Project>

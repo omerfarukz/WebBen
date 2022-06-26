@@ -9,10 +9,10 @@ public class ProgramTests
     [Test]
     public async Task Program_Should_Execute_Without_Error()
     {
-        await Main(new []{"--help"});
-        await Main(new []{"--verbose"});
-        await Main(new []{"uri"});
-        await Main(new []{"config"});
-        await Main(new []{"analyze"});
+        await Main(new[] {"--help"});
+        await Main(new[] {"--verbose"});
+        await Main(new[] {"uri"});
+        await Main(new[] {"config"});
+        await Main(new[] {"analyze"});
     }
 }

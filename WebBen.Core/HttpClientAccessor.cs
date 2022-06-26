@@ -31,7 +31,7 @@ internal class HttpClientAccessor : IDisposable
         Client = new HttpClient(handler, true) {BaseAddress = testCase.Configuration.Uri};
         Client.MaxResponseContentBufferSize = testCase.Configuration.MaxBufferSize;
         Client.Timeout = TimeSpan.FromMilliseconds(testCase.Configuration.TimeoutInMs);
-    }   
+    }
 
     public HttpClient Client { get; }
     public CookieContainer? CookieContainer { get; }

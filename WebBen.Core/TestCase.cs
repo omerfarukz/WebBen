@@ -7,8 +7,7 @@ public record TestCase(CaseConfiguration Configuration)
 {
     public CaseConfiguration Configuration { get; } =
         Configuration ?? throw new ArgumentNullException(nameof(Configuration));
-    
+
     public ConcurrentBag<TimeSpan> Timings { get; } = new();
-    public ConcurrentBag<string> Errors { get; } = new();
-    public TimeSpan Elapsed { get; internal set; }
+    public ConcurrentBag<string> Errors { get; } = new(); 
 }

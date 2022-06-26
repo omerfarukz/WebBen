@@ -36,7 +36,7 @@ public class HttpTestContextTests
     [Test]
     public async Task Pass_Null_To_CreateActionBlockInternal_Should_Throw()
     {
-        var testCase = new TestCase(new CaseConfiguration()
+        var testCase = new TestCase(new CaseConfiguration
         {
             Uri = _uri,
             FetchContent = true
@@ -50,16 +50,16 @@ public class HttpTestContextTests
         Assert.ThrowsAsync<ArgumentNullException>(() =>
             _httpTestContext.CreateActionBlockInternal(httpClientAccessor, new TestCase(null!)));
 
-        testCase = new TestCase(new CaseConfiguration()
+        testCase = new TestCase(new CaseConfiguration
         {
             Uri = new Uri($"{_uri}/notfound"),
             FetchContent = true
         });
         await _httpTestContext.CreateActionBlockInternal(httpClientAccessor, testCase);
 
-        testCase = new TestCase(new CaseConfiguration()
+        testCase = new TestCase(new CaseConfiguration
         {
-            Uri = new Uri($"http://foo.bar.local"),
+            Uri = new Uri("http://foo.bar.local"),
             FetchContent = false
         });
 
@@ -73,13 +73,13 @@ public class HttpTestContextTests
         configuration.Uri = new Uri("http://foo.bar.local");
         configuration.RequestCount = 1;
 
-        var testCases = _httpTestContext.Execute(new List<TestCase>()
+        var testCases = _httpTestContext.Execute(new List<TestCase>
         {
-            new TestCase(configuration)
+            new(configuration)
         }, null).Result;
 
-        Assert.IsNotEmpty(testCases.Items );
-        Assert.AreEqual(testCases.Items .Length, 1);
+        Assert.IsNotEmpty(testCases.Items);
+        Assert.AreEqual(testCases.Items.Length, 1);
         Assert.IsNotEmpty(testCases.Items[0].Errors);
     }
 
@@ -116,9 +116,9 @@ public class HttpTestContextTests
             configuration.Uri = new Uri("http://foo.bar");
             configuration.CredentialConfigurationKey = Guid.NewGuid().ToString();
             configuration.RequestCount = 1;
-            var testCases = _httpTestContext.Execute(new List<TestCase>()
+            var testCases = _httpTestContext.Execute(new List<TestCase>
             {
-                new TestCase(configuration)
+                new(configuration)
             }, null).Result;
         });
     }
@@ -126,10 +126,7 @@ public class HttpTestContextTests
     [Test]
     public void Add_Null_Test_Case_Args_Should_Throw()
     {
-        Assert.CatchAsync( async ()=>
-        {
-            await _httpTestContext.Execute(null!, null);
-        });
+        Assert.CatchAsync(async () => { await _httpTestContext.Execute(null!, null); });
     }
 
     [Test]
@@ -140,7 +137,7 @@ public class HttpTestContextTests
             var testConfiguration = new TestConfiguration();
             testConfiguration.CredentialConfigurations = new[]
             {
-                new CredentialConfiguration()
+                new CredentialConfiguration
                 {
                     Data = new Dictionary<string, object>(),
                     Key = Guid.NewGuid().ToString(),
@@ -174,7 +171,7 @@ public class HttpTestContextTests
 
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
-        
+
         Assert.NotNull(allResults.Items.First().Errors);
         Assert.IsNotEmpty(allResults.Items.First().Errors);
         Assert.AreEqual(1, allResults.Items.First().Errors.Length);
@@ -260,6 +257,7 @@ public class HttpTestContextTests
         Assert.NotNull(result);
         Assert.IsEmpty(result.Errors);
         Assert.IsNotEmpty(result.Timings);
+        Assert.NotZero(result.Elapsed.TotalMilliseconds);       
         Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
         Assert.NotZero(result.Elapsed.TotalSeconds);
     }
@@ -275,6 +273,7 @@ public class HttpTestContextTests
         var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
         Assert.IsNotEmpty(analyzeResult.Results);
         Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
+        Assert.NotZero(analyzeResult.Results.First().Items.First().Elapsed.TotalMilliseconds);
     }
 
     [Test]
@@ -294,6 +293,7 @@ public class HttpTestContextTests
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
         Assert.AreEqual(1, allResults.Items.Count());
+        Assert.NotZero(allResults.Items.First().Elapsed.TotalMilliseconds);
     }
 
     [Test]

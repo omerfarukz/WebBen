@@ -58,7 +58,7 @@ public class HttpClientAccessorTests
         var testCase = new TestCase(caseConfiguration);
         var mockCredential = new MockCredential();
         Assert.Null(mockCredential.GetCredential(null!, null!));
-        
+
         var httpClientAccessor = new HttpClientAccessor(testCase, mockCredential);
 
         Assert.NotNull(httpClientAccessor.Client);

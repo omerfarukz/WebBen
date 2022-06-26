@@ -131,14 +131,13 @@ public class HttpTestContext
         int parallelism
     )
     {
-        var actionBlock = new ActionBlock<TestCase>(async testCase =>
-        {
-            await CreateActionBlockInternal(httpClientAccessor, testCase);
-        }, new ExecutionDataflowBlockOptions
-        {
-            MaxDegreeOfParallelism = parallelism,
-            BoundedCapacity = parallelism
-        });
+        var actionBlock = new ActionBlock<TestCase>(
+            async testCase => { await CreateActionBlockInternal(httpClientAccessor, testCase); },
+            new ExecutionDataflowBlockOptions
+            {
+                MaxDegreeOfParallelism = parallelism,
+                BoundedCapacity = parallelism
+            });
 
         return actionBlock;
     }

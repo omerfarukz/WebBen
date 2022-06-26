@@ -7,9 +7,9 @@ namespace WebBen.CLI.CommandLine;
 
 internal class WebBenRootCommand : RootCommand
 {
-    public readonly Option<bool> VerboseOption;
     public readonly Option<ExportFormat> ExportFormatOption;
-    
+    public readonly Option<bool> VerboseOption;
+
     public WebBenRootCommand(IExporter exporter, ILogger logger)
     {
         AddCommand(new ConfigCommand(exporter, logger));
@@ -19,9 +19,8 @@ internal class WebBenRootCommand : RootCommand
         VerboseOption = new Option<bool>(new[] {"--verbose", "-v"}, "Enable verbose output");
         ExportFormatOption = new Option<ExportFormat>(new[] {"--export-format", "-e"}, "Export format");
         ExportFormatOption.SetDefaultValue(ExportFormat.Default);
-        
+
         AddGlobalOption(VerboseOption);
         AddGlobalOption(ExportFormatOption);
     }
-
 }
