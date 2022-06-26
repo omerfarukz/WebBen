@@ -276,7 +276,7 @@ Http request headers can be specified.
   ]
 }
 ```
-
+    
 ## Http request
 Http requests created by WebBen are not actually sent to the server. Instead, they are stored in a queue. The queue is processed by multiple threads depending on the parallelism.
 
@@ -290,6 +290,67 @@ Content-Length: 15
 {"name":"test"}
 ```
 
+WebBen is just a simple tool to generate http requests. You can combine it with other tools to make more complex tasks. For example, you can use WebBen to generate requests and then use another tool to send them to the your backend.
+
+### Example
+```shell
+webben uri https://url-to-benchmark.local/pages/1 -e json | \
+curl -H "Content-Type: application/json" \
+    -X POST \
+    --data-binary @- \
+    https://your-awesome-backend.local/api/v1/posts
+    
+
+POST / HTTP/1.1
+Host: your-awesome-backend.local
+User-Agent: curl/7.79.1
+Accept: */*
+Content-Type: application/json
+Content-Length: 1042
+
+{
+  "Items": [
+    {
+      "Timings": [
+        "00:00:00.5772976",
+        "00:00:00.5528780",
+        "00:00:00.5148466",
+        "00:00:00.5118757",
+        "00:00:00.5118554",
+        "00:00:00.4524819",
+        "00:00:00.5113236",
+        "00:00:00.5117843",
+        "00:00:00.5148185",
+        "00:00:00.4524458"
+      ],
+      "Errors": [],
+      "Elapsed": "00:00:00.5938226",
+      "Configuration": {
+        "HttpMethod": "GET",
+        "RequestCount": 10,
+        "Parallelism": 10,
+        "UseDefaultCredentials": false,
+        "UseCookieContainer": false,
+        "MaxBufferSize": 2147483647,
+        "Name": "iteration1",
+        "Uri": "https://url-to-benchmark.local/pages/1",
+        "FetchContent": false,
+        "AllowRedirect": true,
+        "TimeoutInMs": 2147483647
+      },
+      "Calculations": {
+        "Average": "00:00:00.5111607",
+        "StdDev": "00:00:00.0361018",
+        "P90": "00:00:00.5772976",
+        "P80": "00:00:00.5528780",
+        "P70": "00:00:00.5148466",
+        "Median": "00:00:00.5118655"
+      }
+    }
+  ]
+}
+```
+
 ## :yum: How to contribute
 Have an idea? Found a bug? Contributions are always welcome. 
 - Open an issue or create a pull request.
@@ -297,4 +358,3 @@ Have an idea? Found a bug? Contributions are always welcome.
 - Give a Star.
 
 Thanks! :heart:
-
