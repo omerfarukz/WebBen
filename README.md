@@ -283,7 +283,7 @@ Http requests created by WebBen are not actually sent to the server. Instead, th
 ```http request
 POST / HTTP/1.1
 Host: localhost:3000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) WebBen/1.2206
 Content-Type: application/json; charset=utf-8
 Content-Length: 15
 
