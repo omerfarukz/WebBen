@@ -157,13 +157,13 @@ Output:
 }
 ```
 
-## Usage
+### Usage
 
 ```shell
 ./webben config samples/Multiple.json
 ```
 
-## Output ( Default Formatter )
+### Output ( Default Formatter )
 
 ```shell
 ╭─────────────┬───────┬───┬───┬───┬────────┬────────┬────────╮
@@ -175,13 +175,13 @@ Output:
 ╰─────────────┴───────┴───┴───┴───┴────────┴────────┴────────╯
 ```
 
-## Usage
+### Usage
 
 ```shell
 ./webben config samples/Multiple.json -e Json
 ```
 
-## Output ( JSON Formatter )
+### Output ( JSON Formatter )
 
 ```json
 [{
@@ -277,7 +277,8 @@ Http request headers can be specified.
 }
 ```
 
-### Http request
+## Http request
+Http requests created by WebBen are not actually sent to the server. Instead, they are stored in a queue. The queue is processed by multiple threads depending on the parallelism.
 
 ```http request
 POST / HTTP/1.1
@@ -290,8 +291,10 @@ Content-Length: 15
 ```
 
 ## :yum: How to contribute
-
-Have an idea? Found a bug? Do not hasistate to contirubute. :rocket:
+Have an idea? Found a bug? Contributions are always welcome. 
+- Open an issue or create a pull request.
+- Share with your friends.
+- Give a Star.
 
 Thanks! :heart:
 
