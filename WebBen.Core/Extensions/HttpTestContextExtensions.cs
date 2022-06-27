@@ -26,10 +26,11 @@ public static class HttpTestContextExtensions
         if (configurationSource == null)
             throw new ArgumentNullException(nameof(configurationSource));
 
-        var configurationData = JsonNode.Parse(await configurationSource.GetContent());
-        var testConfigurations = configurationData?["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
+        var content = await configurationSource.GetContent();
+        var configurationData = JsonNode.Parse(content)!;
+        var testConfigurations = configurationData["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
         var credentialConfigurations =
-            configurationData?["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
+            configurationData["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
 
         if (testConfigurations == null)
             throw new InvalidDataException();
