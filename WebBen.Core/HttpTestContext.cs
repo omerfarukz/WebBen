@@ -25,11 +25,12 @@ public class HttpTestContext
     public HttpTestContext(ILogger logger)
     {
         _logger = logger;
+        _logger.Debug($"Timer resolution is set to high precision:'{Stopwatch.IsHighResolution}'");
+        
         _credentialProviders = new Dictionary<string, ICredentialProvider>
         {
             {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
         };
-        _logger.Debug($"Timer resolution is set to '{(Stopwatch.IsHighResolution ? "high" : "low")}' precision");
     }
 
     /// <summary>
@@ -102,10 +103,8 @@ public class HttpTestContext
 
                 _logger.Debug($"Creating credentials for case '{testCase.Configuration.Name}");
 
-                var credentialConfiguration = credentialConfigurations.SingleOrDefault(f =>
+                var credentialConfiguration = credentialConfigurations.Single(f =>
                     f.Key == testCase.Configuration.CredentialConfigurationKey);
-                if (credentialConfiguration == null)
-                    throw new InvalidDataException(nameof(credentialConfiguration));
 
                 if (!_credentialProviders.ContainsKey(credentialConfiguration.Provider))
                     throw new InvalidProgramException(

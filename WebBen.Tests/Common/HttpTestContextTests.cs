@@ -170,6 +170,39 @@ public class HttpTestContextTests
             var testResult = _httpTestContext.Execute(testCases, testConfiguration.CredentialConfigurations).Result;
         });
     }
+    
+    [Test]
+    public void Add_Valid_Credential_Has_Invalid_Provider_Name_Should_Throw()
+    {
+        Assert.Throws<AggregateException>(() =>
+        {
+            var testConfiguration = new TestConfiguration();
+            testConfiguration.CredentialConfigurations = new[]
+            {
+                new CredentialConfiguration
+                {
+                    Data = new Dictionary<string, object>(),
+                    Key = "credential1",
+                    Provider = "NonExistingProviderName"
+                }
+            };
+
+            var configuration = new CaseConfiguration();
+            configuration.Uri = new Uri("http://foo.bar");
+            configuration.CredentialConfigurationKey ="credential1";
+            testConfiguration.TestCaseConfigurations = new[]
+            {
+                new CaseConfiguration()
+            };
+
+            var testCases = testConfiguration.TestCaseConfigurations
+                .Select(f => new TestCase(f))
+                .ToList()
+                .AsReadOnly();
+
+            var testResult = _httpTestContext.Execute(testCases, testConfiguration.CredentialConfigurations).Result;
+        });
+    }
 
     [Test]
     public async Task Non_Existing_Url_Should_Return_Error()
