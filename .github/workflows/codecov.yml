@@ -36,7 +36,7 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test --no-restore /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+      run: dotnet test --no-build /p:CollectCoverage=true
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CC_SECRET }} # not required for public repos
