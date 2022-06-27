@@ -45,4 +45,12 @@ public class TableParserTests
         var actual = values.ToStringTable(new[] {"Number"}, f => f);
         Assert.AreEqual("┌──────┐\n│Number│\n├──────┤\n│0     │\n│1     │\n│2     │\n└──────┘\n", actual);
     }
+    
+    [Test]
+    public void Ordinary_Data_With_A_Null_Row_Should_Pass()
+    {
+        var values = Enumerable.Range(0, 3);
+        var actual = values.ToStringTable(new[] {"Number"}, f => f == 2 ? null : f.ToString());
+        Assert.AreEqual("┌──────┐\n│Number│\n├──────┤\n│0     │\n│1     │\n││\n└──────┘\n", actual);
+    }
 }

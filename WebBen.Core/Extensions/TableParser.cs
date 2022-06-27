@@ -46,8 +46,7 @@ internal static class TableParser
         // Fill table rows
         for (var rowIndex = 1; rowIndex < arrValues.GetLength(0); rowIndex++)
         for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-            arrValues[rowIndex, colIndex] = valueSelectors[colIndex]
-                .Invoke(values[rowIndex - 1]).ToString();
+            arrValues[rowIndex, colIndex] = valueSelectors[colIndex].Invoke(values[rowIndex - 1])?.ToString();
 
         return ToStringTable(arrValues);
     }
