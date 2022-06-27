@@ -37,6 +37,8 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test /p:CollectCoverage=true
+    - name: omr
+      run: pwd && ls
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CC_SECRET }} # not required for public repos
