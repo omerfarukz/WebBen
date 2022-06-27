@@ -35,6 +35,15 @@ public class FileConfigurationSourceTests
         Assert.ThrowsAsync<FileNotFoundException>(() => source.GetContent());
     }
 
+    [Test]
+    public void Null_File_Path_Should_Throw()
+    {
+        Assert.Throws<ArgumentNullException>(() =>
+        {
+            var source = new FileConfigurationSource(null!);
+        });
+    }
+
     [TearDown]
     public void TearDown()
     {
