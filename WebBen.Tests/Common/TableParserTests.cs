@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using NUnit.Framework;
 using WebBen.Core.Extensions;
 
@@ -35,5 +36,13 @@ public class TableParserTests
         var values = Array.Empty<int>();
         var actual = values.ToStringTable(new[] {null as string}, f => string.Empty);
         Assert.AreEqual("┌┐\n││\n├┤\n└┘\n", actual);
+    }
+    
+    [Test]
+    public void OrdinaryData_Should_Pass()
+    {
+        var values = Enumerable.Range(0, 3);
+        var actual = values.ToStringTable(new[] {"Number"}, f => f);
+        Assert.AreEqual("┌──────┐\n│Number│\n├──────┤\n│0     │\n│1     │\n│2     │\n└──────┘\n", actual);
     }
 }
