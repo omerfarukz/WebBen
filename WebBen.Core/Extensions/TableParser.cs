@@ -70,7 +70,7 @@ internal static class TableParser
         sb.Append(Pipe);
         for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
         {
-            var cell = arrValues[0, colIndex]?.PadRight(maxColumnsWidth[colIndex]);
+            var cell = (arrValues[0, colIndex] ?? string.Empty).PadRight(maxColumnsWidth[colIndex]);
             sb.Append(cell);
             sb.Append(Pipe);
         }
@@ -93,7 +93,7 @@ internal static class TableParser
             sb.Append(Pipe);
             for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
             {
-                var cell = arrValues[rowIndex, colIndex]?.PadRight(maxColumnsWidth[colIndex]);
+                var cell = (arrValues[rowIndex, colIndex] ?? string.Empty).PadRight(maxColumnsWidth[colIndex]);
                 sb.Append(cell);
                 sb.Append(Pipe);
             }
