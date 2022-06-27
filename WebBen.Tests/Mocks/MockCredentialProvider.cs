@@ -13,6 +13,14 @@ public class MockCredentialProvider : ICredentialProvider
     }
 }
 
+public class MockCredentialProvider2 : ICredentialProvider
+{
+    public ICredentials FromConfiguration(IDictionary<string, object> props)
+    {
+        return new MockCredential();
+    }
+}
+
 public class MockCredential : ICredentials
 {
     public NetworkCredential GetCredential(Uri uri, string authType)

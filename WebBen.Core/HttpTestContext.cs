@@ -38,7 +38,7 @@ public class HttpTestContext
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    private async Task<TestResultItem> Execute(TestCase testCase, ICredentials? credentials)
+    internal async Task<TestResultItem> Execute(TestCase testCase, ICredentials? credentials)
     {
         if (testCase is null)
             throw new ArgumentNullException(nameof(testCase));

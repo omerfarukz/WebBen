@@ -32,6 +32,7 @@ public class HttpTestContextTests
     [Test]
     public void Add_Null_Credential_Provider_Should_Throw()
     {
+        _httpTestContext.AddCredentialProvider(new MockCredentialProvider2());
         Assert.Throws<ArgumentNullException>(() => _httpTestContext.AddCredentialProvider(null!));
     }
 
@@ -126,9 +127,15 @@ public class HttpTestContextTests
     }
 
     [Test]
+    public void Add_Null_Test_Cases_Args_Should_Throw()
+    {
+        Assert.CatchAsync(async () => { await _httpTestContext.Execute(((IReadOnlyCollection<TestCase>) null!)!, null); });
+    }
+
+    [Test]
     public void Add_Null_Test_Case_Args_Should_Throw()
     {
-        Assert.CatchAsync(async () => { await _httpTestContext.Execute(null!, null); });
+        Assert.CatchAsync(async () => { await _httpTestContext.Execute(((TestCase) null!)!, null); });
     }
 
     [Test]
