@@ -58,7 +58,7 @@ public class TextWriterExporter : IExporter
     {
         var asTable = testResult.Items.ToStringTable(
             new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},
-            f => f.Configuration?.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
+            f => f.Configuration!.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration!.RequestCount.ToString(),
             f => f.Configuration!.Parallelism.ToString(),
@@ -75,7 +75,7 @@ public class TextWriterExporter : IExporter
     {
         var resultSetAsTable = analyzeResult.Results.SelectMany(f => f.Items).ToStringTable(
             new[] {"Name", "Elapsed(sec)", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},
-            f => f.Configuration?.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
+            f => f.Configuration!.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
             f => f.Configuration!.RequestCount,
             f => f.Configuration!.Parallelism,
