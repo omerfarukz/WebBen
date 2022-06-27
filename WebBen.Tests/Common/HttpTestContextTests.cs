@@ -188,11 +188,11 @@ public class HttpTestContextTests
             };
 
             var configuration = new CaseConfiguration();
-            configuration.Uri = new Uri("http://foo.bar");
+            configuration.Uri = new Uri("http://localhost:3000");
             configuration.CredentialConfigurationKey ="credential1";
             testConfiguration.TestCaseConfigurations = new[]
             {
-                new CaseConfiguration()
+                configuration
             };
 
             var testCases = testConfiguration.TestCaseConfigurations
@@ -337,6 +337,19 @@ public class HttpTestContextTests
         Assert.IsNotEmpty(analyzeResult.Results);
         Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
         Assert.NotZero(analyzeResult.Results.First().Items.First().Elapsed.TotalMilliseconds);
+    }
+
+    [Test]
+    public async Task Analyze_Uri_Has_Error_Should_Stop()
+    {
+        var configuration = new AnalyzeConfiguration();
+        configuration.Uri = new Uri("http://non.existing.local");
+        configuration.MaxTrialCount = 1;
+        configuration.CalculationFunction = CalculationFunction.Median;
+
+        var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
+        Assert.IsEmpty(analyzeResult.Results);
+        Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
     }
 
     [Test]
