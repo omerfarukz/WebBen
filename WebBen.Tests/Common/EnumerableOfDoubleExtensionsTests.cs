@@ -43,6 +43,13 @@ public class EnumerableOfDoubleExtensionsTests
         Assert.AreEqual(TimeSpan.FromSeconds(0), enumerable.Calculate(CalculationFunction.P70));
         Assert.AreEqual(TimeSpan.FromSeconds(0), enumerable.Calculate(CalculationFunction.StdDev));
 
+        Assert.IsFalse(Enum.IsDefined(typeof(CalculationFunction), int.MaxValue));
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+        {
+            var calculationFunction = (CalculationFunction)int.MaxValue;
+            Enumerable.Empty<TimeSpan>().Calculate(calculationFunction);
+        });
+        
         Assert.Throws<ArgumentNullException>(() =>
         {
             EnumerableOfDoubleExtensions.Calculate(null!, CalculationFunction.Average);
@@ -63,5 +70,6 @@ public class EnumerableOfDoubleExtensionsTests
         {
             EnumerableOfDoubleExtensions.Calculate(null!, CalculationFunction.P90);
         });
+        
     }
 }

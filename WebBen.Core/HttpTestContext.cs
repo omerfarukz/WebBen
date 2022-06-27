@@ -69,10 +69,12 @@ public class HttpTestContext
 
         stopWatch.Stop();
 
-        var testResultItem = new TestResultItem();
-        testResultItem.Elapsed = stopWatch.Elapsed;
-        testResultItem.Errors = testCase.Errors.ToArray();
-        testResultItem.Timings = testCase.Timings.ToArray();
+        var testResultItem = new TestResultItem
+        {
+            Elapsed = stopWatch.Elapsed,
+            Errors = testCase.Errors.ToArray(),
+            Timings = testCase.Timings.ToArray()
+        };
 
         return testResultItem;
     }

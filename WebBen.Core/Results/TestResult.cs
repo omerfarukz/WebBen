@@ -5,8 +5,6 @@ namespace WebBen.Core.Results;
 
 public record TestResult(TestResultItem[] Items)
 {
-    public TestResultItem[] Items { get; set; } = Items;
-
     public void BuildSummaries()
     {
         var calculationFunctions = Enum.GetValues(typeof(CalculationFunction));

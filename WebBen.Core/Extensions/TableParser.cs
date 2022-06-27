@@ -11,11 +11,11 @@ internal static class TableParser
 {
     private const char Pipe = '│';
     private const char Line = '─';
-    private const char TopLeftCorner = '╭';
+    private const char TopLeftCorner = '┌';
     private const char TopCross = '┬';
-    private const char TopRightCorner = '╮';
-    private const char BottomLeftCorner = '╰';
-    private const char BottomRightCorner = '╯';
+    private const char TopRightCorner = '┐';
+    private const char BottomLeftCorner = '└';
+    private const char BottomRightCorner = '┘';
     private const char BottomCross = '┴';
     private const char CellDivider = '┼';
     private const char CellBeginning = '├';

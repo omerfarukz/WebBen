@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using NUnit.Framework;
 using WebBen.Core;
 using WebBen.Core.Configuration;
+using WebBen.Core.Configuration.Source;
 using WebBen.Core.Extensions;
 using WebBen.Tests.Mocks;
 
@@ -197,6 +199,25 @@ public class HttpTestContextTests
     }
 
     [Test]
+    public void Execute_With_Null_Configuration_Source_Should_Throw()
+    {
+        Assert.ThrowsAsync<ArgumentNullException>(async () =>
+        {
+            var allResults = await _httpTestContext.Execute((IConfigurationSource) null!);
+        });
+    }
+
+    [Test]
+    public void Execute_With_Null_Test_Configuration_Source_Should_Throw()
+    {
+        Assert.ThrowsAsync<InvalidDataException>(async () =>
+        {
+            var source = new MockConfigurationSource(new TestConfiguration() { TestCaseConfigurations = null! });
+            var allResults = await _httpTestContext.Execute(source);
+        });
+    }
+
+    [Test]
     public async Task Execute_With_TestCaseAndCredential_Should_Pass()
     {
         var caseConfiguration = new CaseConfiguration();
@@ -227,8 +248,9 @@ public class HttpTestContextTests
 
         var result = allResults.Items.First();
         Assert.NotNull(result);
-        Assert.IsEmpty(result.Errors);
-        Assert.IsNotEmpty(result.Timings);
+        Assert.IsNotNull(result.Errors);
+        Assert.IsEmpty(result.Errors!);
+        Assert.IsNotNull(result.Timings);
         Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
         Assert.NotZero(result.Elapsed.TotalSeconds);
 
@@ -255,8 +277,9 @@ public class HttpTestContextTests
 
         var result = allResults.Items.First();
         Assert.NotNull(result);
+        Assert.IsNotNull(result.Errors);
         Assert.IsEmpty(result.Errors);
-        Assert.IsNotEmpty(result.Timings);
+        Assert.IsNotNull(result.Timings);
         Assert.NotZero(result.Elapsed.TotalMilliseconds);       
         Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
         Assert.NotZero(result.Elapsed.TotalSeconds);
@@ -267,6 +290,20 @@ public class HttpTestContextTests
     {
         var configuration = new AnalyzeConfiguration();
         configuration.Uri = _uri;
+        configuration.MaxTrialCount = 1;
+        configuration.CalculationFunction = CalculationFunction.Median;
+
+        var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
+        Assert.IsNotEmpty(analyzeResult.Results);
+        Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
+        Assert.NotZero(analyzeResult.Results.First().Items.First().Elapsed.TotalMilliseconds);
+    }
+
+    [Test]
+    public async Task Slow_Uri_Segmentation_Should_Work()
+    {
+        var configuration = new AnalyzeConfiguration();
+        configuration.Uri = new Uri(_uri.ToString() + "slow");
         configuration.MaxTrialCount = 1;
         configuration.CalculationFunction = CalculationFunction.Median;
 

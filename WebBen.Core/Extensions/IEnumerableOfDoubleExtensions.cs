@@ -2,10 +2,13 @@ using WebBen.Core.Configuration;
 
 namespace WebBen.Core.Extensions;
 
-public static class EnumerableOfDoubleExtensions
+internal static class EnumerableOfDoubleExtensions
 {
     public static TimeSpan Calculate(this IEnumerable<TimeSpan>? source, CalculationFunction calculationFunction)
     {
+        if (source == null)
+            throw new ArgumentNullException(nameof(source));
+        
         return calculationFunction switch
         {
             CalculationFunction.Average => source.Average(),
@@ -14,12 +17,11 @@ public static class EnumerableOfDoubleExtensions
             CalculationFunction.P90 => source.Percentile(0.9d),
             CalculationFunction.P80 => source.Percentile(0.8d),
             CalculationFunction.P70 => source.Percentile(0.7d),
-            _ => throw new NotSupportedException(
-                $"{nameof(calculationFunction)}: {calculationFunction}")
+            _ => throw new ArgumentOutOfRangeException(nameof(calculationFunction), calculationFunction, null)
         };
     }
 
-    private static TimeSpan StdDev(this IEnumerable<TimeSpan>? source)
+    private static TimeSpan StdDev(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles =>
         {
@@ -32,22 +34,22 @@ public static class EnumerableOfDoubleExtensions
         });
     }
 
-    private static TimeSpan Average(this IEnumerable<TimeSpan>? source)
+    private static TimeSpan Average(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Average());
     }
 
-    private static TimeSpan Percentile(this IEnumerable<TimeSpan>? source, double percent)
+    private static TimeSpan Percentile(this IEnumerable<TimeSpan> source, double percent)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Percentile(percent));
     }
 
-    private static TimeSpan Median(this IEnumerable<TimeSpan>? source)
+    private static TimeSpan Median(this IEnumerable<TimeSpan> source)
     {
         return CastDoubleAndProcess(source, doubles => doubles.Median());
     }
 
-    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan>? source,
+    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan> source,
         Func<IEnumerable<double>, double> func)
     {
         return TimeSpan.FromMilliseconds(func(source.Select(f => f.TotalMilliseconds)));
@@ -55,9 +57,6 @@ public static class EnumerableOfDoubleExtensions
 
     private static double Average(this IEnumerable<double> source)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-
         var num = 0d;
         var num2 = 0L;
         foreach (var num3 in source)
@@ -74,12 +73,6 @@ public static class EnumerableOfDoubleExtensions
 
     private static double Percentile(this IEnumerable<double> source, double percent)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-
-        if (percent is < 0.0 or > 1.0)
-            throw new ArgumentOutOfRangeException(nameof(percent), "percent must be between 0.0 and 1.0");
-
         var array = source.DefaultIfEmpty(0).OrderBy(x => x).ToArray();
         var num = (int) Math.Floor(percent * array.Length);
         return array[num];
@@ -87,9 +80,6 @@ public static class EnumerableOfDoubleExtensions
 
     private static double Median(this IEnumerable<double> source)
     {
-        if (source == null)
-            throw new ArgumentNullException(nameof(source));
-
         var array = source.OrderBy(x => x).ToArray();
         var num = array.Length;
         if (num == 0) return 0;

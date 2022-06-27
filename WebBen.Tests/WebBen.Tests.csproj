@@ -29,6 +29,7 @@
             <Link>Assets/Simple.json</Link>
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
+        <None Remove="coverage.json" />
     </ItemGroup>
 
 </Project>

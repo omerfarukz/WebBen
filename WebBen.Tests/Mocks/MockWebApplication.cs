@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,6 +15,11 @@ public static class MockWebApplication
 
         var app = builder.Build();
         app.Map("/", () => "hello");
+        app.Map("/slow", () =>
+        {
+            SpinWait.SpinUntil(() => false, TimeSpan.FromMilliseconds(1500));
+            return "oh no";
+        });
         app.Start();
 
         return app;

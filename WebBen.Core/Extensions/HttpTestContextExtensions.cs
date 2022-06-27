@@ -12,26 +12,21 @@ public static class HttpTestContextExtensions
     public static async Task<TestResult> Execute(this HttpTestContext httpTestContext,
         CaseConfiguration caseConfiguration)
     {
-        var configuration = new TestConfiguration
-        {
-            TestCaseConfigurations = new[] {caseConfiguration}
-        };
-
         var testCases = new TestCase[]
         {
-            new(configuration.TestCaseConfigurations.FirstOrDefault())
+            new(caseConfiguration)
         };
 
         return await httpTestContext.Execute(testCases, null);
     }
 
     public static async Task<TestResult> Execute(this HttpTestContext httpTestContext,
-        IConfigurationSource configurationFile)
+        IConfigurationSource configurationSource)
     {
-        if (configurationFile == null)
-            throw new ArgumentNullException(nameof(configurationFile));
+        if (configurationSource == null)
+            throw new ArgumentNullException(nameof(configurationSource));
 
-        var configurationData = JsonNode.Parse(await configurationFile.GetContent());
+        var configurationData = JsonNode.Parse(await configurationSource.GetContent());
         var testConfigurations = configurationData?["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();
         var credentialConfigurations =
             configurationData?["CredentialConfigurations"].Deserialize<CredentialConfiguration[]>();
@@ -39,11 +34,7 @@ public static class HttpTestContextExtensions
         if (testConfigurations == null)
             throw new InvalidDataException();
 
-        var testCases = testConfigurations
-            .Select(f => new TestCase(f))
-            .ToList()
-            .AsReadOnly();
-
+        var testCases = testConfigurations.Select(configuration => new TestCase(configuration)).ToList();
         return await httpTestContext.Execute(testCases, credentialConfigurations);
     }
 
