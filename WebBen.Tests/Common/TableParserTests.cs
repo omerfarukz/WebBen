@@ -18,6 +18,22 @@ public class TableParserTests
     {
         var values = Array.Empty<int>();
         var actual = values.ToStringTable(new[] {"A"}, f => string.Empty);
-        Assert.AreNotEqual(" | A | \r\n|---| \r\n", actual);
+        Assert.AreEqual("┌─┐\n│A│\n├─┤\n└─┘\n", actual);
+    }
+    
+    [Test]
+    public void Null_Values_Should_Pass()
+    {
+        var values = Array.Empty<int>();
+        var actual = values.ToStringTable(new[] {"A"}, f => null);
+        Assert.AreEqual("┌─┐\n│A│\n├─┤\n└─┘\n", actual);
+    }
+    
+    [Test]
+    public void Null_Header_Should_Pass()
+    {
+        var values = Array.Empty<int>();
+        var actual = values.ToStringTable(new[] {null as string}, f => string.Empty);
+        Assert.AreEqual("┌┐\n││\n├┤\n└┘\n", actual);
     }
 }
