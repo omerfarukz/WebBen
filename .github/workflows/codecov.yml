@@ -36,14 +36,14 @@ jobs:
     - name: Build
       run: dotnet build --configuration Release --no-restore
     - name: Test
-      run: dotnet test /p:CollectCoverage=true
+      run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
     - name: omr
       run: pwd && ls && ls WebBen.Tests
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CC_SECRET }} # not required for public repos
         directory: WebBen.Tests
-        files: coverage.json
+        files: lcov.info
         name: codecov-umbrella # optional
         fail_ci_if_error: true # optional (default = false)
         verbose: true # optional (default = false)
