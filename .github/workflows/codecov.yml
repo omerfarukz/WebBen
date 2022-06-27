@@ -38,7 +38,7 @@ jobs:
     - name: Test
       run: dotnet test /p:CollectCoverage=true
     - name: omr
-      run: pwd && ls
+      run: pwd && ls && ls WebBen.Tests
     - uses: codecov/codecov-action@v2
       with:
         token: ${{ secrets.CC_SECRET }} # not required for public repos
