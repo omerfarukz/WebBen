@@ -37,6 +37,15 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test /p:CollectCoverage=true
+    - name: Coverlet coverage test
+      uses: b3b00/coverlet-action@1.2.2
+      with:
+        output: ./lcov.info
+        # output format : lcov, json, opencover, cobertura, teamcity (see coverlet documentation)
+        outputFormat: lcov
+        # excludes: # optional
+        # path to unit test project from repository root
+        testProject: WebBen.Tests
     - name: omr
       run: pwd && ls && ls WebBen.Tests
     - uses: codecov/codecov-action@v2
