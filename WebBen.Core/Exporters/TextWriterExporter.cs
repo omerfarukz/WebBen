@@ -60,12 +60,12 @@ public class TextWriterExporter : IExporter
             new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},
             f => f.Configuration?.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
-            f => f.Configuration?.RequestCount.ToString(),
-            f => f.Configuration?.Parallelism.ToString(),
-            f => f.Errors?.Length.ToString(),
-            f => f.Calculations?[CalculationFunction.Average].TotalMilliseconds.ToString("N"),
-            f => f.Calculations?[CalculationFunction.StdDev].TotalMilliseconds.ToString("N"),
-            f => f.Calculations?[CalculationFunction.Median].TotalMilliseconds.ToString("N")
+            f => f.Configuration!.RequestCount.ToString(),
+            f => f.Configuration!.Parallelism.ToString(),
+            f => f.Errors!.Length.ToString(),
+            f => f.Calculations![CalculationFunction.Average].TotalMilliseconds.ToString("N"),
+            f => f.Calculations![CalculationFunction.StdDev].TotalMilliseconds.ToString("N"),
+            f => f.Calculations![CalculationFunction.Median].TotalMilliseconds.ToString("N")
         );
 
         return asTable;
@@ -77,12 +77,12 @@ public class TextWriterExporter : IExporter
             new[] {"Name", "Elapsed(sec)", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},
             f => f.Configuration?.Name ?? DateTime.Now.ToString("yyMMddHHmmssffff"),
             f => f.Elapsed.TotalSeconds.ToString("N"),
-            f => f.Configuration?.RequestCount,
-            f => f.Configuration?.Parallelism,
-            f => f.Errors?.Length.ToString(),
-            f => f.Calculations?[CalculationFunction.Average].TotalMilliseconds.ToString("N"),
-            f => f.Calculations?[CalculationFunction.StdDev].TotalMilliseconds.ToString("N"),
-            f => f.Calculations?[CalculationFunction.Median].TotalMilliseconds.ToString("N")
+            f => f.Configuration!.RequestCount,
+            f => f.Configuration!.Parallelism,
+            f => f.Errors!.Length.ToString(),
+            f => f.Calculations![CalculationFunction.Average].TotalMilliseconds.ToString("N"),
+            f => f.Calculations![CalculationFunction.StdDev].TotalMilliseconds.ToString("N"),
+            f => f.Calculations![CalculationFunction.Median].TotalMilliseconds.ToString("N")
         );
 
         var analysisAsTable = new[] {analyzeResult}.ToStringTable(
