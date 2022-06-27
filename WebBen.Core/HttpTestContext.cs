@@ -155,9 +155,6 @@ public class HttpTestContext
         if (testCase == null)
             throw new ArgumentNullException(nameof(testCase));
 
-        if (testCase.Configuration == null)
-            throw new ArgumentNullException(nameof(testCase.Configuration));
-
         var httpRequestMessage = BuildHttpRequestMessage(testCase, httpClientAccessor);
 
         try

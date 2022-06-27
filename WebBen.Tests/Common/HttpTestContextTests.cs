@@ -70,6 +70,15 @@ public class HttpTestContextTests
     }
 
     [Test]
+    public void Pass_Null_Configuration_To_CreateActionBlockInternal_Should_Throw()
+    {
+        Assert.Throws<ArgumentNullException>( () =>
+        {
+            var testCase = new TestCase(null!);
+        });
+    }
+
+    [Test]
     public void Http_Request_Exception_Should_Catch()
     {
         var configuration = new CaseConfiguration();
@@ -129,7 +138,10 @@ public class HttpTestContextTests
     [Test]
     public void Add_Null_Test_Cases_Args_Should_Throw()
     {
-        Assert.CatchAsync(async () => { await _httpTestContext.Execute(((IReadOnlyCollection<TestCase>) null!)!, null); });
+        Assert.CatchAsync(async () =>
+        {
+            await _httpTestContext.Execute(((IReadOnlyCollection<TestCase>) null!)!, null);
+        });
     }
 
     [Test]
@@ -170,7 +182,7 @@ public class HttpTestContextTests
             var testResult = _httpTestContext.Execute(testCases, testConfiguration.CredentialConfigurations).Result;
         });
     }
-    
+
     [Test]
     public void Add_Valid_Credential_Has_Invalid_Provider_Name_Should_Throw()
     {
@@ -189,7 +201,7 @@ public class HttpTestContextTests
 
             var configuration = new CaseConfiguration();
             configuration.Uri = new Uri("http://localhost:3000");
-            configuration.CredentialConfigurationKey ="credential1";
+            configuration.CredentialConfigurationKey = "credential1";
             testConfiguration.TestCaseConfigurations = new[]
             {
                 configuration
@@ -252,7 +264,7 @@ public class HttpTestContextTests
     {
         Assert.ThrowsAsync<InvalidDataException>(async () =>
         {
-            var source = new MockConfigurationSource(new TestConfiguration() { TestCaseConfigurations = null! });
+            var source = new MockConfigurationSource(new TestConfiguration() {TestCaseConfigurations = null!});
             var allResults = await _httpTestContext.Execute(source);
         });
     }
@@ -320,7 +332,7 @@ public class HttpTestContextTests
         Assert.IsNotNull(result.Errors);
         Assert.IsEmpty(result.Errors);
         Assert.IsNotNull(result.Timings);
-        Assert.NotZero(result.Elapsed.TotalMilliseconds);       
+        Assert.NotZero(result.Elapsed.TotalMilliseconds);
         Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
         Assert.NotZero(result.Elapsed.TotalSeconds);
     }
