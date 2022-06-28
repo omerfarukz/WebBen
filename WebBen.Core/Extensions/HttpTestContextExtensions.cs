@@ -72,6 +72,7 @@ public static class HttpTestContextExtensions
                 var testResult = await context.Execute(caseConfiguration);
                 var result = testResult.Items.First();
 
+                // If any trial failed, stop the analysis
                 if (result.Errors != null && result.Errors.Length > 0)
                 {
                     logger.Debug($"Error(s) occured {result.Errors.Length}");
