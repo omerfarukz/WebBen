@@ -68,14 +68,6 @@ public class HttpTestContextTests
 
         await _httpTestContext.CreateActionBlockInternal(httpClientAccessor, testCase);
     }
-    
-    [Test]
-    public void Pass_Null_Configuration_To_CreateActionBlockInternal_Should_Throw()
-    {
-        Assert.CatchAsync<ArgumentNullException>(async () =>
-            await _httpTestContext.CreateActionBlockInternal(null!, new TestCase(null!)));
-    }
-
 
     [Test]
     public void Pass_Null_Configuration_To_CreateActionBlockInternal_Should_Throw()
