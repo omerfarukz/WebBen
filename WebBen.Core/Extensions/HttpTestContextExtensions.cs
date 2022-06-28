@@ -50,7 +50,7 @@ public static class HttpTestContextExtensions
         logger.Debug($"Range: {string.Join(',', requestCountCacheQueue)}");
 
         var resultBag = new List<TestResult>();
-        string[]? trialErrors = null;
+        string[] trialErrors = null!;
         while (requestCountCacheQueue.Any())
         {
             var requestCount = requestCountCacheQueue.Dequeue();
@@ -73,18 +73,16 @@ public static class HttpTestContextExtensions
                 resultBag.Add(testResult);
 
                 var firstItem = testResult.Items.First();
+                logger.Debug($"#{i + 1}. {firstItem.Elapsed.TotalSeconds:N} sec(s)");
+                trialTimespans[i] = firstItem.Elapsed;
 
                 // If any trial failed, stop the analysis
-                if (firstItem.Errors != null)
+                if (firstItem.Errors.Any())
                 {
                     logger.Debug($"Error(s) occured {firstItem.Errors.Length}");
                     trialErrors = firstItem.Errors;
                     break;
                 }
-
-
-                logger.Debug($"#{i + 1}. {firstItem.Elapsed.TotalSeconds:N} sec(s)");
-                trialTimespans[i] = firstItem.Elapsed;
             }
 
             if (trialErrors != null)
@@ -124,10 +122,9 @@ public static class HttpTestContextExtensions
             }
         }
 
-        var analyzeResult = new AnalyzeResult(resultBag)
+        var analyzeResult = new AnalyzeResult(resultBag, trialErrors)
         {
             MaxRequestsPerSecond = maxRequestForSecond,
-            Errors= trialErrors
         };
         return analyzeResult;
     }

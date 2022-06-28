@@ -54,7 +54,7 @@ public class TextWriterExporterTests : TextWriterTestBase
                 Timings = Array.Empty<TimeSpan>(),
                 Errors = Array.Empty<string>()
             },
-        })});
+        })}, null);
 
         exporter.Format = ExportFormat.Default;
         exporter.Export(testResult);
