@@ -50,12 +50,12 @@ public static class HttpTestContextExtensions
         logger.Debug($"Range: {string.Join(',', requestCountCacheQueue)}");
 
         var resultBag = new List<TestResult>();
+        string[]? trialErrors = null;
         while (requestCountCacheQueue.Any())
         {
             var requestCount = requestCountCacheQueue.Dequeue();
             logger.Debug($"Create request with maximum parallelism: {requestCount}");
 
-            var failed = false;
             var trialTimespans = new TimeSpan[analyzeConfiguration.MaxTrialCount];
             for (var i = 0; i < analyzeConfiguration.MaxTrialCount; i++)
             {
@@ -70,23 +70,24 @@ public static class HttpTestContextExtensions
                     RequestCount = requestCount
                 };
                 var testResult = await context.Execute(caseConfiguration);
-                var result = testResult.Items.First();
+                resultBag.Add(testResult);
+
+                var firstItem = testResult.Items.First();
 
                 // If any trial failed, stop the analysis
-                if (result.Errors != null && result.Errors.Length > 0)
+                if (firstItem.Errors != null)
                 {
-                    logger.Debug($"Error(s) occured {result.Errors.Length}");
-                    failed = true;
+                    logger.Debug($"Error(s) occured {firstItem.Errors.Length}");
+                    trialErrors = firstItem.Errors;
                     break;
                 }
 
-                resultBag.Add(testResult);
 
-                logger.Debug($"#{i + 1}. {result.Elapsed.TotalSeconds:N} sec(s)");
-                trialTimespans[i] = result.Elapsed;
+                logger.Debug($"#{i + 1}. {firstItem.Elapsed.TotalSeconds:N} sec(s)");
+                trialTimespans[i] = firstItem.Elapsed;
             }
 
-            if (failed)
+            if (trialErrors != null)
                 break;
 
             var averageTiming = trialTimespans.Calculate(analyzeConfiguration.CalculationFunction);
@@ -125,7 +126,8 @@ public static class HttpTestContextExtensions
 
         var analyzeResult = new AnalyzeResult(resultBag)
         {
-            MaxRequestsPerSecond = maxRequestForSecond
+            MaxRequestsPerSecond = maxRequestForSecond,
+            Errors= trialErrors
         };
         return analyzeResult;
     }

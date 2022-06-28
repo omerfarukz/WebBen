@@ -9,6 +9,7 @@ public class AnalyzeResult
 
     public IReadOnlyCollection<TestResult> Results { get; set; }
     public int MaxRequestsPerSecond { get; init; }
+    public string[] Errors { get; set; }
 
     public void BuildSummaries()
     {

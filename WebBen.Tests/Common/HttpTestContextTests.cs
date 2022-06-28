@@ -360,7 +360,8 @@ public class HttpTestContextTests
         configuration.CalculationFunction = CalculationFunction.Median;
 
         var analyzeResult = await _httpTestContext.Analyze(configuration, new MockLogger());
-        Assert.IsEmpty(analyzeResult.Results);
+        Assert.IsNotEmpty(analyzeResult.Results);
+        Assert.IsNotEmpty(analyzeResult.Errors);
         Assert.NotZero(analyzeResult.MaxRequestsPerSecond);
     }
 
