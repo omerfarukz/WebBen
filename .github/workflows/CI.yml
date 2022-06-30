@@ -1,4 +1,4 @@
-name: dotnet build & test & pack
+name: CI && CD
 
 on: [push]
 
