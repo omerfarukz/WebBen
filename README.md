@@ -1,7 +1,7 @@
 # WebBen[chmark]
 
 [![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![codecov](https://codecov.io/gh/omerfarukz/WebBen/branch/master/graph/badge.svg?token=HLMKRMA74L)](https://codecov.io/gh/omerfarukz/WebBen) [![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
-[![CodeQL](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml) [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE)
+[![CodeQL](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml) [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt)
 
 
 Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and
