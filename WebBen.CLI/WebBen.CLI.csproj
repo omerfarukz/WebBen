@@ -20,7 +20,7 @@
         <Authors>Omer Faruk Zorlu</Authors>
         <Copyright>2022-06</Copyright>
         <PackageProjectUrl>https://github.com/omerfarukz/WebBen</PackageProjectUrl>
-        <PackageLicenseUrl>https://github.com/omerfarukz/WebBen/blob/master/LICENSE</PackageLicenseUrl>
+        <PackageLicenseUrl>https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/omerfarukz/WebBen/</RepositoryUrl>
         <PackageTags>benchmark http</PackageTags>
 
@@ -33,12 +33,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1"/>
-        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1"/>
+        <PackageReference Include="System.CommandLine" Version="2.0.0-beta4.22272.1" />
+        <PackageReference Include="System.CommandLine.NamingConventionBinder" Version="2.0.0-beta4.22272.1" />
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\WebBen.Core\WebBen.Core.csproj"/>
+        <ProjectReference Include="..\WebBen.Core\WebBen.Core.csproj" />
     </ItemGroup>
 
     <ItemGroup>
