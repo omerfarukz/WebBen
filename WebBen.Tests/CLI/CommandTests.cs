@@ -69,7 +69,7 @@ public class CommandTests
         var command = new UriCommand(_exporter, new MockLogger());
 
         var uri = "http://foo.bar";
-        var parseResult = command.Parse($"{uri} -f -r -t 10 -m 20 -p 30");
+        var parseResult = command.Parse($"{uri} -f -r -t 10 -p 30");
 
         Assert.IsEmpty(parseResult.Errors);
         Assert.IsNull(parseResult.CommandResult.ErrorMessage);
