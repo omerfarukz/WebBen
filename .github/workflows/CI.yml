@@ -33,12 +33,12 @@ jobs:
 #           verbose: true # optional (default = false)
           
   release:
-    name: Create Github Release
+    name: Get Release
     needs: [build]
     runs-on: ubuntu-latest
     steps:
     - name: Get release
-      id: get_release
+      id: release-master
       uses: bruceadams/get-release@v1.2.3
       env:
         GITHUB_TOKEN: ${{ github.token }}
