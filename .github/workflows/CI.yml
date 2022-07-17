@@ -3,22 +3,21 @@ name: CI & CD
 on: [push]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        dotnet-version: [ '6.0.x' ]
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-        uses: actions/setup-dotnet@v2
-        with:
-          dotnet-version: ${{ matrix.dotnet-version }}
-      - name: Install dependencies
-        run: dotnet restore
-      - name: Build
-        run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
+#   build:
+#     runs-on: ubuntu-latest
+#     strategy:
+#       matrix:
+#         dotnet-version: [ '6.0.x' ]
+#     steps:
+#       - uses: actions/checkout@v3
+#       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+#         uses: actions/setup-dotnet@v2
+#         with:
+#           dotnet-version: ${{ matrix.dotnet-version }}
+#       - name: Install dependencies
+#         run: dotnet restore
+#       - name: Build
+#         run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
 #       - name: Test
 #         run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
 #       - name: Publish the package to nuget
@@ -32,16 +31,18 @@ jobs:
 #           fail_ci_if_error: true # optional (default = false)
 #           verbose: true # optional (default = false)
           
-  release:
+  release:  
     name: Get Release
-    needs: [build]
-    runs-on: ubuntu-latest
     steps:
-    - name: Get release
-      id: release-master
-      uses: bruceadams/get-release@v1.2.3
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
+    - name: step 1uses: joutvhu/get-release@v1.0.1
+      with:
+        # The name of the owner of the repo. Used to identify the owner of the repository.
+        owner: omerfarukz
+        # The name of the repository. Used to identify the repository on which to release.
+        repo: WebBen
+        # Specify tag instead of using checkout tag.
+        tag_name: release-master
+        throwing: true
         
   publish:
     needs: [release]
