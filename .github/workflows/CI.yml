@@ -45,7 +45,9 @@ jobs:
         # Specify tag instead of using checkout tag.
         tag_name: release-master
         throwing: true
-        token: ${{ secrets.GITHUB_TOKEN }}
+        debug: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
   publish:
     needs: [release]
