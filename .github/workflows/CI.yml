@@ -42,6 +42,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
+        tag: 'release-master'
         tag_name: 'release-master'
         release_name: Release v1.22
     - name: Output Release URL File
