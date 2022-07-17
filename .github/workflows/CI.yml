@@ -34,7 +34,6 @@ jobs:
           
   release:
     name: Create Github Release
-    if: contains(github.ref, 'tags/v') # works only version tagged
     needs: [build]
     runs-on: ubuntu-latest
     steps:
@@ -57,7 +56,6 @@ jobs:
         path: release_url.txt
         
   publish:
-    if: contains(github.ref, 'tags/v') # works only version tagged
     needs: [release]
     runs-on: ubuntu-latest
     strategy:
