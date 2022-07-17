@@ -11,7 +11,6 @@ public static class MockWebApplication
     public static WebApplication CreateServer()
     {
         var builder = WebApplication.CreateBuilder(Array.Empty<string>());
-        builder.Services.AddEndpointsApiExplorer();
 
         var app = builder.Build();
         app.Map("/", () => "hello");
