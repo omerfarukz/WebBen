@@ -42,10 +42,10 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
+        allowUpdates: true
         tag: 'release-master'
         tag_name: 'release-master'
         release_name: Release v1.22
-        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Output Release URL File
       run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
     - name: Save Release URL File for publish
