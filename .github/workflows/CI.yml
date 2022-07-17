@@ -77,7 +77,7 @@ jobs:
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
     - name: Build
-      run: dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} | zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
+      run: dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} | zip -r ${{ matrix.rid }}  . -i ./bin/${{ matrix.rid }}
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1.0.1
