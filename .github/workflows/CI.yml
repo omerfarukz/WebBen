@@ -38,9 +38,11 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
+    - name: "Determine tag"
+      run: "echo \"RELEASE_TAG=${GITHUB_REF#refs/tags/}\" >> $GITHUB_ENV"
+
     - name: Create Release
-      id: create_release
-      uses: actions/create-release@v1.0.0
+      uses: ncipollo/release-action@v1.10.0
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
       with:
