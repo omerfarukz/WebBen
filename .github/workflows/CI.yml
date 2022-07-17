@@ -37,28 +37,11 @@ jobs:
     needs: [build]
     runs-on: ubuntu-latest
     steps:
-    - name: Create Release
-      uses: ncipollo/release-action@v1.10.0
+    - name: Get release
+      id: get_release
+      uses: bruceadams/get-release@v1.2.3
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
-      with:
-        allowUpdates: true
-        tag: 'release-master'
-        tag_name: 'release-master'
-        release_name: Release v1.22
-    - name: Output Release URL File
-      run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
-    - name: Output All
-      run: echo ${{ steps }} 
-    - name: Check Release URL File
-      run: cat release_url.txt
-    - name: aaa
-      run: echo ${{ steps.create_release }}
-    - name: Save Release URL File for publish
-      uses: actions/upload-artifact@v1
-      with:
-        name: release_url
-        path: release_url.txt
+        GITHUB_TOKEN: ${{ github.token }}
         
   publish:
     needs: [release]
