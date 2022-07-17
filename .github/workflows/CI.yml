@@ -48,6 +48,8 @@ jobs:
         release_name: Release v1.22
     - name: Output Release URL File
       run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
+    - name: Check Release URL File
+      run: cat release_url.txt
     - name: Save Release URL File for publish
       uses: actions/upload-artifact@v1
       with:
