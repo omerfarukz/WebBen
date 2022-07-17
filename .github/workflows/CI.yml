@@ -33,4 +33,39 @@ jobs:
           name: codecov-umbrella # optional
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
+          
+        
+  publish:
+    if: contains(github.ref, 'tags/v') # works only version tagged
+    needs: [release]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [win-x64, linux-x64, osx-x64]
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      NUGET_XMLDOC_MODE: skip
+    steps:
+    - uses: actions/checkout@v1
+    - name: Load Release URL File from release job
+      uses: actions/download-artifact@v1
+      with:
+        name: release_url
+    - name: Setup .NET Core 6.0
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.100
+    - name: Build
+      run: dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.get_release_info.outputs.upload_url }}
+        asset_path: ./${{ matrix.rid }}.zip
+        asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.rid }}.zip
+        asset_content_type: application/zip
 
