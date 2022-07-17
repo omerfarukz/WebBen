@@ -80,7 +80,7 @@ jobs:
       run: dotnet --version
     - name: Build
       run: dotnet publish --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} --configuration Release --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=true -p:DebugType=None -p:DebugSymbols=false
-      #run: dotnet publish -c Release --self-contained --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }}
+      #run: dotnet publish  WebBen.CLI/WebBen.CLI.csproj -c Release --self-contained --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }}
     - name: Zip
       run: zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
     - name: Upload Release Asset
