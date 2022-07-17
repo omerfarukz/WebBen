@@ -3,33 +3,33 @@ name: CI & CD
 on: [push]
 
 jobs:
-#   build:
-#     runs-on: ubuntu-latest
-#     strategy:
-#       matrix:
-#         dotnet-version: [ '6.0.x' ]
-#     steps:
-#       - uses: actions/checkout@v3
-#       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
-#         uses: actions/setup-dotnet@v2
-#         with:
-#           dotnet-version: ${{ matrix.dotnet-version }}
-#       - name: Install dependencies
-#         run: dotnet restore
-#       - name: Build
-#         run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
-#       - name: Test
-#         run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
-#       - name: Publish the package to nuget
-#         run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
-#       - uses: codecov/codecov-action@v2
-#         with:
-#           token: ${{ secrets.CC_SECRET }} # not required for public repos
-#           directory: WebBen.Tests
-#           files: lcov.info
-#           name: codecov-umbrella # optional
-#           fail_ci_if_error: true # optional (default = false)
-#           verbose: true # optional (default = false)
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        dotnet-version: [ '6.0.x' ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+      - name: Install dependencies
+        run: dotnet restore
+      - name: Build
+        run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
+      - name: Test
+        run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
+      - name: Publish the package to nuget
+        run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
+      - uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CC_SECRET }} # not required for public repos
+          directory: WebBen.Tests
+          files: lcov.info
+          name: codecov-umbrella # optional
+          fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)
         
   publish:
 #     needs: [build]
