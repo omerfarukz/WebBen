@@ -32,7 +32,7 @@ jobs:
           verbose: true # optional (default = false)
         
   release:
-#     needs: [build]
+    needs: [build_test_cc]
     runs-on: ubuntu-latest
     strategy:
       matrix:
