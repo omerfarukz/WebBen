@@ -19,12 +19,10 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
-      - name: Publish the package to nuget
-        run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
       - name: Test
         run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
-      - name: omr
-        run: pwd && ls && ls WebBen.Tests
+      - name: Publish the package to nuget
+        run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CC_SECRET }} # not required for public repos
