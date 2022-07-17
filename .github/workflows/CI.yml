@@ -62,18 +62,10 @@ jobs:
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
       NUGET_XMLDOC_MODE: skip
     steps:
-    - uses: actions/checkout@v3
-    - name: Load Release URL File from release job
-      uses: actions/download-artifact@v1
-      with:
-        name: release_url
-    - uses: actions/checkout@v3
     - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v2
       with:
         dotnet-version: ${{ matrix.dotnet-version }}
-    - name: inf
-      run: dotnet --version
     - name: Build
       run: dotnet publish WebBen.CLI/WebBen.CLI.csproj --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} --configuration Release --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=true -p:DebugType=None -p:DebugSymbols=false
       #run: dotnet publish  WebBen.CLI/WebBen.CLI.csproj -c Release --self-contained --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }}
@@ -87,6 +79,6 @@ jobs:
       with:
         upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: ./${{ matrix.rid }}.zip
-        asset_name: ${{ steps.get_release_info.outputs.file_name }}-${{ matrix.rid }}.zip
+        asset_name: ${{ steps.get_release.outputs.file_name }}-${{ matrix.rid }}.zip
         asset_content_type: application/zip
 
