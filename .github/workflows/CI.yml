@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-restore /p:PackAsTool=True
       - name: Publish the package to nuget
         run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
       - name: Test
