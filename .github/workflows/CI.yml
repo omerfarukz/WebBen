@@ -34,6 +34,29 @@ jobs:
           fail_ci_if_error: true # optional (default = false)
           verbose: true # optional (default = false)
           
+  release:
+    name: Create Github Release
+    if: contains(github.ref, 'tags/v') # works only version tagged
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1.0.0
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Output Release URL File
+      run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
+    - name: Save Release URL File for publish
+      uses: actions/upload-artifact@v1
+      with:
+        name: release_url
+        path: release_url.txt
         
   publish:
     if: contains(github.ref, 'tags/v') # works only version tagged
@@ -42,6 +65,7 @@ jobs:
     strategy:
       matrix:
         rid: [win-x64, linux-x64, osx-x64]
+        dotnet-version: [ '6.0.x' ]
     env:
       DOTNET_CLI_TELEMETRY_OPTOUT: 1
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
@@ -52,10 +76,11 @@ jobs:
       uses: actions/download-artifact@v1
       with:
         name: release_url
-    - name: Setup .NET Core 6.0
-      uses: actions/setup-dotnet@v1
+    - uses: actions/checkout@v3
+    - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
+      uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: 6.0.100
+        dotnet-version: ${{ matrix.dotnet-version }}
     - name: Build
       run: dotnet publish -c Release --self-contained -r ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
     - name: Upload Release Asset
