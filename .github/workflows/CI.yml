@@ -45,7 +45,7 @@ jobs:
         allowUpdates: true
         tag: 'release-master'
         tag_name: 'release-master'
-        release_name: Release v1.22
+        release_name: Release v1.22 ${{ github.ref }}
     - name: Output Release URL File
       run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
     - name: Check Release URL File
