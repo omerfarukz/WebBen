@@ -66,7 +66,7 @@ jobs:
       run: dotnet publish WebBen.CLI/WebBen.CLI.csproj --runtime ${{ matrix.rid }} -o ./bin/${{ matrix.rid }} --configuration Release --self-contained -p:PublishSingleFile=true -p:PublishTrimmed=true -p:PublishReadyToRun=true -p:DebugType=None -p:DebugSymbols=false
     - name: Zip
       #run: zip -r ${{ matrix.rid }} ./bin/${{ matrix.rid }}
-      run: cd ./bin/${{ matrix.rid }} && zip -r ../../${{ matrix.rid }} .
+      run: cd ./bin/${{ matrix.rid }} && zip -r9 ../../${{ matrix.rid }} .
     - name: Upload Release Asset
       id: upload-release-asset 
       uses: actions/upload-release-asset@v1.0.1
