@@ -30,12 +30,20 @@ jobs:
 #           name: codecov-umbrella # optional
 #           fail_ci_if_error: true # optional (default = false)
 #           verbose: true # optional (default = false)
-          
-  release:  
-    name: release
+        
+  publish:
+#     needs: [release]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        rid: [win-x64, linux-x64, osx-x64]
+        dotnet-version: [ '6.0.x' ]
+    env:
+      DOTNET_CLI_TELEMETRY_OPTOUT: 1
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
+      NUGET_XMLDOC_MODE: skip
     steps:
-    - name: step 1
+    - name: Get Latest Release
       id: get_release
       uses: joutvhu/get-release@v1.0.1
       with:
@@ -49,19 +57,6 @@ jobs:
         debug: true
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-  publish:
-    needs: [release]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        rid: [win-x64, linux-x64, osx-x64]
-        dotnet-version: [ '6.0.x' ]
-    env:
-      DOTNET_CLI_TELEMETRY_OPTOUT: 1
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: 1
-      NUGET_XMLDOC_MODE: skip
-    steps:
     - uses: actions/checkout@v3
     - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
       uses: actions/setup-dotnet@v2
