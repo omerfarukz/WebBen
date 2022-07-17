@@ -34,7 +34,8 @@ jobs:
   release:  
     name: Get Release
     steps:
-    - name: step 1uses: joutvhu/get-release@v1.0.1
+    - name: step 1
+      uses: joutvhu/get-release@v1.0.1
       with:
         # The name of the owner of the repo. Used to identify the owner of the repository.
         owner: omerfarukz
