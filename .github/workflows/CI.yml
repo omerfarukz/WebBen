@@ -33,6 +33,7 @@ jobs:
           
   release:  
     name: Get Release
+    runs-on: ubuntu-latest
     steps:
     - name: step 1
       uses: joutvhu/get-release@v1.0.1
