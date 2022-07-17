@@ -32,6 +32,15 @@ jobs:
           verbose: true # optional (default = false)
         
   publish:
+    permissions:
+      contents: write
+      actions: read
+      checks: write
+      issues: read
+      packages: write
+      pull-requests: read
+      repository-projects: read
+      statuses: read
     needs: [build_test_cc]
     runs-on: ubuntu-latest
     strategy:
