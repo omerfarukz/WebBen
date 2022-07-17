@@ -45,6 +45,7 @@ jobs:
         tag: 'release-master'
         tag_name: 'release-master'
         release_name: Release v1.22
+        token: ${{ secrets.GITHUB_TOKEN }}
     - name: Output Release URL File
       run: echo ${{ steps.create_release.outputs.upload_url }} > release_url.txt
     - name: Save Release URL File for publish
