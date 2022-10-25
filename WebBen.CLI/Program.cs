@@ -11,7 +11,7 @@ public class Program
     {
         var logger = new TextWriterLogger(Console.Out);
         var exporter = new TextWriterExporter(Console.Out);
-        ;
+        
         var rootCommand = new WebBenRootCommand(exporter, logger);
 
         // Invoke command
