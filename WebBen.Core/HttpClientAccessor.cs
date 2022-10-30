@@ -2,7 +2,7 @@ using System.Net;
 
 namespace WebBen.Core;
 
-internal class HttpClientAccessor : IDisposable
+internal sealed class HttpClientAccessor : IDisposable
 {
     public HttpClientAccessor(TestCase testCase, ICredentials? credentials)
     {

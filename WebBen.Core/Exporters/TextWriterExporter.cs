@@ -54,7 +54,7 @@ public class TextWriterExporter : IExporter
         }
     }
 
-    private string AsTable(TestResult testResult)
+    private static string AsTable(TestResult testResult)
     {
         var asTable = testResult.Items.ToStringTable(
             new[] {"Name", "Elapsed", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},
@@ -71,7 +71,7 @@ public class TextWriterExporter : IExporter
         return asTable;
     }
 
-    private string AsTable(AnalyzeResult analyzeResult)
+    private static string AsTable(AnalyzeResult analyzeResult)
     {
         var resultSetAsTable = analyzeResult.Results.SelectMany(f => f.Items).ToStringTable(
             new[] {"Name", "Elapsed(sec)", "NoR", "Pll", "Err", "Avg(ms)", "StdDev(ms)", "Median(ms)"},

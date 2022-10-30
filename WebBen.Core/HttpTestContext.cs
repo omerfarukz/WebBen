@@ -14,14 +14,10 @@ public class HttpTestContext
 {
     private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
     private readonly ILogger _logger;
-    private static readonly string DefaultUserAgent;
 
-    static HttpTestContext()
-    {
-        var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version!;
-        DefaultUserAgent = $"WebBen/{assemblyVersion.Major}.{assemblyVersion.Minor}";
-    }
-
+    private static readonly string DefaultUserAgent =
+        $"WebBen/{Assembly.GetExecutingAssembly().GetName().Version?.Major}";
+    
     public HttpTestContext(ILogger logger)
     {
         _logger = logger;
@@ -34,7 +30,6 @@ public class HttpTestContext
     }
 
     /// <summary>
-    ///     TODO: return strong typed object
     /// </summary>
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
@@ -174,13 +169,13 @@ public class HttpTestContext
             }
             else
             {
-                testCase.Errors.Add($"{httpResponseMessage.StatusCode}"); // TODO: encapsulate   
+                testCase.Errors.Add($"{httpResponseMessage.StatusCode}");   
                 _logger.Error($"Test case {testCase.Configuration.Name} returned {httpResponseMessage.StatusCode}");
             }
         }
         catch (HttpRequestException e)
         {
-            testCase.Errors.Add($"{e.StatusCode}: {e.Message}"); // TODO: encapsulate
+            testCase.Errors.Add($"{e.StatusCode}: {e.Message}");
             _logger.Error($"{testCase.Configuration.Name}: {e.Message}");
         }
     }

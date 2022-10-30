@@ -8,7 +8,7 @@ internal static class EnumerableOfDoubleExtensions
     {
         if (source == null)
             throw new ArgumentNullException(nameof(source));
-        
+
         return calculationFunction switch
         {
             CalculationFunction.Average => source.Average(),
@@ -38,23 +38,7 @@ internal static class EnumerableOfDoubleExtensions
     {
         return CastDoubleAndProcess(source, doubles => doubles.Average());
     }
-
-    private static TimeSpan Percentile(this IEnumerable<TimeSpan> source, double percent)
-    {
-        return CastDoubleAndProcess(source, doubles => doubles.Percentile(percent));
-    }
-
-    private static TimeSpan Median(this IEnumerable<TimeSpan> source)
-    {
-        return CastDoubleAndProcess(source, doubles => doubles.Median());
-    }
-
-    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan> source,
-        Func<IEnumerable<double>, double> func)
-    {
-        return TimeSpan.FromMilliseconds(func(source.Select(f => f.TotalMilliseconds)));
-    }
-
+    
     private static double Average(this IEnumerable<double> source)
     {
         var num = 0d;
@@ -71,6 +55,11 @@ internal static class EnumerableOfDoubleExtensions
         return num / num2;
     }
 
+    private static TimeSpan Percentile(this IEnumerable<TimeSpan> source, double percent = 0.95d)
+    {
+        return CastDoubleAndProcess(source, doubles => doubles.Percentile(percent));
+    }
+    
     private static double Percentile(this IEnumerable<double> source, double percent)
     {
         var array = source.DefaultIfEmpty(0).OrderBy(x => x).ToArray();
@@ -78,6 +67,11 @@ internal static class EnumerableOfDoubleExtensions
         return array[num];
     }
 
+    private static TimeSpan Median(this IEnumerable<TimeSpan> source)
+    {
+        return CastDoubleAndProcess(source, doubles => doubles.Median());
+    }
+    
     private static double Median(this IEnumerable<double> source)
     {
         var array = source.OrderBy(x => x).ToArray();
@@ -88,5 +82,11 @@ internal static class EnumerableOfDoubleExtensions
             return (array[num / 2] + array[num / 2 - 1]) / 2.0;
 
         return array[num / 2];
+    }
+
+    private static TimeSpan CastDoubleAndProcess(this IEnumerable<TimeSpan> source,
+        Func<IEnumerable<double>, double> func)
+    {
+        return TimeSpan.FromMilliseconds(func(source.Select(f => f.TotalMilliseconds)));
     }
 }

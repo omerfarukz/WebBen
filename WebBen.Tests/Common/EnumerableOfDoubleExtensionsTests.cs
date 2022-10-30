@@ -35,7 +35,7 @@ public class EnumerableOfDoubleExtensionsTests
         Assert.AreEqual(TimeSpan.FromSeconds(3), enumerable.Calculate(CalculationFunction.P90));
         Assert.AreEqual(8164965, enumerable.Calculate(CalculationFunction.StdDev).Ticks);
 
-        enumerable = new TimeSpan[] { };
+        enumerable = Array.Empty<TimeSpan>();
         Assert.AreEqual(TimeSpan.FromSeconds(0), enumerable.Calculate(CalculationFunction.Average));
         Assert.AreEqual(TimeSpan.FromSeconds(0), enumerable.Calculate(CalculationFunction.Median));
         Assert.AreEqual(TimeSpan.FromSeconds(0), enumerable.Calculate(CalculationFunction.P90));

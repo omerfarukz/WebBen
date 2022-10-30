@@ -91,7 +91,7 @@ public class HttpTestContextTests
         }, null).Result;
 
         Assert.IsNotEmpty(testCases.Items);
-        Assert.AreEqual(testCases.Items.Length, 1);
+        Assert.AreEqual(1, testCases.Items.Length);
         Assert.IsNotEmpty(testCases.Items[0].Errors);
     }
 
@@ -240,13 +240,13 @@ public class HttpTestContextTests
 
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
-        Assert.AreEqual(1, allResults.Items.Count());
+        Assert.AreEqual(1, allResults.Items.Length);
 
         var result = allResults.Items.First();
         Assert.NotNull(result);
         Assert.IsEmpty(result.Errors);
         Assert.IsNotEmpty(result.Timings);
-        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
+        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Length);
         Assert.NotZero(result.Elapsed.TotalSeconds);
     }
 
@@ -296,14 +296,14 @@ public class HttpTestContextTests
 
         var allResults = await _httpTestContext.Execute(new MockConfigurationSource(testConfiguration));
         Assert.NotNull(allResults);
-        Assert.AreEqual(1, allResults.Items.Count());
+        Assert.AreEqual(1, allResults.Items.Length);
 
         var result = allResults.Items.First();
         Assert.NotNull(result);
         Assert.IsNotNull(result.Errors);
         Assert.IsEmpty(result.Errors!);
         Assert.IsNotNull(result.Timings);
-        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
+        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Length);
         Assert.NotZero(result.Elapsed.TotalSeconds);
 
         caseConfiguration = null;
@@ -325,7 +325,7 @@ public class HttpTestContextTests
         var configurationSource = new MockConfigurationSource(testConfiguration);
         var allResults = await _httpTestContext.Execute(configurationSource);
         Assert.NotNull(allResults);
-        Assert.AreEqual(1, allResults.Items.Count());
+        Assert.AreEqual(1, allResults.Items.Length);
 
         var result = allResults.Items.First();
         Assert.NotNull(result);
@@ -333,7 +333,7 @@ public class HttpTestContextTests
         Assert.IsEmpty(result.Errors);
         Assert.IsNotNull(result.Timings);
         Assert.NotZero(result.Elapsed.TotalMilliseconds);
-        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Count());
+        Assert.AreEqual(caseConfiguration.RequestCount, result.Timings.Length);
         Assert.NotZero(result.Elapsed.TotalSeconds);
     }
 
@@ -395,7 +395,7 @@ public class HttpTestContextTests
 
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
-        Assert.AreEqual(1, allResults.Items.Count());
+        Assert.AreEqual(1, allResults.Items.Length);
         Assert.NotZero(allResults.Items.First().Elapsed.TotalMilliseconds);
     }
 
@@ -414,7 +414,7 @@ public class HttpTestContextTests
         };
         var allResults = await _httpTestContext.Execute(caseConfiguration);
         Assert.NotNull(allResults);
-        Assert.AreEqual(1, allResults.Items.Count());
+        Assert.AreEqual(1, allResults.Items.Length);
     }
 
     [TearDown]

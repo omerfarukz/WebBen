@@ -35,18 +35,24 @@ internal static class TableParser
         params Func<T, object?>[] valueSelectors)
     {
         if (columnHeaders.Length != valueSelectors.Length)
-            throw new ArgumentException();
+            throw new ArgumentException($"{nameof(columnHeaders)} and {nameof(valueSelectors)} does not met");
 
         var arrValues = new string?[values.Count + 1, valueSelectors.Length];
 
         // Fill headers
         for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
+        {
             arrValues[0, colIndex] = columnHeaders[colIndex];
+        }
 
         // Fill table rows
         for (var rowIndex = 1; rowIndex < arrValues.GetLength(0); rowIndex++)
-        for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-            arrValues[rowIndex, colIndex] = valueSelectors[colIndex].Invoke(values[rowIndex - 1])?.ToString();
+        {
+            for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
+            {
+                arrValues[rowIndex, colIndex] = valueSelectors[colIndex].Invoke(values[rowIndex - 1])?.ToString();
+            }
+        }
 
         return ToStringTable(arrValues);
     }
@@ -110,7 +116,6 @@ internal static class TableParser
         }
 
         sb.AppendLine();
-
         return sb.ToString();
     }
 
@@ -118,12 +123,14 @@ internal static class TableParser
     {
         var maxColumnsWidth = new int[arrValues.GetLength(1)];
         for (var colIndex = 0; colIndex < arrValues.GetLength(1); colIndex++)
-        for (var rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
         {
-            var newLength = arrValues[rowIndex, colIndex]?.Length;
-            var oldLength = maxColumnsWidth[colIndex];
+            for (var rowIndex = 0; rowIndex < arrValues.GetLength(0); rowIndex++)
+            {
+                var newLength = arrValues[rowIndex, colIndex]?.Length;
+                var oldLength = maxColumnsWidth[colIndex];
 
-            if (newLength > oldLength) maxColumnsWidth[colIndex] = newLength.Value;
+                if (newLength > oldLength) maxColumnsWidth[colIndex] = newLength.Value;
+            }
         }
 
         return maxColumnsWidth;
