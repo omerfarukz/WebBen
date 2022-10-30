@@ -33,4 +33,5 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
-.sonarqube/
+**/.sonarqube/
+**/coverage.xml
