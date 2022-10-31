@@ -20,12 +20,20 @@ public static class HttpTestContextExtensions
         return await httpTestContext.Execute(testCases, null);
     }
 
-    public static async Task<TestResult> Execute(this HttpTestContext httpTestContext,
+    public static Task<TestResult> Execute(
+        this HttpTestContext httpTestContext,
         IConfigurationSource configurationSource)
     {
         if (configurationSource == null)
             throw new ArgumentNullException(nameof(configurationSource));
 
+        return ExecuteInternal(httpTestContext, configurationSource);
+    }
+    
+    private static async Task<TestResult> ExecuteInternal(
+        HttpTestContext httpTestContext,
+        IConfigurationSource configurationSource)
+    {
         var content = await configurationSource.GetContent();
         var configurationData = JsonNode.Parse(content)!;
         var testConfigurations = configurationData["TestCaseConfigurations"].Deserialize<CaseConfiguration[]>();

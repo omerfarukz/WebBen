@@ -14,19 +14,26 @@ public class HttpTestContext
 {
     private readonly Dictionary<string, ICredentialProvider> _credentialProviders;
     private readonly ILogger _logger;
-
-    private static readonly string DefaultUserAgent =
-        $"WebBen/{Assembly.GetExecutingAssembly().GetName().Version?.Major}";
-    
+    private readonly string _userAgent;
+        
     public HttpTestContext(ILogger logger)
     {
         _logger = logger;
         _logger.Debug($"Timer resolution is set to high precision:'{Stopwatch.IsHighResolution}'");
         
+        _userAgent = $"WebBen/{Assembly.GetExecutingAssembly().GetName().Version}";
         _credentialProviders = new Dictionary<string, ICredentialProvider>
         {
             {nameof(NetworkCredentialProvider), new NetworkCredentialProvider()}
         };
+    }
+
+    internal Task<TestResultItem> Execute(TestCase testCase, ICredentials? credentials)
+    {
+        if (testCase is null)
+            throw new ArgumentNullException(nameof(testCase));
+
+        return ExecuteInternal(testCase, credentials);
     }
 
     /// <summary>
@@ -34,11 +41,8 @@ public class HttpTestContext
     /// <param name="testCase"></param>
     /// <param name="credentials"></param>
     /// <exception cref="ArgumentNullException"></exception>
-    internal async Task<TestResultItem> Execute(TestCase testCase, ICredentials? credentials)
+    private async Task<TestResultItem> ExecuteInternal(TestCase testCase, ICredentials? credentials)
     {
-        if (testCase is null)
-            throw new ArgumentNullException(nameof(testCase));
-
         _logger.Debug(
             $"Executing test case: {testCase.Configuration.Name}, Parallelism:\t\t{testCase.Configuration.Parallelism}");
 
@@ -75,30 +79,47 @@ public class HttpTestContext
         return testResultItem;
     }
 
-    public async Task<TestResult> Execute(IReadOnlyCollection<TestCase> testCases,
-        IReadOnlyCollection<CredentialConfiguration>? credentialConfigurations)
+    public Task<TestResult> Execute(
+        IEnumerable<TestCase> testCases,
+        IReadOnlyCollection<CredentialConfiguration>? credentialConfigurations
+    )
     {
         if (testCases is null)
             throw new ArgumentNullException(nameof(testCases));
 
-        // Prevent multiple enumeration
-        var enumerableTestCases = testCases as TestCase[] ?? testCases.ToArray();
-        _logger.Debug($"Preparing test cases: {enumerableTestCases.Length}");
+        var testCasesAsArray = testCases.ToArray();
+        foreach (var testCase in testCasesAsArray)
+        {
+            if (testCase == null)
+                throw new ArgumentNullException(nameof(testCases));
+            
+            if (testCase.Configuration?.CredentialConfigurationKey == null)
+                continue;
+            if (credentialConfigurations == null)
+                throw new ArgumentNullException(nameof(credentialConfigurations));
+        }
+
+        return ExecuteInternalAsync(testCasesAsArray, credentialConfigurations);
+    }
+
+    private async Task<TestResult> ExecuteInternalAsync(
+            TestCase[] testCases,
+            IReadOnlyCollection<CredentialConfiguration>? credentialConfigurations
+        )
+    {
+        _logger.Debug($"Preparing test cases: {testCases.Length}");
 
         var testCaseIndex = 0;
-        var testResult = new TestResult(new TestResultItem[enumerableTestCases.Length]);
+        var testResult = new TestResult(new TestResultItem[testCases.Length]);
 
-        foreach (var testCase in enumerableTestCases)
+        foreach (var testCase in testCases)
         {
             ICredentials? credentials = null;
             if (testCase.Configuration.CredentialConfigurationKey != null)
             {
-                if (credentialConfigurations == null)
-                    throw new ArgumentNullException(nameof(credentialConfigurations));
-
                 _logger.Debug($"Creating credentials for case '{testCase.Configuration.Name}");
 
-                var credentialConfiguration = credentialConfigurations.Single(f =>
+                var credentialConfiguration = credentialConfigurations!.Single(f =>
                     f.Key == testCase.Configuration.CredentialConfigurationKey);
 
                 if (!_credentialProviders.ContainsKey(credentialConfiguration.Provider))
@@ -145,13 +166,16 @@ public class HttpTestContext
         return actionBlock;
     }
 
-    internal async Task CreateActionBlockInternal(HttpClientAccessor httpClientAccessor, TestCase testCase)
+    internal Task CreateActionBlockInternal(HttpClientAccessor httpClientAccessor, TestCase testCase)
     {
         if (testCase == null)
             throw new ArgumentNullException(nameof(testCase));
+        return CreateActionBlockInternalAsync(httpClientAccessor, testCase);
+    }
 
+    private async Task CreateActionBlockInternalAsync(HttpClientAccessor httpClientAccessor, TestCase testCase)
+    {
         var httpRequestMessage = BuildHttpRequestMessage(testCase, httpClientAccessor);
-
         try
         {
             var stopWatch = new Stopwatch();
@@ -180,7 +204,7 @@ public class HttpTestContext
         }
     }
 
-    private static HttpRequestMessage BuildHttpRequestMessage(
+    private HttpRequestMessage BuildHttpRequestMessage(
         TestCase testCaseInstance,
         HttpClientAccessor httpClientAccessor)
     {
@@ -199,7 +223,7 @@ public class HttpTestContext
         }
 
         const string userAgentKey = "User-Agent";
-        httpRequestMessage.Headers.Add(userAgentKey, DefaultUserAgent);
+        httpRequestMessage.Headers.Add(userAgentKey, _userAgent);
         
         // Set headers
         foreach (var header in testCaseInstance.Configuration.Headers)

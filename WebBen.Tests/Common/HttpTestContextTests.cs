@@ -110,7 +110,7 @@ public class HttpTestContextTests
     [Test]
     public void Add_Null_Test_Case_In_Collection_Args_Should_Throw()
     {
-        Assert.Throws<AggregateException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
         {
             var testCases = _httpTestContext.Execute(new TestCase[]
             {
@@ -122,7 +122,7 @@ public class HttpTestContextTests
     [Test]
     public void Add_Non_Existing_Credential_Key_Should_Throw()
     {
-        Assert.Throws<AggregateException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
         {
             var configuration = new CaseConfiguration();
             configuration.Uri = new Uri("http://foo.bar");

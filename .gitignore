@@ -34,4 +34,4 @@ Desktop.ini
 .DS_Store
 
 **/.sonarqube/
-**/coverage.xml
+**/coverage*.xml
