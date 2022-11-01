@@ -11,6 +11,8 @@ results. Parallelize the execution of test cases.
 Runs on MacOS, Linux and Windows. For additional
 information see [all supported platforms](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md).
 
+[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+
 ## Installation
 
 ```shell
