@@ -1,6 +1,6 @@
 # WebBen[chmark]
 
-[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![SonarCloud](https://github.com/omerfarukz/WebBen/actions/workflows/sonarqube.yml/badge.svg)](https://sonarcloud.io/summary/overall?id=omerfarukz_WebBen)[![codecov](https://codecov.io/gh/omerfarukz/WebBen/branch/master/graph/badge.svg?token=HLMKRMA74L)](https://codecov.io/gh/omerfarukz/WebBen) [![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
+[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![SonarCloud](https://github.com/omerfarukz/WebBen/actions/workflows/sonarqube.yml/badge.svg)](https://sonarcloud.io/summary/overall?id=omerfarukz_WebBen) [![codecov](https://codecov.io/gh/omerfarukz/WebBen/branch/master/graph/badge.svg?token=HLMKRMA74L)](https://codecov.io/gh/omerfarukz/WebBen) [![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
 [![CodeQL](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml) [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt)
 
 
