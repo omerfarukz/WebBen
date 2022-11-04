@@ -1,7 +1,18 @@
 # WebBen[chmark]
 
-[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![SonarCloud](https://github.com/omerfarukz/WebBen/actions/workflows/sonarqube.yml/badge.svg)](https://sonarcloud.io/summary/overall?id=omerfarukz_WebBen) [![codecov](https://codecov.io/gh/omerfarukz/WebBen/branch/master/graph/badge.svg?token=HLMKRMA74L)](https://codecov.io/gh/omerfarukz/WebBen) [![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
-[![CodeQL](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/codeql.yml) [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt)
+[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![SonarCloud](https://github.com/omerfarukz/WebBen/actions/workflows/sonarqube.yml/badge.svg)](https://sonarcloud.io/summary/overall?id=omerfarukz_WebBen)
+[![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
+[![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=coverage)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=code_smells)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=sqale_index)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=reliability_rating)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=vulnerabilities)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
+[![Bugs](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=bugs)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
 
 Cross platform HTTP Server benchmark tool written in .NET 6.0. Declarative and easy to use. Execute test cases and
 compare the
@@ -9,8 +20,6 @@ results. Parallelize the execution of test cases.
 
 Runs on MacOS, Linux and Windows. For additional
 information see [all supported platforms](https://github.com/dotnet/core/blob/main/release-notes/6.0/supported-os.md).
-
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
 
 ## Installation
 
