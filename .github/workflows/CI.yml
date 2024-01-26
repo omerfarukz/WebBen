@@ -1,7 +1,6 @@
 name: CI & CD
 
 on: [push]
-
 jobs:
   build_test_cc:
     runs-on: ubuntu-latest
