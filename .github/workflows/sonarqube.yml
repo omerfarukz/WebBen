@@ -12,6 +12,10 @@ jobs:
       matrix:
         dotnet-version: [ '6.0.x' ]
     steps:
+      - uses: actions/setup-java@v4.0.0
+        with:
+          # The Java version to set up. Takes a whole or semver Java version. See examples of supported syntax in README file
+          java-version: 17
       - uses: actions/checkout@v3
       - name: Setup .NET Core SDK ${{ matrix.dotnet-version }}
         uses: actions/setup-dotnet@v2
