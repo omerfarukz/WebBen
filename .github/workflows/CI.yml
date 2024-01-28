@@ -18,7 +18,7 @@ jobs:
       - name: Build
         run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
       - name: Test
-        run: dotnet test -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
+        run: dotnet test --framework=net6.0 -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
       - name: Publish the package to nuget
         run: dotnet nuget push WebBen.CLI/bin/Release/*.nupkg --api-key "${{secrets.NUGET_API_KEY2}}" -s https://api.nuget.org/v3/index.json
       - uses: codecov/codecov-action@v2
