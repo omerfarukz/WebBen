@@ -1,10 +1,8 @@
 # WebBen[chmark]
 
-[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) [![SonarCloud](https://github.com/omerfarukz/WebBen/actions/workflows/sonarqube.yml/badge.svg)](https://sonarcloud.io/summary/overall?id=omerfarukz_WebBen)
-[![CI & CD](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml/badge.svg)](https://github.com/omerfarukz/WebBen/actions/workflows/CI.yml)
+[![nuget](https://img.shields.io/nuget/dt/webben)](https://www.nuget.org/packages/webben) 
 [![license](https://img.shields.io/github/license/omerfarukz/WebBen)](https://github.com/omerfarukz/WebBen/blob/master/LICENSE.txt)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=ncloc)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=coverage)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
 
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=omerfarukz_WebBen&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=omerfarukz_WebBen)
