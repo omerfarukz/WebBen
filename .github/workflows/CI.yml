@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: dotnet restore
       - name: Build
-        run: dotnet build --configuration Release --no-restore -p:PackAsTool=True
+        run: dotnet build --framework=net6.0 --configuration Release --no-restore -p:PackAsTool=True
       - name: Test
         run: dotnet test --framework=net6.0 -p:coverletOutput=./lcov.info -p:CollectCoverage=true -p:CoverletOutputFormat=lcov 
       - name: Publish the package to nuget
